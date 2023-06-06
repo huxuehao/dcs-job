@@ -1,0 +1,87 @@
+package com.tiger.job.core.config;
+
+import com.tiger.job.common.entity.ScheduleTaskDto;
+import lombok.AllArgsConstructor;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+
+import java.lang.management.ManagementFactory;
+import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.function.Consumer;
+
+/**
+ * @ClassName TaskConfig
+ * @Description 定时任务配置
+ * @Author huxuehao
+ **/
+
+@AllArgsConstructor
+@SpringBootConfiguration
+public class TaskConfig {
+
+    @Bean(name = "schedulerScanMethodMap")
+    public Map<String, Map<Object, Method>> schedulerScanMethodMap() {
+        return new HashMap<>();
+    }
+
+    /**
+     * 描述：当前项目的唯一标识符，用于分布式定时任务使用。
+     * 使用主机地址和进程IP组合作为唯一标识。
+     * @return
+     */
+    @Bean(name = "uniqueIdentifier")
+    public String uniqueIdentifier() {
+        String pid = ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
+        String hostAddress = UUID.randomUUID().toString().replaceAll("-","");
+        try {
+            hostAddress = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return hostAddress + ":" + pid;
+    }
+
+    /**
+     * 描述：我们没开启一个定时任务，就会产生一个ScheduledFuture实体，当我们需要动态的操作定时任务（上述的实体）时，
+     * 我们需要调用scheduledFuture.cancel(true)或scheduledFuture.schedule(worker, cronTrigger)，这就意味着
+     * 我们需要将每一个ScheduledFuture实体存储起来，当需要动态的控制定时任务时，我们去改Map中取出对应的实体进行上述的
+     * cancel或schedule操作即可。所以我们需要在spring容器中维护一个ScheduledFuture的注册表注册表。
+     */
+    @Bean(name = "scheduledFutureMap")
+    public Map<String, ScheduledFuture> scheduledFutureMap() {
+        return new ConcurrentHashMap<>();
+    }
+
+    /**
+     * 描述：对于定时任务的动态操作（添加、开启、停止、删除）我们需要将上述操作封装成触发器，想要使用的时候
+     * 我们只需要取出已经初始化好的代码逻辑，取出对应的代码逻辑，传入参数，执行即可。上述描述是一种预处理的思想。
+     *
+     * 在这里我们使用java8的Consumer（消费型函数式接口）进行时间，并将实现了不同代码逻辑的Consumer存储到Map中，
+     * 这样我们一方面可以实现动态扩展，另一方面省去了多 if-else 的操作。
+     */
+    @Bean(name = "triggerMap")
+    public Map<String, Consumer<ScheduleTaskDto>> triggerMap() {
+        return new ConcurrentHashMap<>();
+    }
+
+    /**
+     * 一个用于开启定时任务的线程池；我们关注的核心方法是：threadPoolTaskScheduler.schedule(工作内容, 触发器)
+     */
+    @Bean(name = "threadPoolTaskScheduler")
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(Runtime.getRuntime().availableProcessors()); // 线程池的大小
+        threadPoolTaskScheduler.setThreadNamePrefix("WorKerThread:"); // 线程名称
+        threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true); // 调度器shutdown后，等待当前调度执行完成
+        threadPoolTaskScheduler.setAwaitTerminationSeconds(30);
+        return threadPoolTaskScheduler;
+    }
+}

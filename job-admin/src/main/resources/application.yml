@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: dsc-job
+    description: dsc-job分布式定时任务执行器，并提供了丰富的管理接口。
+  profiles:
+    active: dev
+
+# dcs-job配置
+tiger:
+  scheduled-task:
+    task-package: com.tiger.job.task # 定时任务的包路径，用于扫描定时任务
+    cluster:
+      open: true # 开启分布式
+    log:
+      success-open: true # 开启执行成功日志(建议开启)
+      fail-open: true # 开启执行失败日志(建议开启)
+      save-days: 2 # 日志保存天数
+    retry:
+      open: true # 是否开启重试策略
+      count: 1 # 重试次数
+      sleep: 5 # 重试间隔（秒）
+  http-util:
+    socket-timeout: 60000 # 单位：秒
+    connect-timeout: 15000 # 单位：秒
+    connection-request-timeout: 60000 # 单位：秒

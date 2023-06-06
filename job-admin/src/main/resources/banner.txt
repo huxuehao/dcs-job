@@ -1,0 +1,10 @@
+欢迎使用 DSC-JOB , 程序开始启动...
+${AnsiColor.YELLOW} ______    _______   _______      _________   _____   _______
+${AnsiColor.YELLOW}(  __  \  (  ____ \ (  ____ \     \__    _/ /  ___  \ |  _____\
+${AnsiColor.YELLOW}| (  \  ) | (    \/ | (    \/        )  (   | (   ) | | (   )  |
+${AnsiColor.YELLOW}| |   ) | | (_____  | |              |  |   | |   | | | (___) /
+${AnsiColor.YELLOW}| |   | | (_____  | | |              |  |   | |   | | |  _____ \
+${AnsiColor.YELLOW}| |   ) |       ) | | |              |  |   | |   | | | (     ) |
+${AnsiColor.YELLOW}| (__/  ) /\____) | | (____/\     |\_)  )   | (___) | | (_____) /
+${AnsiColor.YELLOW}(______/  \_______) (_______/     `____/     \_____/  |________/
+${AnsiColor.DEFAULT}项目名称:${AnsiColor.YELLOW}${spring.application.name}${AnsiColor.DEFAULT}  作者:${AnsiColor.BLUE}StudiousTiger  ${AnsiColor.DEFAULT}环境:${AnsiColor.RED}${spring.profiles.active}  ${AnsiColor.DEFAULT}端口:${AnsiColor.CYAN}${server.port}${AnsiColor.DEFAULT}

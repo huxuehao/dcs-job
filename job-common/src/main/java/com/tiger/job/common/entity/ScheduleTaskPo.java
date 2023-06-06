@@ -1,0 +1,22 @@
+package com.tiger.job.common.entity;
+
+import com.tiger.job.common.entity.base.BaseDto;
+import lombok.Data;
+
+/**
+ * @ClassName ScheduleTaskPo
+ * @Description TODO
+ * @Author huxuehao
+ **/
+@Data
+public class ScheduleTaskPo extends BaseDto {
+    private String id;
+    private String name;
+    private String taskType;
+    private String taskDescribe;
+    private String cron;
+    private String path;
+    private String enable;
+    private String openLog;
+    private String total;
+}

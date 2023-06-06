@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.tiger</groupId>
+    <artifactId>job</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>job-core</module>
+        <module>job-admin</module>
+        <module>job-task</module>
+        <module>job-common</module>
+    </modules>
+    <properties>
+        <dcs-job.version>1.0-SNAPSHOT</dcs-job.version>
+        <spring-depend.version>2.7.1</spring-depend.version>
+        <spring-aop.version>2.7.1</spring-aop.version>
+        <spring-cache.version>2.7.1</spring-cache.version>
+        <spring-redis.version>2.7.1</spring-redis.version>
+        <spring-redisson.version>3.17.3</spring-redisson.version>
+        <java.version>1.8</java.version>
+        <mysql.java>8.0.29</mysql.java>
+        <druid.version>1.2.14</druid.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <fastjson.version>2.0.16</fastjson.version>
+        <hutool.version>5.8.4</hutool.version>
+        <httpclient.version>4.5.7</httpclient.version>
+        <httpmime.version>4.5.7</httpmime.version>
+        <commons.collections.version>3.2.2</commons.collections.version>
+        <jwt.version>0.9.1</jwt.version>
+        <log4j.version>1.2.17</log4j.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- SpringBoot的依赖配置-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-depend.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- aop依赖 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+                <version>${spring-aop.version}</version>
+            </dependency>
+            <!-- mybatis-plus框架 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- redis依赖 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring-redis.version}</version>
+            </dependency>
+            <!-- redisson依赖 -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${spring-redisson.version}</version>
+            </dependency>
+            <!-- druid数据库连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <!-- mysql-java -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.java}</version>
+            </dependency>
+            <!-- collections工具类 -->
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons.collections.version}</version>
+            </dependency>
+            <!-- fastjson2 -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <!-- httpclient 模块 -->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+            <!-- httpmime 模块 -->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpmime</artifactId>
+                <version>${httpmime.version}</version>
+            </dependency>
+            <!-- Token生成与解析-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
+            </dependency>
+            <!-- log4j -->
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <!-- 管理模块 -->
+            <dependency>
+                <groupId>com.tiger</groupId>
+                <artifactId>job-admin</artifactId>
+                <version>${dcs-job.version}</version>
+            </dependency>
+            <!-- 公共模块 -->
+            <dependency>
+                <groupId>com.tiger</groupId>
+                <artifactId>job-common</artifactId>
+                <version>${dcs-job.version}</version>
+            </dependency>
+            <!-- 核心模块 -->
+            <dependency>
+                <groupId>com.tiger</groupId>
+                <artifactId>job-core</artifactId>
+                <version>${dcs-job.version}</version>
+            </dependency>
+            <!-- 定时任务模块 -->
+            <dependency>
+                <groupId>com.tiger</groupId>
+                <artifactId>job-task</artifactId>
+                <version>${dcs-job.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <!-- 扫描src/main/java下所有xx.xml文件 -->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <!-- 扫描resources下所有资源 -->
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+    </build>
+
+</project>
