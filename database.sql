@@ -1,5 +1,3 @@
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
 -- 字典表
 CREATE TABLE `sys_dict` (
   `id` bigint NOT NULL COMMENT '主键',
@@ -65,5 +63,3 @@ CREATE TABLE `sys_scheduled_log` (
   `execute_time` varchar(40) DEFAULT NULL COMMENT '执行时间',
   PRIMARY KEY (`id`)
 ) COMMENT = '定时任务调度日志表';
-
-SET FOREIGN_KEY_CHECKS = 1;
