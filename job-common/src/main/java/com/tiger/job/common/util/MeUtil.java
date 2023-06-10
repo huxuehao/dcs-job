@@ -15,6 +15,7 @@ import java.util.*;
  * @Author StudiousTiger
  **/
 public class MeUtil {
+    public static final String ADMINISTRATOR = "1111111111111111111";
     private static final String datetimeFormat = "yyyy-MM-dd HH:mm:ss";
     private static final String dateFormat = "yyyy-MM-dd";
 

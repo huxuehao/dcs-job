@@ -11,22 +11,22 @@ import com.tiger.job.common.annotation.SchedulerBean;
 @SchedulerBean
 public class MyScheduled1 {
 
-    @TaskPath(path = "/sheduled1/execute/do-task1")
+    @TaskPath(name = "定时任务1", path = "/sheduled1/execute/do-task1")
     public void doTask1() {
         System.out.println("The sheduled1-doTask1 task is executing now....");
     }
 
-    @TaskPath(path = "/sheduled1/execute/do-task2")
+    @TaskPath(name = "定时任务2", path = "/sheduled1/execute/do-task2")
     public void doTask2() {
         System.out.println("The sheduled1-doTask2 task is executing now....");
     }
 
-    @TaskPath(path = "/sheduled1/execute/do-task3")
+    @TaskPath(name = "定时任务3", path = "/sheduled1/execute/do-task3")
     public void doTask3() {
         System.out.println("The sheduled1-doTask3 task is executing now....");
     }
 
-    @TaskPath(path = "/sheduled1/execute/do-task4")
+    @TaskPath(name = "定时任务4", path = "/sheduled1/execute/do-task4")
     public void doTask4() {
         System.out.println("The sheduled1-doTask4 task is executing now....");
     }

@@ -24,11 +24,11 @@ public class AspectRetry {
     RetryProperties retryProperties;
 
     @Pointcut("@annotation(com.tiger.job.common.annotation.Retry)")
-    public void RetryPointcut() {
+    public void retryPointcut() {
 
     }
 
-    @Around("RetryPointcut()")
+    @Around("retryPointcut()")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
         if (retryProperties.isOpen()) {
             /* 设置重试策略 */

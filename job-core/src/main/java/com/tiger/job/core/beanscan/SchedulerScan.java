@@ -2,12 +2,16 @@ package com.tiger.job.core.beanscan;
 
 import com.tiger.job.common.annotation.SchedulerBean;
 import com.tiger.job.common.annotation.TaskPath;
+import com.tiger.job.common.entity.ScheduleTaskDto;
 import com.tiger.job.common.exception.member.EmptyTaskPathException;
 import com.tiger.job.common.exception.member.NotFolderException;
 import com.tiger.job.common.exception.member.SameTaskPathException;
+import com.tiger.job.common.util.MeUtil;
+import com.tiger.job.core.constant.ScanProperties;
+import com.tiger.job.core.mapper.ScheduleTaskMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -27,9 +31,10 @@ import java.util.*;
 @Component
 public class SchedulerScan {
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-    @Value("${tiger.scheduled-task.task-package}")
-    String taskPackage;
+    @Autowired
+    ScanProperties scanProperties;
+    @Autowired
+    ScheduleTaskMapper taskMapper;
 
     /**
      * 扫描定时任务方法
@@ -39,10 +44,10 @@ public class SchedulerScan {
      *                                         value是含有TaskAPI注解的方法
      */
     public Map<String, Map<Object, Method>> schedulerScanMethod() {
-        String dirPath = getDirPath(taskPackage);
-        List<Class<?>> classes = scanClassForDir(taskPackage,dirPath);
+        String dirPath = getDirPath(scanProperties.getTaskPackage());
+        List<Class<?>> classes = scanClassForDir(scanProperties.getTaskPackage(),dirPath);
         List<Class<?>> schedulerBeanClass = getSchedulerBeanClass(classes);
-        return getTaskAPIMethod(schedulerBeanClass);
+        return getTaskPathMethod(schedulerBeanClass);
     }
 
     /**
@@ -143,8 +148,9 @@ public class SchedulerScan {
      *                     Map<Object, Method>:key是含有SchedulerBean注解的类实体
      *                                         value是含有TaskAPI注解的方法
      */
-    private Map<String, Map<Object, Method>> getTaskAPIMethod(List<Class<?>> classes) {
+    private Map<String, Map<Object, Method>> getTaskPathMethod(List<Class<?>> classes) {
         Map<String, Map<Object, Method>> methodMap = new HashMap<>();
+        List<TaskPath> taskPaths = new ArrayList<>();
         if (classes == null || classes.size() == 0) {
             return methodMap;
         }
@@ -170,11 +176,57 @@ public class SchedulerScan {
                     if (methodMap.containsKey(path)) {
                         throw new SameTaskPathException("存在相同的定时任务path：" + path + "，请确保path的唯一性");
                     }
+                    taskPaths.add(annotation);
                     methodMap.put(path, mapValue);
                     log.info("定时任务：已经完成对 [ {} ] 定时任务的扫描", path);
                 }
             }
         }
+        if (scanProperties.getAutoInsert()) {
+            autoInsert(taskPaths);
+        }
         return methodMap;
+    }
+
+    /**
+     * 自动入库
+     * @param taskPaths
+     */
+    private void autoInsert(List<TaskPath> taskPaths) {
+        List<ScheduleTaskDto> taskList = genTaskDto(taskPaths);
+        taskMapper.deleteRecordsNotIn(taskList);
+        taskMapper.addRecordsMoreOf(taskList);
+    }
+
+    /**
+     * 生成task实体
+     * @param taskPaths
+     * @return
+     */
+    private List<ScheduleTaskDto> genTaskDto(List<TaskPath> taskPaths) {
+        List<ScheduleTaskDto> taskList = new ArrayList<>();
+        for (TaskPath taskPath : taskPaths) {
+            ScheduleTaskDto dto = new ScheduleTaskDto();
+            dto.setId(MeUtil.nextId());
+            dto.setPath(taskPath.path());
+            dto.setEnable(taskPath.enable());
+            dto.setOpenLog(taskPath.openLog());
+            dto.setTaskDescribe(taskPath.describe());
+            dto.setTaskType(taskPath.type());
+            dto.setCreateUser(MeUtil.ADMINISTRATOR);
+            dto.setCreateTime(MeUtil.currentDatetime());
+            if ("-1".equals(taskPath.cron())) {
+                dto.setCron(scanProperties.getDefaultCron());
+            } else {
+                dto.setCron(taskPath.cron());
+            }
+            if ("".equals(taskPath.name())) {
+                dto.setName(taskPath.path());
+            } else {
+                dto.setName(taskPath.name());
+            }
+            taskList.add(dto);
+        }
+        return taskList;
     }
 }

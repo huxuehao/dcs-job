@@ -1,6 +1,5 @@
 package com.tiger.job.core.mapper;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tiger.job.common.entity.ScheduleLogDto;
 import org.apache.ibatis.annotations.Param;

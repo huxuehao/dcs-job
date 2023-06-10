@@ -158,7 +158,7 @@ public class TaskExecutorImpl implements TaskExecutor {
     }
 
     /* 获取分布式锁的过期时间 */
-    public long expirationTime(String cron) {
+    private long expirationTime(String cron) {
         CronExpression parse = CronExpression.parse(cron);
         LocalDateTime nextExecuteTime = parse.next(LocalDateTime.now()); /* 根据cron获取下次执行的时间 */
         LocalDateTime nowTime = LocalDateTime.now(); /* 获取当前时间 */

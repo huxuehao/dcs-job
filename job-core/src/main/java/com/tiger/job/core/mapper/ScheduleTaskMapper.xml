@@ -237,4 +237,43 @@
         from
             `sys_scheduled`
     </select>
+
+    <delete id="deleteRecordsNotIn">
+        delete from `sys_scheduled`
+        where  `path` not in
+        <foreach collection="tasks" item="item" open="(" separator="," close=")">
+            #{item.path}
+        </foreach>
+    </delete>
+
+    <insert id="addRecordsMoreOf">
+        insert ignore into
+            `sys_scheduled` (
+                `id`,
+                `name`,
+                `task_type`,
+                `task_describe`,
+                `path`,
+                `cron`,
+                `enable`,
+                `open_log`,
+                `create_user`,
+                `create_time`
+            )
+        values
+        <foreach collection="tasks" item="item" index="index" separator=",">
+            (
+                #{item.id},
+                #{item.name},
+                #{item.taskType},
+                #{item.taskDescribe},
+                #{item.path},
+                #{item.cron},
+                #{item.enable},
+                #{item.openLog},
+                #{item.createUser},
+                #{item.createTime}
+            )
+        </foreach>
+    </insert>
 </mapper>
