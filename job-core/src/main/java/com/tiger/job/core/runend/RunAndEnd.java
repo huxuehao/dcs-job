@@ -6,17 +6,17 @@ import org.springframework.boot.SpringBootConfiguration;
 
 /**
  * @ClassName RunAndEnd
- * @Description TODO
+ * @Description 项目启动前后的配置
  * @Author huxuehao
  **/
 @SpringBootConfiguration
 public class RunAndEnd implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
-        System.out.println("-------------------------------------------");
-        System.out.println("|                                         |");
-        System.out.println("|       dsc-job successfully started      |");
-        System.out.println("|                                         |");
-        System.out.println("-------------------------------------------");
+        System.out.println("/-------------------------------------------\\");
+        System.out.println("| - - - - - - - - - - - - - - - - - - - - - |");
+        System.out.println("| - - Application successfully started - -  |");
+        System.out.println("| - - - - - - - - - - - - - - - - - - - - - |");
+        System.out.println("\\-------------------------------------------/");
     }
 }

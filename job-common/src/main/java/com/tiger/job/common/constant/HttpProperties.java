@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @ClassName CommonProperties
- * @Description TODO
+ * @Description httpUtils参数
  * @Author huxuehao
  **/
 @Component

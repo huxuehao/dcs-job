@@ -5,7 +5,7 @@ import lombok.Data;
 
 /**
  * @ClassName ScheduleTaskPo
- * @Description TODO
+ * @Description 定时任务信息表PO
  * @Author huxuehao
  **/
 @Data

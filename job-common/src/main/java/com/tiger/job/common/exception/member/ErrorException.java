@@ -5,7 +5,7 @@ import com.tiger.job.common.exception.base.BaseException;
 
 /**
  * @ClassName ErrorException
- * @Description TODO
+ * @Description 错误
  * @Author huxuehao
  **/
 public class ErrorException extends BaseException {

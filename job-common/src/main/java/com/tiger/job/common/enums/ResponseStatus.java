@@ -2,7 +2,7 @@ package com.tiger.job.common.enums;
 
 /**
  * @EnumName ResponseStatus
- * @Description TODO
+ * @Description 响应体
  * @Author huxuehao
  **/
 public enum ResponseStatus {

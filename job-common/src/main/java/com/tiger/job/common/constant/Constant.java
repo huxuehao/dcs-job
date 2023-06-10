@@ -2,7 +2,7 @@ package com.tiger.job.common.constant;
 
 /**
  * @ClassName Constant
- * @Description TODO
+ * @Description 常量
  * @Author huxuehao
  **/
 public class Constant {

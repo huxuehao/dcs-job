@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @ClassName TaskQueue
- * @Description 定时任务的redis队列
+ * @Description 定时任务队列
  * @Author huxuehao
  **/
 @Component

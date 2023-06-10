@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  * @ClassName MyUtil
- * @Description TODO
+ * @Description 自定义工具类
  * @Author StudiousTiger
  **/
 public class MeUtil {

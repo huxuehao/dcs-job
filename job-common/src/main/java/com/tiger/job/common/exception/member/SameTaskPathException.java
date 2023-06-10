@@ -5,7 +5,7 @@ import com.tiger.job.common.exception.base.BaseException;
 
 /**
  * @ClassName SamePathTaskAPIException
- * @Description TODO
+ * @Description 存在相同的path异常
  * @Author huxuehao
  **/
 public class SameTaskPathException extends BaseException {

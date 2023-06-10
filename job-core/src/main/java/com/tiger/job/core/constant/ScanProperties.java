@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @ClassName ScanProperties
- * @Description TODO
+ * @Description 扫描定时任务相关参数
  * @Author huxuehao
  **/
 @Data

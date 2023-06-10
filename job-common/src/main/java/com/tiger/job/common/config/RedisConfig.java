@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @ClassName RedisConfig
- * @Description TODO
+ * @Description redis的配置类
  * @Author huxuehao
  **/
 @Component

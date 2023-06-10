@@ -1,19 +1,17 @@
 package com.tiger.job.core.retry;
 
-import com.tiger.job.common.annotation.Retry;
 import com.tiger.job.core.constant.RetryProperties;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
  * @ClassName AspectRetry
- * @Description 定时任务执行器的重试切面
+ * @Description 重试拦截器，定时任务执行器的重试切面
  * @Author huxuehao
  **/
 @Aspect

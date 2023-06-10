@@ -61,7 +61,7 @@ public class TaskExecutorImpl implements TaskExecutor {
     Map<String, Map<Object, Method>> schedulerScanMethodMap;
 
     /**
-     * 单例执行，即用户手动执行，不需retry
+     * 触发执行，即用户手动执行，不需retry
      * @param task 定时任务实体
      * @return 执行结果
      */
@@ -100,17 +100,27 @@ public class TaskExecutorImpl implements TaskExecutor {
     }
 
     /**
-     * 集群模式下的定时任务执行
+     * 集群模式下的分布式执行
      * 为了实现多节点 轮询+抢占 的分布式定时任务，本次的解决方案为： redis分布式锁 + redis队列。
      * @param task 定时任务实体
      * @return 执行结果
      */
     @Override
     public boolean clusterExecute(ScheduleTaskDto task) {
+        /* 获取当前定时任务所属的队列 */
         String queueName = taskQueue.getQueueName(task.getId());
+        /* 获取 queueName 对应的分布式锁 */
         RLock lock = locker.getLock(taskQueue.getQueueLockName(queueName));
+        /* 产看队列队首元素 */
         String firstItem = taskQueue.peek(queueName);
         if (firstItem == null) {
+            /*
+            * 当元素为空时，意味着队列为空，那么所有的节点都有执行的机会。
+            * 所有节点去抢占分布式锁：
+            *     抢到时，设置过期时间，当前节点如队列，执行定时任务
+            *     未抢到时，当前节点（不在队列时）入队
+            *
+            * */
             try {
                 if (lock.tryLock(0,this.expirationTime(task.getCron()), TimeUnit.MILLISECONDS)) {
                     taskQueue.push(queueName, getQueueItem());
@@ -122,6 +132,10 @@ public class TaskExecutorImpl implements TaskExecutor {
                 return false;
             }
         }
+        /*
+        * 若队首元素与当前节点的唯一表示父匹配，侧上锁、执行定时、出队、（不在队列时）入队；
+        * 否则，当前节点（不在队列时）入队
+        * */
         if (firstItem.startsWith(uniqueIdentifier)) {
             try {
                 if (lock.tryLock(0,this.expirationTime(task.getCron()), TimeUnit.MILLISECONDS)) {
@@ -174,6 +188,7 @@ public class TaskExecutorImpl implements TaskExecutor {
             /*执行定时任务*/
             if (schedulerScanMethodMap.containsKey(task.getPath())) {
                 Map<Object, Method> objectMethodMap = schedulerScanMethodMap.get(task.getPath());
+                /* objectMethodMap 中的Key是已经实例化过的对象，value是定时任务的方法载体 */
                 for (Map.Entry<Object, Method> entry : objectMethodMap.entrySet()) {
                     /* 执行定时任务*/
                     entry.getValue().invoke(entry.getKey());
@@ -197,7 +212,7 @@ public class TaskExecutorImpl implements TaskExecutor {
         return message == null;
     }
 
-    /* 用户日志采集 */
+    /* 定时任务日志采集 */
     private void genLog(ScheduleTaskDto task, String message){
         /* 判断定时任务执行状态。true为执行成功，false为执行失败 */
         String status = message == null ? "success" : "fail";

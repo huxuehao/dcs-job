@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * @@interface SchedulerBean
- * @Description TODO
+ * @Description 定时任务类注解
  * @Author huxuehao
  **/
 @Documented

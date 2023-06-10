@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @ClassName LoginBody
- * @Description TODO
+ * @Description 登录类
  * @Author StudiousTiger
  **/
 @Data

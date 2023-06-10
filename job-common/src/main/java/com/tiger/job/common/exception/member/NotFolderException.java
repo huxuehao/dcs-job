@@ -5,7 +5,7 @@ import com.tiger.job.common.exception.base.BaseException;
 
 /**
  * @ClassName NotFolderException
- * @Description TODO
+ * @Description 非文件夹异常
  * @Author huxuehao
  **/
 public class NotFolderException extends BaseException {

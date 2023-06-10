@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @ClassName ScheduleLogDto
- * @Description TODO
+ * @Description 日志类
  * @Author huxuehao
  **/
 @Data

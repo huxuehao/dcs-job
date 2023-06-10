@@ -27,12 +27,18 @@ import java.util.function.Consumer;
 @SpringBootConfiguration
 public class TaskConfig {
 
+    /**
+     * 类注册表
+     * 描述：存储了当前工程中用户通过@SchedulerBean和@TaskPath标记的定时任务类和定时任务方法
+     * @return
+     */
     @Bean(name = "schedulerScanMethodMap")
     public Map<String, Map<Object, Method>> schedulerScanMethodMap() {
         return new HashMap<>();
     }
 
     /**
+     * 节点唯一标识符
      * 描述：当前项目的唯一标识符，用于分布式定时任务使用。
      * 使用主机地址和进程IP组合作为唯一标识。
      * @return
@@ -50,6 +56,7 @@ public class TaskConfig {
     }
 
     /**
+     * 定时任务注册表
      * 描述：我们没开启一个定时任务，就会产生一个ScheduledFuture实体，当我们需要动态的操作定时任务（上述的实体）时，
      * 我们需要调用scheduledFuture.cancel(true)或scheduledFuture.schedule(worker, cronTrigger)，这就意味着
      * 我们需要将每一个ScheduledFuture实体存储起来，当需要动态的控制定时任务时，我们去改Map中取出对应的实体进行上述的
@@ -61,6 +68,7 @@ public class TaskConfig {
     }
 
     /**
+     * 触发器注册表
      * 描述：对于定时任务的动态操作（添加、开启、停止、删除）我们需要将上述操作封装成触发器，想要使用的时候
      * 我们只需要取出已经初始化好的代码逻辑，取出对应的代码逻辑，传入参数，执行即可。上述描述是一种预处理的思想。
      *

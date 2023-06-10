@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 /**
  * @ClassName HeartbeatSchedule
- * @Description TODO
+ * @Description 心跳检检测
  * @Author huxuehao
  **/
 @Component

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @ClassName ClusterProperties
- * @Description TODO
+ * @Description 集群相关参数
  * @Author huxuehao
  **/
 @Data

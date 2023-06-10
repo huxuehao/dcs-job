@@ -5,7 +5,7 @@ import com.tiger.job.common.exception.base.BaseException;
 
 /**
  * @ClassName MatchPathException
- * @Description TODO
+ * @Description 没有捕获path异常
  * @Author huxuehao
  **/
 public class NotMatchPathException extends BaseException {

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * @ClassName BaseEntity
- * @Description TODO
+ * @Description 基础entity
  * @Author StudiousTiger
  **/
 public class BaseEntity implements Serializable {

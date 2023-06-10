@@ -5,7 +5,7 @@ import com.tiger.job.common.exception.base.BaseException;
 
 /**
  * @ClassName EmtyTaskPathException
- * @Description TODO
+ * @Description 存在path为空的TaskPath注解
  * @Author huxuehao
  **/
 public class EmptyTaskPathException  extends BaseException {

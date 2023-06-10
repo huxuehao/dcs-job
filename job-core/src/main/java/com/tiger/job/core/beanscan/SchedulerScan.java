@@ -25,7 +25,7 @@ import java.util.*;
 
 /**
  * @ClassName SchedulerScan
- * @Description TODO
+ * @Description 扫描器，扫描定时任务
  * @Author huxuehao
  **/
 @Component
@@ -189,7 +189,7 @@ public class SchedulerScan {
     }
 
     /**
-     * 自动入库
+     * 自动入库，同步数据表
      * @param taskPaths
      */
     private void autoInsert(List<TaskPath> taskPaths) {
