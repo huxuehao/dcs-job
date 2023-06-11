@@ -1,6 +1,6 @@
 package com.tiger.job.core.queue;
 
-import com.tiger.job.core.constant.JobConstant;
+import com.tiger.job.common.constant.JobConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;

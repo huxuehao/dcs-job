@@ -15,8 +15,8 @@ public @interface TaskPath {
     String name() default "";
     /* 描述 */
     String describe() default "暂无描述";
-    /* path */
-    String path() default "";
+    /* path，必填 */
+    String path();
     /* 执行策略 */
     String cron() default "-1";
     /* 分类 */

@@ -2,12 +2,12 @@ package com.tiger.job.core.init;
 
 import com.tiger.job.common.entity.ScheduleTaskDto;
 import com.tiger.job.core.beanscan.SchedulerScan;
-import com.tiger.job.core.constant.ChannelConstant;
-import com.tiger.job.core.constant.ClusterProperties;
+import com.tiger.job.common.constant.ChannelConstant;
+import com.tiger.job.common.constant.ClusterProperties;
 import com.tiger.job.core.executor.TaskExecutor;
 import com.tiger.job.core.queue.TaskQueue;
-import com.tiger.job.core.service.ScheduleTaskService;
 import com.tiger.job.core.worker.TaskWorker;
+import com.tiger.job.server.service.ScheduleTaskService;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

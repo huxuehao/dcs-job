@@ -1,6 +1,6 @@
 package com.tiger.job.core.retry;
 
-import com.tiger.job.core.constant.RetryProperties;
+import com.tiger.job.common.constant.RetryProperties;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

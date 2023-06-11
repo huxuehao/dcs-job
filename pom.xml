@@ -13,6 +13,8 @@
         <module>job-admin</module>
         <module>job-task</module>
         <module>job-common</module>
+        <module>job-api</module>
+        <module>job-server</module>
     </modules>
     <properties>
         <dcs-job.version>1.0-SNAPSHOT</dcs-job.version>
@@ -126,6 +128,18 @@
             <dependency>
                 <groupId>com.tiger</groupId>
                 <artifactId>job-admin</artifactId>
+                <version>${dcs-job.version}</version>
+            </dependency>
+            <!-- 接口模块 -->
+            <dependency>
+                <groupId>com.tiger</groupId>
+                <artifactId>job-api</artifactId>
+                <version>${dcs-job.version}</version>
+            </dependency>
+            <!-- 服务模块 -->
+            <dependency>
+                <groupId>com.tiger</groupId>
+                <artifactId>job-server</artifactId>
                 <version>${dcs-job.version}</version>
             </dependency>
             <!-- 公共模块 -->

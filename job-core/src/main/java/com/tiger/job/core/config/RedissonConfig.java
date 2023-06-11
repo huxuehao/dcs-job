@@ -1,6 +1,6 @@
 package com.tiger.job.core.config;
 
-import com.tiger.job.core.constant.RedisProperties;
+import com.tiger.job.common.constant.RedisProperties;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.ClusterServersConfig;

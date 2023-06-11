@@ -1,7 +1,7 @@
 package com.tiger.job.core.worker;
 
 import com.tiger.job.common.entity.ScheduleTaskDto;
-import com.tiger.job.core.constant.ClusterProperties;
+import com.tiger.job.common.constant.ClusterProperties;
 import com.tiger.job.core.executor.TaskExecutor;
 import org.springframework.stereotype.Component;
 

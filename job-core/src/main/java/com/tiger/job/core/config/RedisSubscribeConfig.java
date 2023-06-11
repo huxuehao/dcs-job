@@ -2,7 +2,7 @@ package com.tiger.job.core.config;
 
 import com.alibaba.fastjson2.JSON;
 import com.tiger.job.common.entity.ScheduleTaskDto;
-import com.tiger.job.core.constant.ChannelConstant;
+import com.tiger.job.common.constant.ChannelConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
