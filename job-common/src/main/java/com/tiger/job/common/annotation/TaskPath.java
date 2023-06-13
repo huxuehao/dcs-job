@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TaskPath {
-    /* 定时任务名*/
+    /* 定时任务名 */
     String name() default "";
     /* 描述 */
     String describe() default "暂无描述";

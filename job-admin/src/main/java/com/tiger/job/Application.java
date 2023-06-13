@@ -11,8 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @MapperScan(basePackages="com.tiger.job.**.mapper")
 public class Application {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 }
