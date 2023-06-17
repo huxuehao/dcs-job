@@ -27,15 +27,17 @@ public class HeartbeatSchedule {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private static final String TASK_HEART_BEAT_PREFIX = JobConstant.HEARTBEAT_PREFIX + JobConstant.LINK_TAG;
 
-    @Autowired
-    TaskQueue taskQueue;
-    @Autowired
-    @Qualifier("uniqueIdentifier")
-    String uniqueIdentifier;
-    @Autowired
-    ClusterProperties cluster;
-    @Autowired
-    RedisTemplate<String, String> redisTemplate;
+    private final TaskQueue taskQueue;
+    private final String uniqueIdentifier;
+    private final ClusterProperties cluster;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public HeartbeatSchedule(@Qualifier("uniqueIdentifier") String uniqueIdentifier, TaskQueue taskQueue, ClusterProperties cluster, RedisTemplate<String, String> redisTemplate) {
+        this.uniqueIdentifier = uniqueIdentifier;
+        this.taskQueue = taskQueue;
+        this.cluster = cluster;
+        this.redisTemplate = redisTemplate;
+    }
 
     /* 获取心跳ID */
     private String getHeartbeatId() {

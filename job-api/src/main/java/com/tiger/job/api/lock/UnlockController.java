@@ -26,12 +26,15 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/unlock")
 public class UnlockController {
-    @Autowired
-    TaskQueue taskQueue;
     @Resource
     private RedissonClient locker;
-    @Autowired
-    ScheduleTaskService scheduleTaskService;
+    private final TaskQueue taskQueue;
+    private final ScheduleTaskService scheduleTaskService;
+
+    public UnlockController(TaskQueue taskQueue, ScheduleTaskService scheduleTaskService) {
+        this.taskQueue = taskQueue;
+        this.scheduleTaskService = scheduleTaskService;
+    }
 
     @LoginAuth
     @GetMapping("/task/lock/by-id")

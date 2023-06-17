@@ -26,18 +26,18 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class ClusterExecutor implements Executor {
 
-    @Autowired
-    Job job;
-
-    @Autowired
-    TaskQueue taskQueue;
-
-    @Autowired
-    @Qualifier("uniqueIdentifier")
-    String uniqueIdentifier;
+    private final Job job;
+    private final TaskQueue taskQueue;
+    private final String uniqueIdentifier;
 
     @Resource
     private RedissonClient locker;
+
+    public ClusterExecutor(Job job, TaskQueue taskQueue, @Qualifier("uniqueIdentifier") String uniqueIdentifier) {
+        this.job = job;
+        this.taskQueue = taskQueue;
+        this.uniqueIdentifier = uniqueIdentifier;
+    }
 
     @Override
     public Boolean execute(ScheduleTaskDto task) {

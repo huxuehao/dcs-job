@@ -7,7 +7,6 @@ import com.tiger.job.common.response.Response;
 import com.tiger.job.core.executor.impl.ManualExecutor;
 import com.tiger.job.server.service.ScheduleLogService;
 import com.tiger.job.server.service.ScheduleTaskService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Description;
 import org.springframework.scheduling.support.CronExpression;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +20,18 @@ import java.util.Map;
  * @Description 任务管理接口，这里我就使用构造函数进行依赖注入了
  * @Author huxuehao
  **/
-@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/job/task")
 public class TaskManagerController {
     private final ScheduleTaskService scheduleTaskService;
     private final ScheduleLogService scheduleLogService;
     private final ManualExecutor executor;
+
+    public TaskManagerController(ScheduleTaskService scheduleTaskService, ScheduleLogService scheduleLogService, ManualExecutor executor) {
+        this.scheduleTaskService = scheduleTaskService;
+        this.scheduleLogService = scheduleLogService;
+        this.executor = executor;
+    }
 
     @LoginAuth
     @Description(value = "获取最新的错误日志")

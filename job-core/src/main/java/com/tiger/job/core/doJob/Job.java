@@ -25,16 +25,15 @@ import java.util.Map;
 @Component
 public class Job {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Map<String, Map<Object, Method>> schedulerScanMethodMap;
+    private final LogProperties logProperties;
+    private final ScheduleLogService scheduleLogService;
 
-    @Autowired
-    @Qualifier("schedulerScanMethodMap")
-    Map<String, Map<Object, Method>> schedulerScanMethodMap;
-
-    @Autowired
-    LogProperties logProperties;
-
-    @Autowired
-    ScheduleLogService scheduleLogService;
+    public Job(@Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, LogProperties logProperties, ScheduleLogService scheduleLogService) {
+        this.schedulerScanMethodMap = schedulerScanMethodMap;
+        this.logProperties = logProperties;
+        this.scheduleLogService = scheduleLogService;
+    }
 
 
     public boolean invoke(ScheduleTaskDto task) {

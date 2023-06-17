@@ -25,15 +25,17 @@ import java.util.function.Consumer;
  **/
 @Service
 public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, ScheduleTaskDto> implements ScheduleTaskService {
-    @Autowired
-    ScheduleTaskMapper scheduleTaskMapper;
-    @Autowired
-    StringRedisTemplate stringRedisTemplate;
-    @Autowired
-    ClusterProperties clusterProperties;
-    @Autowired
-    @Qualifier("triggerMap")
-    Map<String, Consumer<ScheduleTaskDto>> triggerMap;
+    private final ScheduleTaskMapper scheduleTaskMapper;
+    private final StringRedisTemplate stringRedisTemplate;
+    private final ClusterProperties clusterProperties;
+    private final Map<String, Consumer<ScheduleTaskDto>> triggerMap;
+
+    public ScheduleTaskServiceImpl(@Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, ClusterProperties clusterProperties, ScheduleTaskMapper scheduleTaskMapper, StringRedisTemplate stringRedisTemplate) {
+        this.triggerMap = triggerMap;
+        this.clusterProperties = clusterProperties;
+        this.scheduleTaskMapper = scheduleTaskMapper;
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     @Override
     public List<ScheduleTaskDto> selectAll() {

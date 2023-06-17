@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.*;
  **/
 @RestController
 public class SysLoginController {
-    @Autowired
-    UserService userService;
+
+    private final UserService userService;
+
+    public SysLoginController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PassAuth
     @Description(value = "登录")

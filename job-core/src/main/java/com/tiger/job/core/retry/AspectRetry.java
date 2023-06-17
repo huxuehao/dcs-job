@@ -18,8 +18,11 @@ import org.springframework.stereotype.Component;
 @Order(-1) /* 该切面应当先于 @Transactional 执行 */
 @Component
 public class AspectRetry {
-    @Autowired
-    RetryProperties retryProperties;
+    private final RetryProperties retryProperties;
+
+    public AspectRetry(RetryProperties retryProperties) {
+        this.retryProperties = retryProperties;
+    }
 
     @Pointcut("@annotation(com.tiger.job.common.annotation.Retry)")
     public void retryPointcut() {

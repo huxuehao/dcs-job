@@ -15,11 +15,13 @@ import java.text.SimpleDateFormat;
  **/
 @Component
 public class ClearLogSchedule {
-    @Autowired
-    ScheduleLogService scheduleLogService;
+    private final ScheduleLogService scheduleLogService;
+    private final LogProperties logProperties;
 
-    @Autowired
-    LogProperties logProperties;
+    public ClearLogSchedule(ScheduleLogService scheduleLogService, LogProperties logProperties) {
+        this.scheduleLogService = scheduleLogService;
+        this.logProperties = logProperties;
+    }
 
     /* 每天1点30分30秒清除一次日志 */
     @Scheduled(cron = "30 30 1 * * ?")

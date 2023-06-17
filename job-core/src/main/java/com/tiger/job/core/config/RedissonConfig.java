@@ -18,8 +18,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedissonConfig {
 
-    @Autowired
-    RedisProperties redisProperties;
+    private final RedisProperties redisProperties;
+
+    public RedissonConfig(RedisProperties redisProperties) {
+        this.redisProperties = redisProperties;
+    }
 
     @Bean
     public RedissonClient getRedisson() {

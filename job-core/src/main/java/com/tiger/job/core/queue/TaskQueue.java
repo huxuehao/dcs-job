@@ -18,8 +18,11 @@ public class TaskQueue {
 
     private static final String QUEUE_PREFIX = JobConstant.CLUSTER_QUEUE_PREFIX + JobConstant.LINK_TAG;
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public TaskQueue(RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public String getQueueLockName(String queueName) {
         return JobConstant.CLUSTER_QUEUE_LOCK_PREFIX + JobConstant.LINK_TAG + queueName;

@@ -24,12 +24,13 @@ import java.util.Map;
  **/
 @Service
 public class UserServiceImpl implements UserService {
+    private final UserMapper userMapper;
+    private final CacheUtil cacheUtil;
 
-    @Autowired
-    UserMapper userMapper;
-
-    @Autowired
-    CacheUtil cacheUtil;
+    public UserServiceImpl(UserMapper userMapper, CacheUtil cacheUtil) {
+        this.userMapper = userMapper;
+        this.cacheUtil = cacheUtil;
+    }
 
     @Override
     public List<SysUser> selectUserByUserName(String userName) {

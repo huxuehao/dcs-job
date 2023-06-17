@@ -16,8 +16,11 @@ import java.util.List;
  **/
 @Service
 public class ScheduleLogServiceImpl extends ServiceImpl<ScheduleLogMapper, ScheduleLogDto> implements ScheduleLogService {
-    @Autowired
-    ScheduleLogMapper scheduleLogMapper;
+    private final ScheduleLogMapper scheduleLogMapper;
+
+    public ScheduleLogServiceImpl(ScheduleLogMapper scheduleLogMapper) {
+        this.scheduleLogMapper = scheduleLogMapper;
+    }
 
     @Override
     public List<ScheduleLogDto> getPage() {

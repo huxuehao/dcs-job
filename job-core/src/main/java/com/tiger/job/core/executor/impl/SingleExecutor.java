@@ -20,11 +20,13 @@ import javax.annotation.Resource;
 @Component
 public class SingleExecutor implements Executor {
 
-    @Autowired
-    Job job;
-
     @Resource
     private RedissonClient locker;
+    private final Job job;
+
+    public SingleExecutor(Job job) {
+        this.job = job;
+    }
 
     @Retry
     @Override

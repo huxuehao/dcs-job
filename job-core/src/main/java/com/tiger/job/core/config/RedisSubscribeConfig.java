@@ -27,10 +27,11 @@ import java.util.function.Consumer;
 @Configuration
 public class RedisSubscribeConfig {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Map<String, Consumer<ScheduleTaskDto>> triggerMap;
 
-    @Autowired
-    @Qualifier("triggerMap")
-    Map<String, Consumer<ScheduleTaskDto>> triggerMap;
+    public RedisSubscribeConfig(@Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap) {
+        this.triggerMap = triggerMap;
+    }
 
     /* 消息的监听容器 */
     @Bean

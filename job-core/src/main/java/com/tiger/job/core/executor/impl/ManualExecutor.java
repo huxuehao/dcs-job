@@ -19,11 +19,13 @@ import javax.annotation.Resource;
 @Component
 public class ManualExecutor implements Executor {
 
-    @Autowired
-    Job job;
-
     @Resource
     private RedissonClient locker;
+    private final Job job;
+
+    public ManualExecutor(Job job) {
+        this.job = job;
+    }
 
     @Override
     public Boolean execute(ScheduleTaskDto task) {

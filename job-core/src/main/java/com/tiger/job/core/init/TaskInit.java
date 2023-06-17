@@ -21,6 +21,7 @@ import org.springframework.scheduling.support.CronTrigger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -44,43 +45,38 @@ import java.util.stream.Collectors;
 @SpringBootConfiguration
 public class TaskInit {
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-    @Qualifier("scheduledFutureMap")
-    @Autowired
-    Map<String, ScheduledFuture> scheduledFutureMap;
-    @Qualifier("triggerMap")
-    @Autowired
-    Map<String, Consumer<ScheduleTaskDto>> triggerMap;
-    @Qualifier("threadPoolTaskScheduler")
-    @Autowired
-    ThreadPoolTaskScheduler threadPoolTaskScheduler;
-    @Qualifier("schedulerScanMethodMap")
-    @Autowired
-    Map<String, Map<Object, Method>> schedulerScanMethodMap;
-    @Autowired
-    ScheduleTaskService scheduleTaskService;
-    @Autowired
-    ClusterExecutor clusterExecutor;
-    @Autowired
-    SingleExecutor singleExecutor;
-    @Autowired
-    TaskQueue taskQueue;
-    @Autowired
-    ClusterProperties clusterProperties;
-    @Autowired
-    SchedulerScan schedulerScan;
+    private final Map<String, ScheduledFuture> scheduledFutureMap;
+    private final Map<String, Consumer<ScheduleTaskDto>> triggerMap;
+    private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    private final Map<String, Map<Object, Method>> schedulerScanMethodMap;
+    private final ScheduleTaskService scheduleTaskService;
+    private final ClusterExecutor clusterExecutor;
+    private final SingleExecutor singleExecutor;
+    private final TaskQueue taskQueue;
+    private final ClusterProperties clusterProperties;
+    private final SchedulerScan schedulerScan;
 
     @Resource
     private RedissonClient locker;
 
-    public TaskInit() {
+    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture> scheduledFutureMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, ClusterExecutor clusterExecutor, SingleExecutor singleExecutor, TaskQueue taskQueue, ClusterProperties clusterProperties, SchedulerScan schedulerScan) {
+        this.scheduledFutureMap = scheduledFutureMap;
+        this.triggerMap = triggerMap;
+        this.threadPoolTaskScheduler = threadPoolTaskScheduler;
+        this.schedulerScanMethodMap = schedulerScanMethodMap;
+        this.scheduleTaskService = scheduleTaskService;
+        this.clusterExecutor = clusterExecutor;
+        this.singleExecutor = singleExecutor;
+        this.taskQueue = taskQueue;
+        this.clusterProperties = clusterProperties;
+        this.schedulerScan = schedulerScan;
     }
 
     /**
      * 描述：初始化
      */
     @PostConstruct
-    public void init() {
+    public void init() throws IOException, ClassNotFoundException {
         this.initSchedulerScan();
         this.initTask();
         this.initTrigger();
@@ -89,7 +85,7 @@ public class TaskInit {
     /**
      * 扫描定时任务
      */
-    private void initSchedulerScan(){
+    private void initSchedulerScan() throws IOException, ClassNotFoundException {
         schedulerScanMethodMap.putAll(schedulerScan.schedulerScanMethod());
     }
 
