@@ -1,4 +1,4 @@
-package com.tiger.job.core.runend;
+package com.tiger.job.core.runAndEnd;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

@@ -4,7 +4,7 @@ import com.tiger.job.common.annotation.LoginAuth;
 import com.tiger.job.common.entity.ScheduleTaskDto;
 import com.tiger.job.common.entity.ScheduleTaskPo;
 import com.tiger.job.common.response.Response;
-import com.tiger.job.core.executor.TaskExecutor;
+import com.tiger.job.core.executor.impl.ManualExecutor;
 import com.tiger.job.server.service.ScheduleLogService;
 import com.tiger.job.server.service.ScheduleTaskService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import java.util.Map;
 public class TaskManagerController {
     private final ScheduleTaskService scheduleTaskService;
     private final ScheduleLogService scheduleLogService;
-    private final TaskExecutor taskExecutor;
+    private final ManualExecutor executor;
 
     @LoginAuth
     @Description(value = "获取最新的错误日志")
@@ -57,11 +57,11 @@ public class TaskManagerController {
     @GetMapping(value = "/execute")
     public Response execute(@RequestParam("id") String id) {
         ScheduleTaskDto task = scheduleTaskService.getById(id);
-        int res = taskExecutor.singleExecute(task);
-        if (res == -1) {
+        Boolean execute = executor.execute(task);
+        if (execute == null) {
             return Response.error("操作冲突：定时正在执行，请稍后重试");
         }
-        return res == 1 ? Response.success("执行成功") : Response.success("[ "+task.getName()+" ] 执行失败");
+        return execute? Response.success("执行成功") : Response.success("[ "+task.getName()+" ] 执行失败");
     }
 
     @LoginAuth

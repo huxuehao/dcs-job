@@ -1,10 +1,12 @@
 package com.tiger.job.core.init;
 
 import com.tiger.job.common.entity.ScheduleTaskDto;
-import com.tiger.job.core.beanscan.SchedulerScan;
+import com.tiger.job.core.beanScan.SchedulerScan;
 import com.tiger.job.common.constant.ChannelConstant;
 import com.tiger.job.common.constant.ClusterProperties;
-import com.tiger.job.core.executor.TaskExecutor;
+import com.tiger.job.core.executor.Executor;
+import com.tiger.job.core.executor.impl.ClusterExecutor;
+import com.tiger.job.core.executor.impl.SingleExecutor;
 import com.tiger.job.core.queue.TaskQueue;
 import com.tiger.job.core.worker.TaskWorker;
 import com.tiger.job.server.service.ScheduleTaskService;
@@ -58,7 +60,9 @@ public class TaskInit {
     @Autowired
     ScheduleTaskService scheduleTaskService;
     @Autowired
-    TaskExecutor taskExecutor;
+    ClusterExecutor clusterExecutor;
+    @Autowired
+    SingleExecutor singleExecutor;
     @Autowired
     TaskQueue taskQueue;
     @Autowired
@@ -95,9 +99,16 @@ public class TaskInit {
     private void initTask() {
         List<ScheduleTaskDto> taskList = scheduleTaskService.selectAll();
         List<ScheduleTaskDto> enableTask = taskList.stream().filter(item -> "1".equals(item.getEnable())).collect(Collectors.toList());
-        log.info("定时任务：当前定时任务为[{}]", clusterProperties.isOpen() ? "集群模式" : "单例模式");
+        Executor executor;
+        if (clusterProperties.isOpen()) {
+            executor = clusterExecutor;
+            log.info("定时任务：当前定时任务为[集群模式]");
+        } else {
+            executor = singleExecutor;
+            log.info("定时任务：当前定时任务为[单例模式]");
+        }
         enableTask.forEach(item -> {
-            TaskWorker worker = new TaskWorker(item, taskExecutor, clusterProperties);
+            TaskWorker worker = new TaskWorker(item, executor);
             CronTrigger cronTrigger = item.toCronTrigger();
             ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(worker, cronTrigger);
             scheduledFutureMap.put(item.getId(), schedule);
@@ -112,18 +123,30 @@ public class TaskInit {
      *    scheduledFuture.cancel(true) //此方法用于取消一个定时任务
      */
     public void initTrigger() {
-        // 定时任务：开启操作
+        this.openTrigger();
+        this.closeTrigger();
+        this.deleteTrigger();
+    }
+
+    /* 定时任务：开启操作 */
+    private void openTrigger() {
+        Executor executor;
+        if (clusterProperties.isOpen()) {
+            executor = clusterExecutor;
+        } else {
+            executor = singleExecutor;
+        }
         Consumer<ScheduleTaskDto> openSchedule = item -> {
             String scheduleId = item.getId();
             if (scheduledFutureMap.containsKey(scheduleId)) { /* 当定时任务已经存在与scheduledFutureMap中*/
                 scheduledFutureMap.compute(scheduleId, (k, v) -> { /* 重新计算scheduledFutureMap中key为scheduledId的value的值 */
                     Optional.ofNullable(v).ifPresent(v0 -> v0.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则将其先停跳 */
-                    TaskWorker worker = new TaskWorker(item, taskExecutor, clusterProperties); /* 开启一个新的定时 */
+                    TaskWorker worker = new TaskWorker(item, executor); /* 开启一个新的定时 */
                     CronTrigger cronTrigger = item.toCronTrigger();
                     return threadPoolTaskScheduler.schedule(worker, cronTrigger);
                 });
             } else { /* 当定时任务不存在scheduledFutureMap中，则新建定时任务，并添加到map中 */
-                TaskWorker worker = new TaskWorker(item, taskExecutor, clusterProperties);
+                TaskWorker worker = new TaskWorker(item, executor);
                 CronTrigger cronTrigger = item.toCronTrigger();
                 ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(worker, cronTrigger);
                 scheduledFutureMap.put(scheduleId, schedule);
@@ -133,8 +156,10 @@ public class TaskInit {
         };
         triggerMap.put(ChannelConstant.OPEN, openSchedule);
         log.info("定时任务：操作注册表：[{}]初始化完成", ChannelConstant.OPEN);
+    }
 
-        // 定时任务：关闭操作
+    /* 定时任务：关闭操作 */
+    private void closeTrigger(){
         Consumer<ScheduleTaskDto> closeSchedule = item -> {
             String scheduleId = item.getId();
             ScheduledFuture scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务
@@ -143,8 +168,10 @@ public class TaskInit {
         };
         triggerMap.put(ChannelConstant.CLOSE, closeSchedule);
         log.info("定时任务：操作注册表：[{}]初始化完成", ChannelConstant.CLOSE);
+    }
 
-        // 定时任务：删除操作
+    /* 定时任务：删除操作 */
+    private void deleteTrigger(){
         Consumer<ScheduleTaskDto> deleteSchedule = item -> {
             String scheduleId = item.getId();
             ScheduledFuture scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务

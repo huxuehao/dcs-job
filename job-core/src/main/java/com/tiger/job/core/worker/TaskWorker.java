@@ -1,8 +1,7 @@
 package com.tiger.job.core.worker;
 
 import com.tiger.job.common.entity.ScheduleTaskDto;
-import com.tiger.job.common.constant.ClusterProperties;
-import com.tiger.job.core.executor.TaskExecutor;
+import com.tiger.job.core.executor.Executor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,24 +15,18 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 public class TaskWorker implements Runnable {
-    private TaskExecutor taskExecutor;
+    private Executor executor;
     private ScheduleTaskDto scheduleTask;
-    private ClusterProperties clusterProperties;
 
     public TaskWorker() {
     }
 
-    public TaskWorker(ScheduleTaskDto scheduleTask, TaskExecutor taskExecutor, ClusterProperties clusterProperties) {
+    public TaskWorker(ScheduleTaskDto scheduleTask, Executor executor) {
         this.scheduleTask = scheduleTask;
-        this.taskExecutor = taskExecutor;
-        this.clusterProperties = clusterProperties;
+        this.executor = executor;
     }
 
     public void run() {
-        if (clusterProperties.isOpen()) {
-            taskExecutor.clusterExecute(scheduleTask);
-        } else {
-            taskExecutor.execute(scheduleTask);
-        }
+        executor.execute(scheduleTask);
     }
 }

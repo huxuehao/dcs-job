@@ -13,7 +13,7 @@ tiger:
       auto-insert: true # 自动扫描报并入库
       default-cron: "0 0/30 * * * ?" # 默认策略
     cluster:
-      open: true # 开启分布式
+      open: true # 开启集群模式
     log:
       success-open: true # 开启执行成功日志(建议开启)
       fail-open: true # 开启执行失败日志(建议开启)

@@ -1,4 +1,4 @@
-package com.tiger.job.core.beanscan;
+package com.tiger.job.core.beanScan;
 
 import com.tiger.job.common.annotation.SchedulerBean;
 import com.tiger.job.common.annotation.TaskPath;
