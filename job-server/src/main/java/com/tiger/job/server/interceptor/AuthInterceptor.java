@@ -12,6 +12,7 @@ import com.tiger.job.common.util.BeanUtil;
 import com.tiger.job.common.util.CacheUtil;
 import com.tiger.job.common.util.MeUtil;
 import com.tiger.job.common.util.TokenUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -32,7 +33,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     CacheUtil cacheUtil = BeanUtil.getBean(CacheUtil.class);
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
         /* 如果不是映射到方法中，那么直接通过 */
         if (!(handler instanceof HandlerMethod)) {
             return true;
@@ -94,12 +95,12 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler, ModelAndView modelAndView) {
 
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler, Exception ex) {
 
     }
 }

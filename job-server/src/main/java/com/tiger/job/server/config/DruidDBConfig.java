@@ -27,6 +27,9 @@ import java.sql.SQLException;
 @EnableTransactionManagement
 public class DruidDBConfig {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private static final String MYBATIS_CONFIG = "classpath:mybatis/mybatis-config.xml";
+    private static final String MAPPER_XML_PATH = "classpath:com/tiger/job/**/*Mapper.xml";
+    private static final String TYPE_ALIASES_PACKAGE = "com.tiger.job.**.entity";
  
     /* adi数据库连接信息 */
     @Value("${spring.datasource.url}")
@@ -62,10 +65,6 @@ public class DruidDBConfig {
     private boolean testOnReturn;
     @Value("${spring.datasource.filters}")
     private String filters;
-
-    private String mybatisConfig = "classpath:mybatis/mybatis-config.xml";
-    private String mapperXmlPath = "classpath:com/tiger/job/**/*Mapper.xml";
-    private String typeAliasesPackage = "com.tiger.job.**.entity";
 
     @Bean
     @Primary /* 在同样的DataSource中，首先使用被标注的DataSource */
@@ -125,15 +124,15 @@ public class DruidDBConfig {
         sqlSessionFactoryBean.setDataSource(dataSource());
         /* 设置mybatis的主配置文件 */
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        Resource mybatisConfigXml = resolver.getResource(mybatisConfig);
+        Resource mybatisConfigXml = resolver.getResource(MYBATIS_CONFIG);
         sqlSessionFactoryBean.setConfigLocation(mybatisConfigXml);
-        log.info("mybatis配置：设置mybatis的主配置文件 [ {} ]", mybatisConfig);
+        log.info("mybatis配置：设置mybatis的主配置文件 [ {} ]", MYBATIS_CONFIG);
         /* 手动配置mybatis的mapper.xml资源路径 */
-        sqlSessionFactoryBean.setMapperLocations(resolver.getResources(mapperXmlPath));
-        log.info("mybatis配置：配置mybatis的mapper.xml资源路径 [ {} ]", mapperXmlPath);
+        sqlSessionFactoryBean.setMapperLocations(resolver.getResources(MAPPER_XML_PATH));
+        log.info("mybatis配置：配置mybatis的mapper.xml资源路径 [ {} ]", MAPPER_XML_PATH);
         /* 手动配置mybatis的别名类资源路径 */
-        sqlSessionFactoryBean.setTypeAliasesPackage(typeAliasesPackage);
-        log.info("mybatis配置：配置mybatis的类型别名程序包路径 [ {} ]", typeAliasesPackage);
+        sqlSessionFactoryBean.setTypeAliasesPackage(TYPE_ALIASES_PACKAGE);
+        log.info("mybatis配置：配置mybatis的类型别名程序包路径 [ {} ]", TYPE_ALIASES_PACKAGE);
         return sqlSessionFactoryBean.getObject();
     }
 }

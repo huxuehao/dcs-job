@@ -9,7 +9,6 @@ import com.tiger.job.common.entity.ScheduleTaskPo;
 import com.tiger.job.common.util.MeUtil;
 import com.tiger.job.server.mapper.ScheduleTaskMapper;
 import com.tiger.job.server.service.ScheduleTaskService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;

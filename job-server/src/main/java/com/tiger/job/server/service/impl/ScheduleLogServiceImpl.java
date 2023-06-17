@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tiger.job.common.entity.ScheduleLogDto;
 import com.tiger.job.server.mapper.ScheduleLogMapper;
 import com.tiger.job.server.service.ScheduleLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

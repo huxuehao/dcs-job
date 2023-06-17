@@ -10,7 +10,6 @@ import com.tiger.job.server.service.UserService;
 import com.tiger.job.common.util.CacheUtil;
 import com.tiger.job.common.util.MeUtil;
 import com.tiger.job.common.util.TokenUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
