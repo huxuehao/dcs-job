@@ -4,6 +4,7 @@ import com.tiger.job.common.annotation.SchedulerBean;
 import com.tiger.job.common.annotation.TaskPath;
 import com.tiger.job.common.exception.member.EmptyTaskPathException;
 import com.tiger.job.common.exception.member.SameTaskPathException;
+import com.tiger.job.common.util.BeanUtil;
 import com.tiger.job.common.util.ClassUtil;
 import com.tiger.job.common.constant.ScanProperties;
 import org.slf4j.Logger;
@@ -83,9 +84,17 @@ public class SchedulerScan {
                     method.setAccessible(true); /* 去除私有方法的限制 */
                     Map<Object, Method> mapValue = new HashMap<Object, Method>() {{
                         try {
-                            put(aClass.newInstance(), method);
+                            /* 先从bean中获取, 若取不到则手动创建实例 */
+                            put(BeanUtil.getBean(aClass), method);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            try {
+                                /* 手动创建实例 */
+                                put(aClass.newInstance(), method);
+                            } catch (InstantiationException ex) {
+                                throw new RuntimeException("实例化异常，请确保[" + aClass.getName() +"]具有空的构造函数");
+                            } catch (IllegalAccessException ex) {
+                                throw new RuntimeException("非法访问异常，请确保[" + aClass.getName() +"]的构造函数类型为public");
+                            }
                         }
                     }};
                     /* 判断是否有重复的path */

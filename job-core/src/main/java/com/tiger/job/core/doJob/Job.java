@@ -34,7 +34,6 @@ public class Job {
         this.scheduleLogService = scheduleLogService;
     }
 
-
     public boolean invoke(ScheduleTaskDto task) {
         String message = null;
         try {
