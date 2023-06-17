@@ -13,7 +13,6 @@ import com.tiger.job.server.service.ScheduleTaskService;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -45,7 +44,7 @@ import java.util.stream.Collectors;
 @SpringBootConfiguration
 public class TaskInit {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final Map<String, ScheduledFuture> scheduledFutureMap;
+    private final Map<String, ScheduledFuture<?>> scheduledFutureMap;
     private final Map<String, Consumer<ScheduleTaskDto>> triggerMap;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
     private final Map<String, Map<Object, Method>> schedulerScanMethodMap;
@@ -59,7 +58,7 @@ public class TaskInit {
     @Resource
     private RedissonClient locker;
 
-    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture> scheduledFutureMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, ClusterExecutor clusterExecutor, SingleExecutor singleExecutor, TaskQueue taskQueue, ClusterProperties clusterProperties, SchedulerScan schedulerScan) {
+    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, ClusterExecutor clusterExecutor, SingleExecutor singleExecutor, TaskQueue taskQueue, ClusterProperties clusterProperties, SchedulerScan schedulerScan) {
         this.scheduledFutureMap = scheduledFutureMap;
         this.triggerMap = triggerMap;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
@@ -158,7 +157,7 @@ public class TaskInit {
     private void closeTrigger(){
         Consumer<ScheduleTaskDto> closeSchedule = item -> {
             String scheduleId = item.getId();
-            ScheduledFuture scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务
+            ScheduledFuture<?> scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务
             Optional.ofNullable(scheduledFuture).ifPresent(schedule -> schedule.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则停止定时 */
             taskQueue.delete(taskQueue.getQueueName(item.getId())); /* 定时队列删除 */
         };
@@ -170,7 +169,7 @@ public class TaskInit {
     private void deleteTrigger(){
         Consumer<ScheduleTaskDto> deleteSchedule = item -> {
             String scheduleId = item.getId();
-            ScheduledFuture scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务
+            ScheduledFuture<?> scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务
             Optional.ofNullable(scheduledFuture).ifPresent(schedule -> schedule.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则停止定时 */
             scheduledFutureMap.remove(scheduleId); /* 从注册表中移除 */
             taskQueue.delete(taskQueue.getQueueName(item.getId())); /* 定时队列删除 */

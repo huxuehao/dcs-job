@@ -1,5 +1,6 @@
 package com.tiger.job.common.util;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -21,16 +22,16 @@ public final class BeanUtil implements BeanFactoryPostProcessor {
     private static ConfigurableListableBeanFactory beanFactory;
 
     @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    public void postProcessBeanFactory(@NotNull ConfigurableListableBeanFactory beanFactory) throws BeansException {
         BeanUtil.beanFactory = beanFactory;
     }
 
     /**
-     * @desc 获取对象
+     * 获取对象
      * @param name
-     * @return Object 一个以所给名字注册的bean的实例
-     * @throws org.springframework.beans.BeansException
-     *
+     * @return
+     * @param <T>
+     * @throws BeansException
      */
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) throws BeansException {
@@ -38,7 +39,7 @@ public final class BeanUtil implements BeanFactoryPostProcessor {
     }
 
     /**
-     * @desc 获取类型为requiredType的对象
+     * 获取类型为requiredType的对象
      * @param clz
      * @return
      * @throws org.springframework.beans.BeansException

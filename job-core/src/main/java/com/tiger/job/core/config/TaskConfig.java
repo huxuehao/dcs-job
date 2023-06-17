@@ -63,7 +63,7 @@ public class TaskConfig {
      * cancel或schedule操作即可。所以我们需要在spring容器中维护一个ScheduledFuture的注册表注册表。
      */
     @Bean(name = "scheduledFutureMap")
-    public Map<String, ScheduledFuture> scheduledFutureMap() {
+    public Map<String, ScheduledFuture<?>> scheduledFutureMap() {
         return new ConcurrentHashMap<>();
     }
 

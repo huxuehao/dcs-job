@@ -7,7 +7,6 @@ import com.tiger.job.core.doJob.Job;
 import com.tiger.job.core.executor.Executor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,7 +18,6 @@ import javax.annotation.Resource;
  **/
 @Component
 public class SingleExecutor implements Executor {
-
     @Resource
     private RedissonClient locker;
     private final Job job;

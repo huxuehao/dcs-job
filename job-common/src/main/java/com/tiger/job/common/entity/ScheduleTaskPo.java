@@ -2,6 +2,7 @@ package com.tiger.job.common.entity;
 
 import com.tiger.job.common.entity.base.BaseDto;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @ClassName ScheduleTaskPo
@@ -9,6 +10,7 @@ import lombok.Data;
  * @Author huxuehao
  **/
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ScheduleTaskPo extends BaseDto {
     private String id;
     private String name;

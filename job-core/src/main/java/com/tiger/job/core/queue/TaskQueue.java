@@ -1,7 +1,6 @@
 package com.tiger.job.core.queue;
 
 import com.tiger.job.common.constant.JobConstant;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +14,7 @@ import java.util.concurrent.TimeUnit;
  **/
 @Component
 public class TaskQueue {
-
     private static final String QUEUE_PREFIX = JobConstant.CLUSTER_QUEUE_PREFIX + JobConstant.LINK_TAG;
-
     private final RedisTemplate<String, String> redisTemplate;
 
     public TaskQueue(RedisTemplate<String, String> redisTemplate) {

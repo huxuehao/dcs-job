@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @ClassName ClassUtil
@@ -18,7 +19,7 @@ public class ClassUtil {
      * @param c
      * @return
      */
-    public static List<Class> getClassByImplements(Class c) {
+    public static List<Class<?>> getClassByImplements(Class<?> c) {
         if (c.isInterface()) {
             return getClassOfAssignable(c);
         } else {
@@ -32,7 +33,7 @@ public class ClassUtil {
      * @param packageNames 指定包集合
      * @return
      */
-    public static List<Class> getClassByImplements(Class c, List<String> packageNames) {
+    public static List<Class<?>> getClassByImplements(Class<?> c, List<String> packageNames) {
         if (c.isInterface()) {
             return getClassOfAssignable(c, packageNames);
         } else {
@@ -45,7 +46,7 @@ public class ClassUtil {
      * @param c
      * @return
      */
-    public static List<Class> getClassByExtends(Class c) {
+    public static List<Class<?>> getClassByExtends(Class<?> c) {
         if (c.isLocalClass()) {
             return getClassOfAssignable(c);
         } else {
@@ -59,7 +60,7 @@ public class ClassUtil {
      * @param packageNames
      * @return
      */
-    public static List<Class> getClassByExtends(Class c, List<String> packageNames) {
+    public static List<Class<?>> getClassByExtends(Class<?> c, List<String> packageNames) {
         if (c.isLocalClass()) {
             return getClassOfAssignable(c, packageNames);
         } else {
@@ -72,18 +73,16 @@ public class ClassUtil {
      * @param c
      * @return
      */
-    public static List<Class> getClassOfAssignable(Class c) {
-        ArrayList<Class> classes = new ArrayList<>();
+    public static List<Class<?>> getClassOfAssignable(Class<?> c) {
+        ArrayList<Class<?>> classes = new ArrayList<>();
         String packageName = c.getPackage().getName();
-        List<Class> allClass = null;
+        List<Class<?>> allClass = null;
         try {
             allClass = getClasses(packageName);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
         }
-        for (Class aClass : allClass) {
+        for (Class<?> aClass : allClass) {
             if (c.isAssignableFrom(aClass) && !c.equals(aClass)) {
                 classes.add(aClass);
             }
@@ -97,19 +96,17 @@ public class ClassUtil {
      * @param packageNames
      * @return
      */
-    public static List<Class> getClassOfAssignable(Class c, List<String> packageNames) {
-        ArrayList<Class> classes = new ArrayList<>();
-        List<Class> allClass = new ArrayList<>();
+    public static List<Class<?>> getClassOfAssignable(Class<?> c, List<String> packageNames) {
+        ArrayList<Class<?>> classes = new ArrayList<>();
+        List<Class<?>> allClass = new ArrayList<>();
         try {
             for (String packageName : packageNames) {
                 allClass.addAll(getClasses(packageName));
             }
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
         }
-        for (Class aClass : allClass) {
+        for (Class<?> aClass : allClass) {
             if (c.isAssignableFrom(aClass) && !c.equals(aClass)) {
                 classes.add(aClass);
             }
@@ -124,7 +121,7 @@ public class ClassUtil {
      * @throws ClassNotFoundException
      * @throws IOException
      */
-    public static List<Class> getClasses(String packageName) throws ClassNotFoundException, IOException {
+    public static List<Class<?>> getClasses(String packageName) throws ClassNotFoundException, IOException {
         /* 获取类加载器 */
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         /* 包名转路径 */
@@ -137,7 +134,7 @@ public class ClassUtil {
             dirs.add(new File(resources.nextElement().getFile()));
         }
         /* 从目录中获取类 */
-        List<Class> classes = new ArrayList<>();
+        List<Class<?>> classes = new ArrayList<>();
         for (File directory : dirs) {
             classes.addAll(findClasses(directory, packageName));
         }
@@ -151,12 +148,12 @@ public class ClassUtil {
      * @return
      * @throws ClassNotFoundException
      */
-    private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
-        List<Class> classes = new ArrayList<>();
+    private static List<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
+        List<Class<?>> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
         }
-        for (File file : directory.listFiles()) {
+        for (File file : Objects.requireNonNull(directory.listFiles())) {
             /* 判断是否为文件夹 */
             if (file.isDirectory()) {
                 assert !file.getName().contains(".");

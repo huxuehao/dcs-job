@@ -37,7 +37,7 @@ public class SchedulerScan {
      *                                         value是含有TaskAPI注解的方法
      */
     public Map<String, Map<Object, Method>> schedulerScanMethod() throws IOException, ClassNotFoundException {
-        List<Class> schedulerBeanClass = getSchedulerBeanClass(ClassUtil.getClasses(scanProperties.getTaskPackage()));
+        List<Class<?>> schedulerBeanClass = getSchedulerBeanClass(ClassUtil.getClasses(scanProperties.getTaskPackage()));
         return getTaskPathMethod(schedulerBeanClass);
     }
 
@@ -46,9 +46,9 @@ public class SchedulerScan {
      * @param classes 包路径下扫描到的Class集合
      * @return 带有SchedulerBean注解的Class
      */
-    private List<Class> getSchedulerBeanClass(List<Class> classes) {
-        List<Class> schedulerBeanClass = new ArrayList<>();
-        for (Class aClass : classes) {
+    private List<Class<?>> getSchedulerBeanClass(List<Class<?>> classes) {
+        List<Class<?>> schedulerBeanClass = new ArrayList<>();
+        for (Class<?> aClass : classes) {
             if (aClass.isAnnotationPresent(SchedulerBean.class)) {
                 schedulerBeanClass.add(aClass);
             }
@@ -64,15 +64,15 @@ public class SchedulerScan {
      *                     Map<Object, Method>:key是含有SchedulerBean注解的类实体
      *                                         value是含有TaskAPI注解的方法
      */
-    private Map<String, Map<Object, Method>> getTaskPathMethod(List<Class> classes) {
+    private Map<String, Map<Object, Method>> getTaskPathMethod(List<Class<?>> classes) {
         Map<String, Map<Object, Method>> methodMap = new HashMap<>();
         List<TaskPath> taskPaths = new ArrayList<>();
         if (classes == null || classes.size() == 0) {
             return methodMap;
         }
         /* 遍历Class，获取合法的方法 */
-        for (Class aClass : classes) {
-            List<Method> declaredMethods = Arrays.asList(aClass.getDeclaredMethods());
+        for (Class<?> aClass : classes) {
+            Method[] declaredMethods = aClass.getDeclaredMethods();
             for (Method method : declaredMethods) {
                 if (method.isAnnotationPresent(TaskPath.class)) {
                     TaskPath annotation = method.getAnnotation(TaskPath.class);

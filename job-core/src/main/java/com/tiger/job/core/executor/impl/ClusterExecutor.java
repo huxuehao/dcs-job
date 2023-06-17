@@ -8,7 +8,6 @@ import com.tiger.job.core.executor.Executor;
 import com.tiger.job.core.queue.TaskQueue;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.support.CronExpression;
 import org.springframework.stereotype.Component;
@@ -25,7 +24,6 @@ import java.util.concurrent.TimeUnit;
  **/
 @Component
 public class ClusterExecutor implements Executor {
-
     private final Job job;
     private final TaskQueue taskQueue;
     private final String uniqueIdentifier;

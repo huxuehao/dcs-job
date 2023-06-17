@@ -5,7 +5,6 @@ import com.tiger.job.common.entity.ScheduleTaskDto;
 import com.tiger.job.common.constant.ChannelConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

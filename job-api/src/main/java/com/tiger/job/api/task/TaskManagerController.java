@@ -79,7 +79,7 @@ public class TaskManagerController {
     @Description(value = "添加任务")
     @PostMapping(value = "/add")
     public Response addTask(@RequestBody ScheduleTaskDto scheduleTask) {
-        if (!isValidCronExpression(scheduleTask.getCron())) {
+        if (!isValidCron(scheduleTask.getCron())) {
             return Response.error("cron表达式校验失败");
         }
         scheduleTaskService.add(scheduleTask);
@@ -90,7 +90,7 @@ public class TaskManagerController {
     @Description(value = "更新任务")
     @PostMapping(value = "/update")
     public Response updateTask(@RequestBody ScheduleTaskDto scheduleTask) {
-        if (!isValidCronExpression(scheduleTask.getCron())) {
+        if (!isValidCron(scheduleTask.getCron())) {
             return Response.error("cron表达式校验失败");
         }
         return Response.success(scheduleTaskService.update(scheduleTask));
@@ -153,7 +153,7 @@ public class TaskManagerController {
     }
 
     /* 检验cron表达式是否有效 */
-    private boolean isValidCronExpression(String cronStr) {
+    private boolean isValidCron(String cronStr) {
         return CronExpression.isValidExpression(cronStr);
     }
 }

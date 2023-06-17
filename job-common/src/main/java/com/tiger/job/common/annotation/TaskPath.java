@@ -3,7 +3,7 @@ package com.tiger.job.common.annotation;
 import java.lang.annotation.*;
 
 /**
- * @@interface TaskPath
+ * @Annotation  TaskPath
  * @Description 定时任务方法注解
  * @Author huxuehao
  **/

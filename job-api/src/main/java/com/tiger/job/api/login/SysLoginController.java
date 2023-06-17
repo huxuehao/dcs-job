@@ -5,7 +5,6 @@ import com.tiger.job.common.annotation.PassAuth;
 import com.tiger.job.common.entity.LoginBody;
 import com.tiger.job.common.response.Response;
 import com.tiger.job.server.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.web.bind.annotation.*;
 

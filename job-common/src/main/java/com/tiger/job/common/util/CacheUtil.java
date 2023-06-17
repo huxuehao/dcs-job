@@ -24,19 +24,17 @@ public final class CacheUtil {
 
     /* =============================common============================ */
     /**
-     * @desc 指定缓存失效时间
      * @param key  键
      * @param time 时间(秒)
+     * @desc 指定缓存失效时间
      */
-    public boolean expire(String key, long time) {
+    public void expire(String key, long time) {
         try {
             if (time > 0) {
                 redisTemplate.expire(key, time, TimeUnit.SECONDS);
             }
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
     }
 

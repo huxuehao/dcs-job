@@ -2,7 +2,6 @@ package com.tiger.job.core.schedule;
 
 import com.tiger.job.common.constant.LogProperties;
 import com.tiger.job.server.service.ScheduleLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

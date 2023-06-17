@@ -5,7 +5,6 @@ import com.tiger.job.common.constant.JobConstant;
 import com.tiger.job.core.queue.TaskQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,12 +24,11 @@ import java.util.stream.Collectors;
 @Component
 public class HeartbeatSchedule {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private static final String TASK_HEART_BEAT_PREFIX = JobConstant.HEARTBEAT_PREFIX + JobConstant.LINK_TAG;
-
     private final TaskQueue taskQueue;
     private final String uniqueIdentifier;
     private final ClusterProperties cluster;
     private final RedisTemplate<String, String> redisTemplate;
+    private static final String TASK_HEART_BEAT_PREFIX = JobConstant.HEARTBEAT_PREFIX + JobConstant.LINK_TAG;
 
     public HeartbeatSchedule(@Qualifier("uniqueIdentifier") String uniqueIdentifier, TaskQueue taskQueue, ClusterProperties cluster, RedisTemplate<String, String> redisTemplate) {
         this.uniqueIdentifier = uniqueIdentifier;
@@ -52,9 +50,7 @@ public class HeartbeatSchedule {
         }
         try {
             /* 判断心跳是否存在 */
-            if (redisTemplate.hasKey(getHeartbeatId())) {
-                return;
-            } else {
+            if (!Boolean.TRUE.equals(redisTemplate.hasKey(getHeartbeatId()))) {
                 redisTemplate.opsForValue().set(getHeartbeatId(), "1", 1000*90, TimeUnit.MILLISECONDS);
             }
         } catch (Exception e) {
@@ -70,7 +66,7 @@ public class HeartbeatSchedule {
         }
         try {
             /* 判断心跳是否存在 */
-            if (redisTemplate.hasKey(getHeartbeatId())) {
+            if (Boolean.TRUE.equals(redisTemplate.hasKey(getHeartbeatId()))) {
                 redisTemplate.expire(getHeartbeatId(), 1000*90, TimeUnit.MILLISECONDS);
             } else {
                 redisTemplate.opsForValue().set(getHeartbeatId(), "1", 1000*90, TimeUnit.MILLISECONDS);

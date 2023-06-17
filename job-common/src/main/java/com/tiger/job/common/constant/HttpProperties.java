@@ -37,7 +37,7 @@ public class HttpProperties {
     }
 
     public  void setSocketTimeout(int socketTimeout) {
-        this.socketTimeout = socketTimeout;
+        HttpProperties.socketTimeout = socketTimeout;
     }
 
     public static int getConnectTimeout() {
@@ -45,7 +45,7 @@ public class HttpProperties {
     }
 
     public void setConnectTimeout(int connectTimeout) {
-        this.connectTimeout = connectTimeout;
+        HttpProperties.connectTimeout = connectTimeout;
     }
 
     public static int getConnectionRequestTimeout() {
@@ -53,6 +53,6 @@ public class HttpProperties {
     }
 
     public void setConnectionRequestTimeout(int connectionRequestTimeout) {
-        this.connectionRequestTimeout = connectionRequestTimeout;
+        HttpProperties.connectionRequestTimeout = connectionRequestTimeout;
     }
 }

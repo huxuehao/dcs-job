@@ -48,7 +48,7 @@ public abstract class RetryTemplate {
             if ((Boolean) doBiz()) {
                 return true;
             }
-            Thread.sleep(TimeUnit.SECONDS.toMillis(sleepTime));
+            TimeUnit.SECONDS.sleep(sleepTime);
         }
         return false;
     }
