@@ -3,10 +3,7 @@ package com.tiger.job.core.init;
 import com.tiger.job.common.entity.ScheduleTaskDto;
 import com.tiger.job.core.beanScan.SchedulerScan;
 import com.tiger.job.common.constant.ChannelConstant;
-import com.tiger.job.common.constant.ClusterProperties;
-import com.tiger.job.core.executor.Executor;
-import com.tiger.job.core.executor.impl.ClusterExecutor;
-import com.tiger.job.core.executor.impl.SingleExecutor;
+import com.tiger.job.core.executor.AdapterExecutor;
 import com.tiger.job.core.queue.TaskQueue;
 import com.tiger.job.core.worker.TaskWorker;
 import com.tiger.job.server.service.ScheduleTaskService;
@@ -49,25 +46,21 @@ public class TaskInit {
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
     private final Map<String, Map<Object, Method>> schedulerScanMethodMap;
     private final ScheduleTaskService scheduleTaskService;
-    private final ClusterExecutor clusterExecutor;
-    private final SingleExecutor singleExecutor;
+    private final AdapterExecutor adapter;
     private final TaskQueue taskQueue;
-    private final ClusterProperties clusterProperties;
     private final SchedulerScan schedulerScan;
 
     @Resource
     private RedissonClient locker;
 
-    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, ClusterExecutor clusterExecutor, SingleExecutor singleExecutor, TaskQueue taskQueue, ClusterProperties clusterProperties, SchedulerScan schedulerScan) {
+    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapter, SchedulerScan schedulerScan) {
         this.scheduledFutureMap = scheduledFutureMap;
         this.triggerMap = triggerMap;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
         this.schedulerScanMethodMap = schedulerScanMethodMap;
         this.scheduleTaskService = scheduleTaskService;
-        this.clusterExecutor = clusterExecutor;
-        this.singleExecutor = singleExecutor;
         this.taskQueue = taskQueue;
-        this.clusterProperties = clusterProperties;
+        this.adapter = adapter;
         this.schedulerScan = schedulerScan;
     }
 
@@ -94,16 +87,8 @@ public class TaskInit {
     private void initTask() {
         List<ScheduleTaskDto> taskList = scheduleTaskService.selectAll();
         List<ScheduleTaskDto> enableTask = taskList.stream().filter(item -> "1".equals(item.getEnable())).collect(Collectors.toList());
-        Executor executor;
-        if (clusterProperties.isOpen()) {
-            executor = clusterExecutor;
-            log.info("定时任务：当前定时任务为[集群模式]");
-        } else {
-            executor = singleExecutor;
-            log.info("定时任务：当前定时任务为[单例模式]");
-        }
         enableTask.forEach(item -> {
-            TaskWorker worker = new TaskWorker(item, executor);
+            TaskWorker worker = new TaskWorker(item, adapter.matchExecutor());
             CronTrigger cronTrigger = item.toCronTrigger();
             ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(worker, cronTrigger);
             scheduledFutureMap.put(item.getId(), schedule);
@@ -125,23 +110,17 @@ public class TaskInit {
 
     /* 定时任务：开启操作 */
     private void openTrigger() {
-        Executor executor;
-        if (clusterProperties.isOpen()) {
-            executor = clusterExecutor;
-        } else {
-            executor = singleExecutor;
-        }
         Consumer<ScheduleTaskDto> openSchedule = item -> {
             String scheduleId = item.getId();
             if (scheduledFutureMap.containsKey(scheduleId)) { /* 当定时任务已经存在与scheduledFutureMap中*/
                 scheduledFutureMap.compute(scheduleId, (k, v) -> { /* 重新计算scheduledFutureMap中key为scheduledId的value的值 */
                     Optional.ofNullable(v).ifPresent(v0 -> v0.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则将其先停跳 */
-                    TaskWorker worker = new TaskWorker(item, executor); /* 开启一个新的定时 */
+                    TaskWorker worker = new TaskWorker(item, adapter.matchExecutor()); /* 开启一个新的定时 */
                     CronTrigger cronTrigger = item.toCronTrigger();
                     return threadPoolTaskScheduler.schedule(worker, cronTrigger);
                 });
             } else { /* 当定时任务不存在scheduledFutureMap中，则新建定时任务，并添加到map中 */
-                TaskWorker worker = new TaskWorker(item, executor);
+                TaskWorker worker = new TaskWorker(item, adapter.matchExecutor());
                 CronTrigger cronTrigger = item.toCronTrigger();
                 ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(worker, cronTrigger);
                 scheduledFutureMap.put(scheduleId, schedule);

@@ -97,8 +97,11 @@ public class ClassUtil {
      * @return
      */
     public static List<Class<?>> getClassOfAssignable(Class<?> c, List<String> packageNames) {
-        ArrayList<Class<?>> classes = new ArrayList<>();
+        List<Class<?>> classes = new ArrayList<>();
         List<Class<?>> allClass = new ArrayList<>();
+        if (packageNames == null || packageNames.size() == 0) {
+            return classes;
+        }
         try {
             for (String packageName : packageNames) {
                 allClass.addAll(getClasses(packageName));

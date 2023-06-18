@@ -91,9 +91,9 @@ public class SchedulerScan {
                                 /* 手动创建实例 */
                                 put(aClass.newInstance(), method);
                             } catch (InstantiationException ex) {
-                                throw new RuntimeException("实例化异常，请确保[" + aClass.getName() +"]具有空的构造函数");
+                                throw new RuntimeException("实例化异常，请确保[" + aClass.getName() +"]具默认构造函数;" + ex.getMessage());
                             } catch (IllegalAccessException ex) {
-                                throw new RuntimeException("非法访问异常，请确保[" + aClass.getName() +"]的构造函数类型为public");
+                                throw new RuntimeException("非法访问异常，请确保[" + aClass.getName() +"]的默认构造函为public;" + ex.getMessage());
                             }
                         }
                     }};
@@ -103,7 +103,7 @@ public class SchedulerScan {
                     }
                     taskPaths.add(annotation);
                     methodMap.put(path, mapValue);
-                    log.info("定时任务：已经完成对 [ {} ] 定时任务的扫描", path);
+                    log.info("定时任务：已经完成对 [ {}({}) ] 定时任务的扫描", annotation.name(),annotation.path());
                 }
             }
         }
