@@ -46,21 +46,21 @@ public class TaskInit {
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
     private final Map<String, Map<Object, Method>> schedulerScanMethodMap;
     private final ScheduleTaskService scheduleTaskService;
-    private final AdapterExecutor adapter;
+    private final AdapterExecutor adapterExecutor;
     private final TaskQueue taskQueue;
     private final SchedulerScan schedulerScan;
 
     @Resource
     private RedissonClient locker;
 
-    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapter, SchedulerScan schedulerScan) {
+    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapterExecutor, SchedulerScan schedulerScan) {
         this.scheduledFutureMap = scheduledFutureMap;
         this.triggerMap = triggerMap;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
         this.schedulerScanMethodMap = schedulerScanMethodMap;
         this.scheduleTaskService = scheduleTaskService;
         this.taskQueue = taskQueue;
-        this.adapter = adapter;
+        this.adapterExecutor = adapterExecutor;
         this.schedulerScan = schedulerScan;
     }
 
@@ -88,7 +88,7 @@ public class TaskInit {
         List<ScheduleTaskDto> taskList = scheduleTaskService.selectAll();
         List<ScheduleTaskDto> enableTask = taskList.stream().filter(item -> "1".equals(item.getEnable())).collect(Collectors.toList());
         enableTask.forEach(item -> {
-            TaskWorker worker = new TaskWorker(item, adapter.matchExecutor());
+            TaskWorker worker = new TaskWorker(item, adapterExecutor.matchExecutor());
             CronTrigger cronTrigger = item.toCronTrigger();
             ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(worker, cronTrigger);
             scheduledFutureMap.put(item.getId(), schedule);
@@ -115,12 +115,12 @@ public class TaskInit {
             if (scheduledFutureMap.containsKey(scheduleId)) { /* 当定时任务已经存在与scheduledFutureMap中*/
                 scheduledFutureMap.compute(scheduleId, (k, v) -> { /* 重新计算scheduledFutureMap中key为scheduledId的value的值 */
                     Optional.ofNullable(v).ifPresent(v0 -> v0.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则将其先停跳 */
-                    TaskWorker worker = new TaskWorker(item, adapter.matchExecutor()); /* 开启一个新的定时 */
+                    TaskWorker worker = new TaskWorker(item, adapterExecutor.matchExecutor()); /* 开启一个新的定时 */
                     CronTrigger cronTrigger = item.toCronTrigger();
                     return threadPoolTaskScheduler.schedule(worker, cronTrigger);
                 });
             } else { /* 当定时任务不存在scheduledFutureMap中，则新建定时任务，并添加到map中 */
-                TaskWorker worker = new TaskWorker(item, adapter.matchExecutor());
+                TaskWorker worker = new TaskWorker(item, adapterExecutor.matchExecutor());
                 CronTrigger cronTrigger = item.toCronTrigger();
                 ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(worker, cronTrigger);
                 scheduledFutureMap.put(scheduleId, schedule);

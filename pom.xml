@@ -19,9 +19,10 @@
     <properties>
         <dcs-job.version>1.0-SNAPSHOT</dcs-job.version>
         <spring-depend.version>2.7.1</spring-depend.version>
-        <spring-aop.version>2.7.1</spring-aop.version>
-        <spring-cache.version>2.7.1</spring-cache.version>
-        <spring-redis.version>2.7.1</spring-redis.version>
+        <spring-aop.version>${spring-depend.version}</spring-aop.version>
+        <spring-cache.version>${spring-depend.version}</spring-cache.version>
+        <spring-redis.version>${spring-depend.version}</spring-redis.version>
+        <spring-config-processor.version>${spring-depend.version}</spring-config-processor.version>
         <spring-redisson.version>3.17.3</spring-redisson.version>
         <java.version>1.8</java.version>
         <mysql.java>8.0.29</mysql.java>
@@ -50,6 +51,13 @@
                 <version>${spring-depend.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- spring boot 配置注解执行器-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <optional>true</optional>
+                <version>${spring-config-processor.version}</version>
             </dependency>
             <!-- aop依赖 -->
             <dependency>
