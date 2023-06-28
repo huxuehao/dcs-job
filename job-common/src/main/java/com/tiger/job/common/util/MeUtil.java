@@ -4,6 +4,8 @@ import com.alibaba.fastjson2.JSON;
 import com.tiger.job.common.util.dependent.SnowflakeID;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -362,4 +364,15 @@ public class MeUtil {
         return UUID.randomUUID().toString().replaceAll("-","");
     }
 
+    /**
+     * 获取异常栈信息
+     * @param e
+     * @return
+     */
+    public static String catchExceptionStackInfo(Exception e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return sw.toString();
+    }
 }

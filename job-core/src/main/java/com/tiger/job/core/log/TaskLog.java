@@ -1,0 +1,33 @@
+package com.tiger.job.core.log;
+
+import com.tiger.job.common.constant.LogProperties;
+import com.tiger.job.common.entity.ScheduleTaskDto;
+import org.springframework.stereotype.Component;
+
+/**
+ * @ClassName TaskLog
+ * @Description TODO
+ * @Author huxuehao
+ **/
+@Component
+public class TaskLog {
+    private final LogProperties logProperties;
+    private final AdapterGenLog adapterGenLog;
+
+    public TaskLog(LogProperties logProperties, AdapterGenLog adapterGenLog) {
+        this.logProperties = logProperties;
+        this.adapterGenLog = adapterGenLog;
+    }
+
+    /**
+     * 日志执行
+     * @param task
+     * @param message
+     */
+    public void invoke(ScheduleTaskDto task, String message) {
+        if ("0".equals(task.getOpenLog()) || (!logProperties.isFailOpen() && !logProperties.isSuccessOpen())) {
+            return;
+        }
+        adapterGenLog.matchGenLog(message).gen(task, message);
+    }
+}
