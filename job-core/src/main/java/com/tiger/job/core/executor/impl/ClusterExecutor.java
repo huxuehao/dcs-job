@@ -8,7 +8,9 @@ import com.tiger.job.core.executor.Executor;
 import com.tiger.job.core.queue.TaskQueue;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.support.CronExpression;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @Author huxuehao
  **/
 @Component
+@EnableAspectJAutoProxy(exposeProxy=true)
 public class ClusterExecutor implements Executor {
     private final Job job;
     private final TaskQueue taskQueue;
@@ -56,7 +59,12 @@ public class ClusterExecutor implements Executor {
             try {
                 if (lock.tryLock(0,this.expirationTime(task.getCron()), TimeUnit.MILLISECONDS)) {
                     taskQueue.push(queueName, getQueueItem());
-                    return this.doExecute(task);
+                    /**
+                     * doExecute属于内部方法，如果直接使用this.doExecute(xx),那么是使用实例对象调用的，而不是代理对象，导致AOP失效。
+                     * 所以我们通过@EnableAspectJAutoProxy(exposeProxy=true) 加 (XX)AopContext.currentProxy())的方式，使得
+                     * doExecute方法被代理对象调用，从而使得AOP生效
+                     */
+                    return ((ClusterExecutor)AopContext.currentProxy()).doExecute(task);
                 } else {
                     return this.pushQueue(queueName);
                 }
@@ -72,7 +80,7 @@ public class ClusterExecutor implements Executor {
             try {
                 if (lock.tryLock(0,this.expirationTime(task.getCron()), TimeUnit.MILLISECONDS)) {
                     try {
-                        return doExecute(task);
+                        return ((ClusterExecutor)AopContext.currentProxy()).doExecute(task);
                     } finally {
                         taskQueue.pop(queueName);
                         this.pushQueue(queueName);
@@ -119,7 +127,7 @@ public class ClusterExecutor implements Executor {
      * @return 执行结果
      */
     @Retry
-    private boolean doExecute(ScheduleTaskDto task) {
+    public boolean doExecute(ScheduleTaskDto task) {
         RLock lock = locker.getLock(JobConstant.LOCK_PREFIX + JobConstant.LINK_TAG + task.getId());
         if (lock.tryLock()) { /* 获取锁 */
             try {

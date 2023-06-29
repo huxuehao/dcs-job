@@ -26,14 +26,14 @@ public class HeartbeatSchedule {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final TaskQueue taskQueue;
     private final String uniqueIdentifier;
-    private final ClusterProperties cluster;
+    private final ClusterProperties clusterProperties;
     private final RedisTemplate<String, String> redisTemplate;
     private static final String TASK_HEART_BEAT_PREFIX = JobConstant.HEARTBEAT_PREFIX + JobConstant.LINK_TAG;
 
-    public HeartbeatSchedule(@Qualifier("uniqueIdentifier") String uniqueIdentifier, TaskQueue taskQueue, ClusterProperties cluster, RedisTemplate<String, String> redisTemplate) {
+    public HeartbeatSchedule(@Qualifier("uniqueIdentifier") String uniqueIdentifier, TaskQueue taskQueue, ClusterProperties clusterProperties, RedisTemplate<String, String> redisTemplate) {
         this.uniqueIdentifier = uniqueIdentifier;
         this.taskQueue = taskQueue;
-        this.cluster = cluster;
+        this.clusterProperties = clusterProperties;
         this.redisTemplate = redisTemplate;
     }
 
@@ -45,7 +45,7 @@ public class HeartbeatSchedule {
     /* 发送心跳，心跳时长设置1分30秒 */
     @Scheduled(cron = "30 0/1 * * * ?")
     public void sendHeartbeat() {
-        if (!cluster.isOpen()) {
+        if (!clusterProperties.isOpen()) {
             return;
         }
         try {
@@ -61,7 +61,7 @@ public class HeartbeatSchedule {
     /* 维持心跳，心跳时长设置1分30秒 */
     @Scheduled(cron = "15 0/1 * * * ?")
     public void keepHeartbeat() {
-        if (!cluster.isOpen()) {
+        if (!clusterProperties.isOpen()) {
             return;
         }
         try {
@@ -79,7 +79,7 @@ public class HeartbeatSchedule {
     /* 清除队列中不合法的元素*/
     @Scheduled(cron = "45 0/1 * * * ?")
     public void clearIllegalQueueItem() {
-        if (!cluster.isOpen()) {
+        if (!clusterProperties.isOpen()) {
             return;
         }
         try {

@@ -19,8 +19,11 @@ import java.util.concurrent.TimeUnit;
 @Component
 public final class CacheUtil {
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public CacheUtil(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     /* =============================common============================ */
     /**

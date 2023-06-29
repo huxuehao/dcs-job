@@ -50,8 +50,8 @@ import java.util.Map;
  */
 @Component
 public class HttpUtil {
-    @Autowired
     static HttpProperties commonProperties;
+
     /**
      * 连接管理
      */
@@ -94,6 +94,10 @@ public class HttpUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public HttpUtil(HttpProperties commonProperties) {
+        this.commonProperties = commonProperties;
     }
 
     /**
