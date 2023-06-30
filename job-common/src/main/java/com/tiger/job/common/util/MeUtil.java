@@ -285,9 +285,7 @@ public class MeUtil {
      * @return
      */
     public static Timestamp currentTimestamp() {
-        Date utilDate = new Date();
-        Timestamp sqlDate = new Timestamp(utilDate.getTime());
-        return sqlDate;
+        return new Timestamp(new Date().getTime());
     }
 
     /**
@@ -296,24 +294,20 @@ public class MeUtil {
      * @return
      */
     public static String sqlTimeForm(Timestamp sqlDateTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat(datetimeFormat);
-        return sdf.format(sqlDateTime);
+        return new SimpleDateFormat(datetimeFormat).format(sqlDateTime);
     }
 
     /** 时间戳格式化 */
     public static String timeStampForm(long lo) {
-        Date date = new Date(lo);
-        SimpleDateFormat sd = new SimpleDateFormat(datetimeFormat);
-        return sd.format(date);
+        return new SimpleDateFormat(datetimeFormat).format(new Date(lo));
     }
     /**
      * @desc 将数据库 Timestamp 格式化 (yyyy-MM-dd HH:mm:ss)
      * @param sqlDateTime
      * @return
      */
-    public static String sqlTimestampForm(Timestamp sqlDateTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat(datetimeFormat);
-        return sdf.format(sqlDateTime);
+    public static String sqlTimestampForm(Timestamp sqlDateTime, String datetimeFormat) {
+        return new SimpleDateFormat(datetimeFormat).format(sqlDateTime);
     }
 
     /**
@@ -321,8 +315,11 @@ public class MeUtil {
      * @return
      */
     public static String currentDatetime() {
-        Timestamp timestamp = currentTimestamp();
-        return sqlTimestampForm(timestamp);
+        return currentDatetime(datetimeFormat);
+    }
+
+    public static String currentDatetime(String timeFormat) {
+        return sqlTimestampForm(currentTimestamp(), timeFormat);
     }
 
     /**

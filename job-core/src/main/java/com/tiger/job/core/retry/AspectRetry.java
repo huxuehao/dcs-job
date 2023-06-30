@@ -29,6 +29,13 @@ public class AspectRetry {
 
     @Around("retryPointcut()")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
+        /* 类名 */
+        String className = joinPoint.getTarget().getClass().toGenericString();
+        /* 方法名 */
+        String methodName = joinPoint.getSignature().getName();
+        /* 方法的参数 */
+        Object[] args = joinPoint.getArgs();
+
         if (retryProperties.isOpen()) {
             /* 设置重试策略 */
             return new RetryTemplate() {

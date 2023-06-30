@@ -1,9 +1,8 @@
 package com.tiger.job.core.config;
 
 import com.tiger.job.common.entity.ScheduleTaskDto;
-import lombok.AllArgsConstructor;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.lang.management.ManagementFactory;
@@ -23,8 +22,7 @@ import java.util.function.Consumer;
  * @Author huxuehao
  **/
 
-@AllArgsConstructor
-@SpringBootConfiguration
+@Configuration
 public class TaskConfig {
 
     /**
