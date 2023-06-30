@@ -1,11 +1,15 @@
 package com.tiger.job.core.schedule;
 
+import com.tiger.job.common.constant.JobConstant;
 import com.tiger.job.common.util.MeUtil;
 import com.tiger.job.server.service.LogRotate;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
+import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @ClassName RotateScheduleLog
@@ -14,6 +18,10 @@ import java.text.ParseException;
  **/
 @Component
 public class RotateScheduleLog {
+
+    @Resource
+    private RedissonClient locker;
+
     private final LogRotate logRotate;
 
     public RotateScheduleLog(LogRotate logRotate) {
@@ -23,10 +31,11 @@ public class RotateScheduleLog {
     /* 每天1点30分30秒尝试实现日志的轮转 */
     @Scheduled(cron = "30 30 1 * * ?")
     public void clearLog() {
+        RLock lock = locker.getLock(JobConstant.ROTATE_LOCK_KEY);
         try {
-            logRotate.doRotate(MeUtil.currentDatetime("yyyyMMddHHmmss"));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+            if (lock.tryLock(0, 3600000L, TimeUnit.MILLISECONDS)) {
+                logRotate.doRotate(MeUtil.currentDatetime("yyyyMMdd"));
+            }
+        } catch (Exception e) {}
     }
 }

@@ -32,11 +32,6 @@ public class ScheduleLogServiceImpl extends ServiceImpl<ScheduleLogMapper, Sched
     }
 
     @Override
-    public int clearLog(String endTime) {
-        return scheduleLogMapper.clearLog(endTime);
-    }
-
-    @Override
     /* 根据定时任务获取最新的错误日志*/
     public ScheduleLogDto latestLogByTask(String taskId) {
         return scheduleLogMapper.latestLogByTask(taskId);

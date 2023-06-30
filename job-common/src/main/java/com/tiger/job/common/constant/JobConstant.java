@@ -16,4 +16,7 @@ public class JobConstant {
     public static final String CLUSTER_QUEUE_PREFIX = "tiger-job-queue";
     /* 分布式队列锁前缀 */
     public static final String CLUSTER_QUEUE_LOCK_PREFIX = "dcs-lock";
+    /* 日志轮转事务锁 */
+    public static final String ROTATE_LOCK_KEY = "lock:rotate-schedule-log";
+
 }

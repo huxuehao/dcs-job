@@ -69,4 +69,15 @@ public class UnlockController {
         }
         return Response.success("解锁成功");
     }
+
+    @LoginAuth
+    @GetMapping("/task/lock/rotate")
+    @Description("解锁日志轮转定时任务锁")
+    public Response unLockRotate() {
+        RLock lock = locker.getLock(JobConstant.ROTATE_LOCK_KEY);
+        if (lock.isLocked()) {
+            lock.forceUnlock();
+        }
+        return Response.success("解锁成功");
+    }
 }
