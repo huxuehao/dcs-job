@@ -36,6 +36,6 @@ public class RotateScheduleLog {
             if (lock.tryLock(0, 3600000L, TimeUnit.MILLISECONDS)) {
                 logRotate.doRotate(MeUtil.currentDatetime("yyyyMMdd"));
             }
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
     }
 }

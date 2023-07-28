@@ -17,7 +17,7 @@ tiger:
     log:
       success-open: true # 开启执行成功日志(建议开启)
       fail-open: true # 开启执行失败日志(建议开启)
-      save-days: 2 # 日志保存天数
+      save-days: 15 # 日志保存天数
     retry:
       open: true # 是否开启重试策略
       count: 1 # 重试次数

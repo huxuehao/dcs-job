@@ -143,7 +143,7 @@ public class TaskQueue {
     public boolean exist(String queueName, String item) {
         try {
             List<String> range = redisTemplate.opsForList().range(queueName, 0, -1);
-            if (range != null) return false;
+            if (range == null) return false;
             for (String s : range) {
                 if (s.startsWith(item)) return true;
             }

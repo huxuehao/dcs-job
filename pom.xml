@@ -65,6 +65,12 @@
                 <artifactId>spring-boot-starter-aop</artifactId>
                 <version>${spring-aop.version}</version>
             </dependency>
+            <!-- 任务调度依赖 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-quartz</artifactId>
+                <version>${spring-aop.version}</version>
+            </dependency>
             <!-- mybatis-plus框架 -->
             <dependency>
                 <groupId>com.baomidou</groupId>
