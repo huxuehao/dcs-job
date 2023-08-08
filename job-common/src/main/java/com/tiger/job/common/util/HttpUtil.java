@@ -50,54 +50,57 @@ import java.util.Map;
  */
 @Component
 public class HttpUtil {
-    static HttpProperties commonProperties;
+    private final HttpProperties httpProperties;
 
-    /**
-     * 连接管理
-     */
-    private static PoolingHttpClientConnectionManager connectionManager = null;
-
-    /**
-     * 请求配置
-     */
-    private static RequestConfig requestConfig = RequestConfig.custom()
-            .setSocketTimeout(commonProperties.getSocketTimeout())
-            .setConnectTimeout(commonProperties.getConnectTimeout())
-            .setConnectionRequestTimeout(commonProperties.getConnectionRequestTimeout())
-            .build();
-    static {
-        try {
-            SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
-            // 加载信任的材料，设置信任所有的策略
-            sslContextBuilder.loadTrustMaterial(null, new TrustAllStrategy());
-            // 构建sslcontext
-            SSLContext sslcontext = sslContextBuilder.build();
-            Registry<ConnectionSocketFactory> registry =
-                    // 绕过 https 协议
-                    RegistryBuilder.<ConnectionSocketFactory>create()
-                            .register("http", PlainConnectionSocketFactory.INSTANCE)
-                            .register("https",
-                                    new SSLConnectionSocketFactory(
-                                            sslcontext,
-                                            new String[]{"SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"},
-                                            null,
-                                            NoopHostnameVerifier.INSTANCE
-                                    )
-                            ) // 支持的协议 "SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
-                            .build();
-            // 创建连接管理员
-            connectionManager = new PoolingHttpClientConnectionManager(registry);
-            // 设置最大连接数
-            connectionManager.setMaxTotal(1000);
-            // 每个路由最大的请求数量
-            connectionManager.setDefaultMaxPerRoute(500);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public HttpUtil(HttpProperties httpProperties) {
+        this.httpProperties = httpProperties;
     }
 
-    public HttpUtil(HttpProperties commonProperties) {
-        this.commonProperties = commonProperties;
+    /**
+     * 自定义请求配置
+     */
+    private RequestConfig customRequestConfig() {
+        return RequestConfig.custom()
+                .setSocketTimeout(httpProperties.getSocketTimeout())
+                .setConnectTimeout(httpProperties.getConnectTimeout())
+                .setConnectionRequestTimeout(httpProperties.getConnectionRequestTimeout())
+                .build();
+    }
+
+    /**
+     * 自定义连接管理
+     */
+    private PoolingHttpClientConnectionManager customConnectionManager() {
+        SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
+        // 加载信任的材料，设置信任所有的策略
+        SSLContext sslcontext;
+        try {
+            sslContextBuilder.loadTrustMaterial(null, new TrustAllStrategy());
+            // 构建sslcontext
+            sslcontext = sslContextBuilder.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        Registry<ConnectionSocketFactory> registry =
+                // 绕过 https 协议
+                RegistryBuilder.<ConnectionSocketFactory>create()
+                        .register("http", PlainConnectionSocketFactory.INSTANCE)
+                        .register("https",
+                                new SSLConnectionSocketFactory(
+                                        sslcontext,
+                                        new String[]{"SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"},
+                                        null,
+                                        NoopHostnameVerifier.INSTANCE
+                                )
+                        ) // 支持的协议 "SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
+                        .build();
+        // 创建连接管理员
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(registry);
+        // 设置最大连接数
+        connectionManager.setMaxTotal(httpProperties.getMaxTotal());
+        // 每个路由最大的请求数量
+        connectionManager.setDefaultMaxPerRoute(httpProperties.getDefaultMaxPerRoute());
+        return connectionManager;
     }
 
     /**
@@ -113,7 +116,7 @@ public class HttpUtil {
     /**
      * 获取ssl类型的getHttpClient
      *
-     * @param sslContext
+     * @param sslContext .
      * @return 可关闭的httpClient连接
      */
     private CloseableHttpClient getHttpClient(SSLContext sslContext) {
@@ -123,7 +126,7 @@ public class HttpUtil {
     /**
      * HttpClient 构造器
      *
-     * @param sslContext
+     * @param sslContext .
      * @return httpClient构造器
      */
     private HttpClientBuilder getHttpClientBuilder(SSLContext sslContext) {
@@ -141,9 +144,9 @@ public class HttpUtil {
      * @return httpClient构造器
      */
     private HttpClientBuilder getHttpClientBuilder() {
-        return HttpClients.custom().setConnectionManager(connectionManager).setDefaultRequestConfig(requestConfig);
+        return HttpClients.custom().setConnectionManager(customConnectionManager()).setDefaultRequestConfig(customRequestConfig());
+        /*return HttpClients.custom().setConnectionManager(connectionManager).setDefaultRequestConfig(requestConfig);*/
     }
-
 
     /**
      * 发送简单的get请求
@@ -217,13 +220,11 @@ public class HttpUtil {
         // 可关闭的响应对象
         CloseableHttpResponse response = null;
         HttpEntity entity = null;
-        try {
-            // 可关闭的http客户端（浏览器）
-            CloseableHttpClient closeableHttpClient = getHttpClient();
+        try (CloseableHttpClient closeableHttpClient =  getHttpClient()) {
             // 构造httpGet请求对象
             HttpGet httpGet = new HttpGet(url);
             // 添加请求头
-            httpGet = setGetHeaders(httpGet, headers);
+            setGetHeaders(httpGet, headers);
 
             // 执行
             response = closeableHttpClient.execute(httpGet);
@@ -240,10 +241,7 @@ public class HttpUtil {
                 if (response != null) {
                     response.close();
                 }
-                // 关闭客户端
-                /*if (closeableHttpClient != null) {
-                    closeableHttpClient.close();
-                }*/
+                // 关闭客户端 closeableHttpClient
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -266,7 +264,7 @@ public class HttpUtil {
         if (isEmptyMap(params)) {
             return url;
         }
-        StringBuffer paramsLink = new StringBuffer();
+        StringBuilder paramsLink = new StringBuilder();
         paramsLink.append(url).append("?");
 
         if (urlEncoder) {
@@ -284,7 +282,7 @@ public class HttpUtil {
                         .append("&");
             }
         }
-        return paramsLink.toString().substring(0, paramsLink.toString().length() - 1);
+        return paramsLink.substring(0, paramsLink.toString().length() - 1);
     }
 
     /**
@@ -292,16 +290,13 @@ public class HttpUtil {
      *
      * @param httpGet HttpGet
      * @param map     请求头
-     * @return 添加请求头的 HttpGet
      */
-    private HttpGet setGetHeaders(HttpGet httpGet,
-                                  Map<String, String> map) {
+    private void setGetHeaders(HttpGet httpGet, Map<String, String> map) {
         if (!isEmptyMap(map)) {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 httpGet.addHeader(entry.getKey(), entry.getValue());
             }
         }
-        return httpGet;
     }
 
     /**
@@ -340,15 +335,13 @@ public class HttpUtil {
         // 可关闭的响应对象
         CloseableHttpResponse response = null;
         HttpEntity entity = null;
-        try {
-            // 可关闭的http客户端（浏览器）
-            CloseableHttpClient closeableHttpClient = getHttpClient();
+        try (CloseableHttpClient closeableHttpClient = getHttpClient()) {
             // 构造httpPost请求对象
             HttpPost httpPost = new HttpPost(url);
             // 添加请求体
             httpPost = setPostBody(httpPost, body);
             // 添加请求头
-            httpPost = setPostHeaders(httpPost, heads);
+            setPostHeaders(httpPost, heads);
             // 执行
             response = closeableHttpClient.execute(httpPost);
             // 获取响应实体
@@ -365,12 +358,8 @@ public class HttpUtil {
                 if (response != null) {
                     response.close();
                 }
-                // 关闭客户端
-                /*if (closeableHttpClient != null) {
-                    closeableHttpClient.close();
-                }*/
-            } catch (IOException e) {
-                return null;
+                // 关闭客户端 closeableHttpClient
+            } catch (IOException ignored) {
             }
         }
     }
@@ -387,8 +376,6 @@ public class HttpUtil {
         if (body != null) {
             httpPost.addHeader("Content-Type", "application/json;charset=utf8");
             StringEntity jsonEntity = new StringEntity(JSON.toJSONString(body), StandardCharsets.UTF_8);
-            /*jsonEntity.setContentType(new BasicHeader("Content-Type", "application/json; charset=utf-8"));
-            jsonEntity.setContentEncoding(StandardCharsets.UTF_8.name());*/
             httpPost.setEntity(jsonEntity);
         }
         return httpPost;
@@ -430,15 +417,13 @@ public class HttpUtil {
         // 可关闭的响应对象
         CloseableHttpResponse response = null;
         HttpEntity entity = null;
-        try {
-            // 可关闭的http客户端（浏览器）
-            CloseableHttpClient closeableHttpClient = getHttpClient();
+        try (CloseableHttpClient closeableHttpClient = getHttpClient()) {
             // 构造httpPost请求对象
             HttpPost httpPost = new HttpPost(url);
             // 添加请求体
-            httpPost = setPostParams(httpPost, params);
+            setPostParams(httpPost, params);
             // 添加请求头
-            httpPost = setPostHeaders(httpPost, heads);
+            setPostHeaders(httpPost, heads);
             // 执行
             response = closeableHttpClient.execute(httpPost);
             // 获取响应实体
@@ -455,12 +440,8 @@ public class HttpUtil {
                 if (response != null) {
                     response.close();
                 }
-                // 关闭客户端
-                /*if (closeableHttpClient != null) {
-                    closeableHttpClient.close();
-                }*/
-            } catch (IOException e) {
-                return null;
+                // 关闭客户端 closeableHttpClient
+            } catch (IOException ignored) {
             }
         }
     }
@@ -470,10 +451,9 @@ public class HttpUtil {
      *
      * @param httpPost httpPost请求对象
      * @param map      参数map
-     * @return 封装好的httpPost请求对象
      */
-    private HttpPost setPostParams(HttpPost httpPost,
-                                   Map<String, String> map) {
+    private void setPostParams(HttpPost httpPost,
+                               Map<String, String> map) {
         if (!isEmptyMap(map)) {
             List<NameValuePair> nameValuePairs = new ArrayList<>();
             for (Map.Entry<String, String> m : map.entrySet()) {
@@ -481,7 +461,6 @@ public class HttpUtil {
             }
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, StandardCharsets.UTF_8));
         }
-        return httpPost;
     }
 
     /**
@@ -489,23 +468,20 @@ public class HttpUtil {
      *
      * @param httpPost HttpPost
      * @param map      请求头
-     * @return 添加请求头的 HttpGet
      */
-    private HttpPost setPostHeaders(HttpPost httpPost,
-                                    Map<String, String> map) {
+    private void setPostHeaders(HttpPost httpPost,
+                                Map<String, String> map) {
         if (!isEmptyMap(map)) {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 httpPost.addHeader(entry.getKey(), entry.getValue());
             }
         }
-        return httpPost;
     }
 
     /**
      * Get请求实现文件下载
      *
      * @param url 请求基路径
-     * @return
      */
     public byte[] fileDownload(String url) throws IOException {
         return fileDownload(url, null);
@@ -523,11 +499,10 @@ public class HttpUtil {
         // 可关闭的响应对象
         CloseableHttpResponse response = null;
         HttpEntity entity = null;
-        try {
-            CloseableHttpClient closeableHttpClient = getHttpClient();
+        try (CloseableHttpClient closeableHttpClient = getHttpClient()) {
             HttpGet httpGet = new HttpGet(url);
             // 添加请求头
-            httpGet = setGetHeaders(httpGet, headers);
+            setGetHeaders(httpGet, headers);
             // 执行
             response = closeableHttpClient.execute(httpGet);
             // 获取响应实体
@@ -544,12 +519,8 @@ public class HttpUtil {
                 if (response != null) {
                     response.close();
                 }
-                // 关闭客户端
-                /*if (closeableHttpClient != null) {
-                    closeableHttpClient.close();
-                }*/
-            } catch (IOException e) {
-                return null;
+                // 关闭客户端 closeableHttpClient
+            } catch (IOException ignored) {
             }
         }
     }
@@ -580,15 +551,13 @@ public class HttpUtil {
         // 可关闭的响应对象
         CloseableHttpResponse response = null;
         HttpEntity entity = null;
-        try {
-            // 可关闭的http客户端（浏览器）
-            CloseableHttpClient closeableHttpClient = getHttpClient();
+        try (CloseableHttpClient closeableHttpClient = getHttpClient()) {
             // 构造httpPost请求对象
             HttpPost httpPost = new HttpPost(url);
             // 设置文件请求体
             httpPost = setFileEntity(httpPost, fileMap);
             // 添加请求头
-            httpPost = setPostHeaders(httpPost, heads);
+            setPostHeaders(httpPost, heads);
             // 执行
             response = closeableHttpClient.execute(httpPost);
             // 获取响应实体
@@ -606,12 +575,8 @@ public class HttpUtil {
                 if (response != null) {
                     response.close();
                 }
-                // 关闭客户端
-                /*if (closeableHttpClient != null) {
-                    closeableHttpClient.close();
-                }*/
-            } catch (IOException e) {
-                return null;
+                // 关闭客户端 closeableHttpClient
+            } catch (IOException ignored) {
             }
         }
     }
@@ -643,7 +608,7 @@ public class HttpUtil {
     /**
      * 判断 Map<String,String> 是否为空
      *
-     * @param map
+     * @param map .
      * @return true/false
      */
     private Boolean isEmptyMap(Map<String, String> map) {

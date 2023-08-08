@@ -26,3 +26,5 @@ tiger:
     socket-timeout: 60000 # 单位：秒
     connect-timeout: 15000 # 单位：秒
     connection-request-timeout: 60000 # 单位：秒
+    max-total: 1500
+    default-max-per-route: 300
