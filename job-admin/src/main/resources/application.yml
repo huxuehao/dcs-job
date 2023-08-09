@@ -12,6 +12,12 @@ tiger:
       task-package: com.tiger.job.task # 定时任务的包路径，用于扫描定时任务
       auto-insert: true # 自动扫描报并入库
       default-cron: "0 0/30 * * * ?" # 默认策略
+    pool:
+      processor-times: 2 # cpu核数的倍数（整数）
+      float-number: 0 # 线程池上下浮动数（整数）
+      await-termination-seconds: 30 # 等待终止时间（秒）
+      complete-on-shutdown: true # 调度器shutdown后，是否等待当前调度执行完成
+      thread-name-prefix: "TaskThread:" # 线程名称前缀
     cluster:
       open: true # 开启集群模式
     log:

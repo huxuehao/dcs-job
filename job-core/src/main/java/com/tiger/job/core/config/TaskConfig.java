@@ -1,6 +1,10 @@
 package com.tiger.job.core.config;
 
+import com.tiger.job.common.constant.TaskPoolProperties;
 import com.tiger.job.common.entity.ScheduleTaskDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -23,8 +27,9 @@ import java.util.function.Consumer;
  **/
 
 @Configuration
+@AutoConfigureAfter({TaskPoolProperties.class})
 public class TaskConfig {
-
+    private final Logger log = LoggerFactory.getLogger(getClass());
     /**
      * 类注册表
      * 描述：存储了当前工程中用户通过@SchedulerBean和@TaskPath标记的定时任务类和定时任务方法
@@ -82,12 +87,30 @@ public class TaskConfig {
      * 一个用于开启定时任务的线程池；我们关注的核心方法是：threadPoolTaskScheduler.schedule(工作内容, 触发器)
      */
     @Bean(name = "threadPoolTaskScheduler")
-    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler(TaskPoolProperties taskPoolProperties) {
+        int taskThreadPool;
+        int processors = Runtime.getRuntime().availableProcessors(); // CPU核数
+        if (taskPoolProperties.getProcessorTimes() < 1) {
+            taskThreadPool = processors + taskPoolProperties.getFloatNumber();
+        } else {
+            taskThreadPool = processors * taskPoolProperties.getProcessorTimes() + taskPoolProperties.getFloatNumber();
+        }
+        log.info("定时任务线程池: CPU核数 = {}", processors);
+        log.info("定时任务线程池: CPU核数倍数: qianmo.scheduled-tasks.pool.processor-times = {}", taskPoolProperties.getProcessorTimes());
+        log.info("定时任务线程池: 线程池上下浮动数: qianmo.scheduled-tasks.pool.float-number = {}", taskPoolProperties.getFloatNumber());
+        log.info("定时任务线程池: 线程名称前缀: qianmo.scheduled-tasks.pool.thread-name-prefix = {}", taskPoolProperties.getThreadNamePrefix());
+        log.info("定时任务线程池: 线程等待终止时间: qianmo.scheduled-tasks.pool.await-termination-seconds = {}", taskPoolProperties.getAwaitTerminationSeconds());
+        log.info("定时任务线程池: 调度器shutdown后，是否等待当前调度执行完成: qianmo.scheduled-tasks.pool.complete-on-shutdown = {}", taskPoolProperties.isCompleteOnShutdown());
+        log.info("定时任务线程池: 定时任务线程池最终大小 = {}", taskThreadPool);
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        threadPoolTaskScheduler.setPoolSize(Runtime.getRuntime().availableProcessors()); // 线程池的大小
-        threadPoolTaskScheduler.setThreadNamePrefix("WorKerThread:"); // 线程名称
-        threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true); // 调度器shutdown后，等待当前调度执行完成
-        threadPoolTaskScheduler.setAwaitTerminationSeconds(30);
+        // 线程池的大小
+        threadPoolTaskScheduler.setPoolSize(taskThreadPool);
+        // 线程名称
+        threadPoolTaskScheduler.setThreadNamePrefix(taskPoolProperties.getThreadNamePrefix());
+        // 调度器shutdown后，等待当前调度执行完成
+        threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(taskPoolProperties.isCompleteOnShutdown());
+        // 等待终止时间
+        threadPoolTaskScheduler.setAwaitTerminationSeconds(taskPoolProperties.getAwaitTerminationSeconds());
         return threadPoolTaskScheduler;
     }
 }
