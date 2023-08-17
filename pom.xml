@@ -7,7 +7,7 @@
     <groupId>com.tiger</groupId>
     <artifactId>job</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>${dcs-job.version}</version>
     <modules>
         <module>job-core</module>
         <module>job-admin</module>

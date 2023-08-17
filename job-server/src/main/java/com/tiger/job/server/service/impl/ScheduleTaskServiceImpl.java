@@ -1,16 +1,16 @@
 package com.tiger.job.server.service.impl;
 
-import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tiger.job.common.constant.ChannelConstant;
 import com.tiger.job.common.constant.ClusterProperties;
 import com.tiger.job.common.entity.ScheduleTaskDto;
 import com.tiger.job.common.entity.ScheduleTaskPo;
 import com.tiger.job.common.util.MeUtil;
+import com.tiger.job.server.listener.ScheduleEvent;
 import com.tiger.job.server.mapper.ScheduleTaskMapper;
 import com.tiger.job.server.service.ScheduleTaskService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,17 +24,19 @@ import java.util.function.Consumer;
  **/
 @Service
 public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, ScheduleTaskDto> implements ScheduleTaskService {
+    private final ApplicationEventPublisher publisher;
     private final ScheduleTaskMapper scheduleTaskMapper;
-    private final StringRedisTemplate stringRedisTemplate;
+    //private final StringRedisTemplate stringRedisTemplate;
     private final ClusterProperties clusterProperties;
     private final Map<String, Consumer<ScheduleTaskDto>> triggerMap;
 
-    public ScheduleTaskServiceImpl(@Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, ClusterProperties clusterProperties, ScheduleTaskMapper scheduleTaskMapper, StringRedisTemplate stringRedisTemplate) {
+    public ScheduleTaskServiceImpl(ApplicationEventPublisher publisher, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, ClusterProperties clusterProperties, ScheduleTaskMapper scheduleTaskMapper) {
+        this.publisher = publisher;
         this.triggerMap = triggerMap;
         this.clusterProperties = clusterProperties;
         this.scheduleTaskMapper = scheduleTaskMapper;
-        this.stringRedisTemplate = stringRedisTemplate;
     }
+
 
     @Override
     public List<ScheduleTaskDto> selectAll() {
@@ -135,7 +137,8 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
             taskList.forEach(item -> {
                 if (clusterProperties.isOpen()) {
                     /* 发布消息,通知本节点及其他节点开启定时 */
-                    stringRedisTemplate.convertAndSend(ChannelConstant.OPEN, JSON.toJSONString(item));
+                    //stringRedisTemplate.convertAndSend(ChannelConstant.OPEN, JSON.toJSONString(item));
+                    publisher.publishEvent(new ScheduleEvent(this, ChannelConstant.OPEN, item));
                 } else {
                     triggerMap.get(ChannelConstant.OPEN).accept(item);
                 }
@@ -149,7 +152,8 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
             taskList.forEach(item -> {
                 if (clusterProperties.isOpen()) {
                     /* 发布消息，通知本节点及其他节点关闭定时 */
-                    stringRedisTemplate.convertAndSend(ChannelConstant.CLOSE, JSON.toJSONString(item));
+                    //stringRedisTemplate.convertAndSend(ChannelConstant.CLOSE, JSON.toJSONString(item));
+                    publisher.publishEvent(new ScheduleEvent(this, ChannelConstant.CLOSE, item));
                 } else {
                     triggerMap.get(ChannelConstant.CLOSE).accept(item);
                 }
@@ -163,7 +167,8 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
             taskList.forEach(item -> {
                 if (clusterProperties.isOpen()) {
                     /* 发送消息，通知本节点及其他节点删除定时 */
-                    stringRedisTemplate.convertAndSend(ChannelConstant.DELETE, JSON.toJSONString(item));
+                    //stringRedisTemplate.convertAndSend(ChannelConstant.DELETE, JSON.toJSONString(item));
+                    publisher.publishEvent(new ScheduleEvent(this, ChannelConstant.CLOSE, item));
                 } else {
                     triggerMap.get(ChannelConstant.DELETE).accept(item);
                 }
