@@ -21,8 +21,8 @@ public class TaskLog {
 
     /**
      * 日志执行
-     * @param task
-     * @param message
+     * @param task 定时任务DTO
+     * @param message 消息
      */
     public void invoke(ScheduleTaskDto task, String message) {
         if ("0".equals(task.getOpenLog()) || (!logProperties.isFailOpen() && !logProperties.isSuccessOpen())) {

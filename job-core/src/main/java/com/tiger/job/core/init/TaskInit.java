@@ -5,9 +5,9 @@ import com.tiger.job.core.beanScan.SchedulerScan;
 import com.tiger.job.common.constant.ChannelConstant;
 import com.tiger.job.core.executor.AdapterExecutor;
 import com.tiger.job.core.queue.TaskQueue;
+import com.tiger.job.core.unlock.Unlock;
 import com.tiger.job.core.worker.TaskWorker;
 import com.tiger.job.server.service.ScheduleTaskService;
-import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,9 +16,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,11 +49,9 @@ public class TaskInit {
     private final AdapterExecutor adapterExecutor;
     private final TaskQueue taskQueue;
     private final SchedulerScan schedulerScan;
+    private final Unlock unlock;
 
-    @Resource
-    private RedissonClient locker;
-
-    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapterExecutor, SchedulerScan schedulerScan) {
+    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapterExecutor, SchedulerScan schedulerScan, Unlock unlock) {
         this.scheduledFutureMap = scheduledFutureMap;
         this.triggerMap = triggerMap;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
@@ -62,6 +60,7 @@ public class TaskInit {
         this.taskQueue = taskQueue;
         this.adapterExecutor = adapterExecutor;
         this.schedulerScan = schedulerScan;
+        this.unlock = unlock;
     }
 
     /**
@@ -92,6 +91,8 @@ public class TaskInit {
             CronTrigger cronTrigger = item.toCronTrigger();
             ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(worker, cronTrigger);
             scheduledFutureMap.put(item.getId(), schedule);
+            // 强制解锁
+            unlock.unlockTask(Collections.singletonList(item.getId()));
             log.info("定时任务：[{}]初始化完成", item.getName());
         });
     }
@@ -126,7 +127,7 @@ public class TaskInit {
                 scheduledFutureMap.put(scheduleId, schedule);
             }
             /* 强制解锁 */
-            locker.getLock(taskQueue.getQueueLockName(scheduleId)).forceUnlock();
+            unlock.unlockTask(Collections.singletonList(scheduleId));
         };
         triggerMap.put(ChannelConstant.OPEN, openSchedule);
         log.info("定时任务：操作注册表：[{}]初始化完成", ChannelConstant.OPEN);

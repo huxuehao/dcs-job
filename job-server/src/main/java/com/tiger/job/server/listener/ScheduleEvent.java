@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationEvent;
  * @author huxuehao
  **/
 public class ScheduleEvent extends ApplicationEvent {
-
+    private static final long serialVersionUID = -1L;
     private String type;
 
     private ScheduleTaskDto taskDto;
