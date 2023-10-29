@@ -5,9 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * @ClassName ClusterProperties
- * @Description 集群相关参数
- * @Author huxuehao
+ * 描述：集群相关参数
+ *
+ * @author huxuehao
  **/
 @Data
 @Component

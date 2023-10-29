@@ -8,9 +8,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * @ClassName ScheduleLogDto
- * @Description 日志类
- * @Author huxuehao
+ * 描述：日志类
+ *
+ * @author huxuehao
  **/
 @Data
 @AllArgsConstructor

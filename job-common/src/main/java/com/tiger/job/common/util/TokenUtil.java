@@ -15,17 +15,13 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * @ClassName TokenUtil
- * @Description token工具类
- * @Author StudiousTiger
+ * 描述：token工具类
+ *
+ * @author huxuehao
  **/
 public class TokenUtil {
     /**
-     * @desc 创建token
-     * @param id
-     * @param subject
-     * @param ttlMillis
-     * @return
+     * 创建token
      */
     public static String createToken(String id, String subject, long ttlMillis) {
         /* 指定签名的时候使用的签名算法 */
@@ -53,20 +49,17 @@ public class TokenUtil {
     }
 
     /**
-     * @desc 解密token
-     * @param token
-     * @return
+     * 解密token
      */
     public static Claims parseToken(String token) {
-        Claims claims = Jwts.parser()
+        return Jwts.parser()
                 .setSigningKey(generalKey())
                 .parseClaimsJws(token)
                 .getBody();
-        return claims;
     }
 
     /**
-     * @desc 由字符串生成加密key
+     * 由字符串生成加密key
      * @return 秘钥
      */
     public static SecretKey generalKey(){
@@ -74,7 +67,6 @@ public class TokenUtil {
         String stringKey = Constant.JWT_SECRET;
         byte[] encodedKey = Base64.decodeBase64(stringKey);
         /* 根据给定的字节数组使用AES加密算法构造一个密钥。*/
-        SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
-        return key;
+        return new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
     }
 }

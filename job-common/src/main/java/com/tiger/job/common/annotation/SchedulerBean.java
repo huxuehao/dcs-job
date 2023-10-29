@@ -3,9 +3,9 @@ package com.tiger.job.common.annotation;
 import java.lang.annotation.*;
 
 /**
- * @Annotation SchedulerBean
- * @Description 定时任务类注解
- * @Author huxuehao
+ * 描述：定时任务类注解
+ *
+ * @author huxuehao
  **/
 @Documented
 @Target(ElementType.TYPE)

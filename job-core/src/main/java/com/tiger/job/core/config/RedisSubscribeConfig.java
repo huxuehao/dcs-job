@@ -19,9 +19,9 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * @ClassName RedisSubscribeConfig
- * @Description redis 的订阅配置
- * @Author huxuehao
+ * 描述：redis 的订阅配置
+ *
+ * @author huxuehao
  **/
 @Configuration
 public class RedisSubscribeConfig {

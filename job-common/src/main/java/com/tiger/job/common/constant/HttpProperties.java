@@ -5,9 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * @ClassName CommonProperties
- * @Description httpUtils参数
- * @Author huxuehao
+ * 描述：httpUtils参数
+ *
+ * @author huxuehao
  **/
 @Data
 @Component

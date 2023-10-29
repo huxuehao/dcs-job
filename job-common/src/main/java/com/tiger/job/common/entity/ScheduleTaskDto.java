@@ -8,9 +8,9 @@ import org.springframework.scheduling.support.CronTrigger;
 import java.util.Objects;
 
 /**
- * @ClassName ScheduleTask
- * @Description 定时任务信息表
- * @Author huxuehao
+ * 描述：定时任务信息表
+ *
+ * @author huxuehao
  **/
 @Data
 @TableName("sys_scheduled")

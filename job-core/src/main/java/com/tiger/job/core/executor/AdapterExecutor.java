@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * @ClassName AdapterExecutor
- * @Description TODO
- * @Author huxuehao
+ * 描述：执行适配器
+ *
+ * @author huxuehao
  **/
 @Component
 public class AdapterExecutor {

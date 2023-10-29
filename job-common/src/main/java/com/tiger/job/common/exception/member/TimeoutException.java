@@ -4,9 +4,9 @@ import com.tiger.job.common.enums.ResponseStatus;
 import com.tiger.job.common.exception.base.BaseException;
 
 /**
- * @ClassName TimeoutException
- * @Description 请求超时异常
- * @Author StudiousTiger
+ * 描述：请求超时异常
+ *
+ * @author huxuehao
  **/
 public class TimeoutException extends BaseException {
     public TimeoutException(int code, String module, String method, String message) {

@@ -4,9 +4,9 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
- * @ClassName LogRotateMapper
- * @Description TODO
- * @Author huxuehao
+ * mapper
+ *
+ * @author huxuehao
  **/
 @Repository
 public interface LogRotateMapper {

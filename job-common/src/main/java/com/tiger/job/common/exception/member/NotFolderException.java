@@ -4,9 +4,9 @@ import com.tiger.job.common.enums.ResponseStatus;
 import com.tiger.job.common.exception.base.BaseException;
 
 /**
- * @ClassName NotFolderException
- * @Description 非文件夹异常
- * @Author huxuehao
+ * 描述：非文件夹异常
+ *
+ * @author huxuehao
  **/
 public class NotFolderException extends BaseException {
     public NotFolderException(int code, String module, String method, String message) {

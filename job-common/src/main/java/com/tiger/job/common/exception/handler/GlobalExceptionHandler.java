@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.sql.SQLException;
 
 /**
- * @ClassName GlobalExceptionHandler
- * @Description 全局异常处理
- * @Author huxuehao
+ * 描述：全局异常处理
+ *
+ * @author huxuehao
  **/
 @ControllerAdvice
 public class GlobalExceptionHandler {

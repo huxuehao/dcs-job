@@ -1,9 +1,9 @@
 package com.tiger.job.common.constant;
 
 /**
- * @ClassName Constant
- * @Description 常量
- * @Author huxuehao
+ * 描述：常量
+ *
+ * @author huxuehao
  **/
 public class Constant {
     /* token秘钥 */

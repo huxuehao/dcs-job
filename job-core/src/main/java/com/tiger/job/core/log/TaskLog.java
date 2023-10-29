@@ -5,9 +5,9 @@ import com.tiger.job.common.entity.ScheduleTaskDto;
 import org.springframework.stereotype.Component;
 
 /**
- * @ClassName TaskLog
- * @Description TODO
- * @Author huxuehao
+ * 日志
+ *
+ * @author huxuehao
  **/
 @Component
 public class TaskLog {

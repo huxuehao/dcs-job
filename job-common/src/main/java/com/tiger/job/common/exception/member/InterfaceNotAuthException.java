@@ -4,9 +4,9 @@ import com.tiger.job.common.enums.ResponseStatus;
 import com.tiger.job.common.exception.base.BaseException;
 
 /**
- * @ClassName AuthException
- * @Description 请求未授权异常
- * @Author StudiousTiger
+ * 描述：请求未授权异常
+ *
+ * @author huxuehao
  **/
 public class InterfaceNotAuthException extends BaseException {
     public InterfaceNotAuthException(int code, String module, String method, String message) {

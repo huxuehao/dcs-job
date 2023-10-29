@@ -21,11 +21,10 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.function.Consumer;
 
 /**
- * @ClassName TaskConfig
- * @Description 定时任务配置
- * @Author huxuehao
+ * 描述：定时任务配置
+ *
+ * @author huxuehao
  **/
-
 @Configuration
 @AutoConfigureAfter({TaskPoolProperties.class})
 public class TaskConfig {
@@ -33,7 +32,6 @@ public class TaskConfig {
     /**
      * 类注册表
      * 描述：存储了当前工程中用户通过@SchedulerBean和@TaskPath标记的定时任务类和定时任务方法
-     * @return
      */
     @Bean(name = "schedulerScanMethodMap")
     public Map<String, Map<Object, Method>> schedulerScanMethodMap() {
@@ -44,7 +42,6 @@ public class TaskConfig {
      * 节点唯一标识符
      * 描述：当前项目的唯一标识符，用于分布式定时任务使用。
      * 使用主机地址和进程IP组合作为唯一标识。
-     * @return
      */
     @Bean(name = "uniqueIdentifier")
     public String uniqueIdentifier() {
@@ -74,7 +71,7 @@ public class TaskConfig {
      * 触发器注册表
      * 描述：对于定时任务的动态操作（添加、开启、停止、删除）我们需要将上述操作封装成触发器，想要使用的时候
      * 我们只需要取出已经初始化好的代码逻辑，取出对应的代码逻辑，传入参数，执行即可。上述描述是一种预处理的思想。
-     *
+     * <p>
      * 在这里我们使用java8的Consumer（消费型函数式接口）进行时间，并将实现了不同代码逻辑的Consumer存储到Map中，
      * 这样我们一方面可以实现动态扩展，另一方面省去了多 if-else 的操作。
      */

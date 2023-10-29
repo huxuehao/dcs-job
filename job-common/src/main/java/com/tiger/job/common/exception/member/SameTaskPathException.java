@@ -4,9 +4,9 @@ import com.tiger.job.common.enums.ResponseStatus;
 import com.tiger.job.common.exception.base.BaseException;
 
 /**
- * @ClassName SamePathTaskAPIException
- * @Description 存在相同的path异常
- * @Author huxuehao
+ * 描述：存在相同的path异常
+ *
+ * @author huxuehao
  **/
 public class SameTaskPathException extends BaseException {
 

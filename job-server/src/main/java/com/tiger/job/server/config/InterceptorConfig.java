@@ -7,9 +7,9 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 /**
- * @ClassName AuthInterceptConfig
- * @Description 拦截器配置
- * @Author StudiousTiger
+ * 拦截器配置
+ *
+ * @author huxuehao
  **/
 @Configuration
 public class InterceptorConfig extends WebMvcConfigurationSupport {

@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @ClassName UserService
- * @Description 用户操作
- * @Author StudiousTiger
+ * 用户服务接口
+ *
+ * @author huxuehao
  **/
 public interface UserService {
     /**
@@ -31,9 +31,6 @@ public interface UserService {
 
     /**
      * 退出登录
-     *
-     * @param id
-     * @return
      */
     void logout(String id);
 
@@ -65,7 +62,6 @@ public interface UserService {
      * 修改用户密码
      *
      * @param  map 用户信息
-     * @return
      */
     int updatePassword(Map<String, String> map);
 

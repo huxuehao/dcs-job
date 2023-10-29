@@ -8,9 +8,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @ClassName TaskQueue
- * @Description 定时任务队列
- * @Author huxuehao
+ * 定时任务队列
+ *
+ * @author huxuehao
  **/
 @Component
 public class TaskQueue {
@@ -127,7 +127,7 @@ public class TaskQueue {
     public boolean existQueue(String queueName) {
         try {
             Boolean aBoolean = redisTemplate.hasKey(queueName);
-            return aBoolean == null ? false : aBoolean;
+            return aBoolean != null && aBoolean;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -221,7 +221,6 @@ public class TaskQueue {
     /**
      * 清空队列
      * @param queueName 队列名
-     * @return 结果
      */
     public void clear(String queueName) {
         try {
@@ -237,7 +236,6 @@ public class TaskQueue {
     /**
      * 删除队列
      * @param queueNames 队列名
-     * @return 结果
      */
     public void delete(String... queueNames) {
         if (queueNames != null && queueNames.length > 0) {

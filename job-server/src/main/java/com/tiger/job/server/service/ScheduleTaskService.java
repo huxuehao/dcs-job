@@ -7,9 +7,9 @@ import com.tiger.job.common.entity.ScheduleTaskPo;
 import java.util.List;
 
 /**
- * @InterfaceName ScheduleTaskService
- * @Description TODO
- * @Author huxuehao
+ * 调度服务接口
+ *
+ * @author huxuehao
  **/
 public interface ScheduleTaskService extends IService<ScheduleTaskDto> {
     /* 获取列表*/

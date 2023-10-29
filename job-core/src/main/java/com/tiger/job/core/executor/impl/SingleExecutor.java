@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * @ClassName SingleExecutor
- * @Description 单例执行
- * @Author huxuehao
+ * 描述：单例执行器
+ *
+ * @author huxuehao
  **/
 @Component
 public class SingleExecutor implements Executor {

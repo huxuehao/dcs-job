@@ -5,17 +5,17 @@ import com.tiger.job.common.annotation.TaskPath;
 import org.springframework.stereotype.Component;
 
 /**
- * @ClassName 测试定时任务
- * @Description TODO
- * @Author huxuehao
+ * 测试定时任务（整合springboot）
+ *
+ * @author huxuehao
  **/
 @Component
 @SchedulerBean
 public class TopicTask {
 
-    private final ComponentC c;
+    private final ComponentBean c;
 
-    public TopicTask(ComponentC c) {
+    public TopicTask(ComponentBean c) {
         this.c = c;
     }
 

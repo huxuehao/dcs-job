@@ -15,9 +15,9 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * @ClassName SchedulerScan
- * @Description 扫描器，扫描定时任务
- * @Author huxuehao
+ * 描述：扫描器，扫描定时任务
+ *
+ * @author huxuehao
  **/
 @Component
 public class SchedulerScan {

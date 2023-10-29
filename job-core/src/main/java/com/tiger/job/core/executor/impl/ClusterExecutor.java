@@ -18,11 +18,10 @@ import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
-
 /**
- * @ClassName ClusterExecutor
- * @Description TODO
- * @Author huxuehao
+ * 描述：集群执行器
+ *
+ * @author huxuehao
  **/
 @Component
 @EnableAspectJAutoProxy(exposeProxy=true)
@@ -59,7 +58,7 @@ public class ClusterExecutor implements Executor {
             try {
                 if (lock.tryLock(0,this.expirationTime(task.getCron()), TimeUnit.MILLISECONDS)) {
                     taskQueue.push(queueName, getQueueItem());
-                    /**
+                    /*
                      * doExecute属于内部方法，如果直接使用this.doExecute(xx),那么是使用实例对象调用的，而不是代理对象，导致AOP失效。
                      * 所以我们通过@EnableAspectJAutoProxy(exposeProxy=true) 加 (XX)AopContext.currentProxy())的方式，使得
                      * doExecute方法被代理对象调用，从而使得AOP生效

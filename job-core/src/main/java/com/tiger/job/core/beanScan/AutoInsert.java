@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @ClassName AutoInsert
- * @Description TODO
- * @Author huxuehao
+ * 扫描结果自动导入库
+ *
+ * @author huxuehao
  **/
 @Component
 public class AutoInsert {
@@ -39,8 +39,6 @@ public class AutoInsert {
 
     /**
      * 生成task实体
-     * @param taskPaths
-     * @return
      */
     private List<ScheduleTaskDto> genTaskDto(List<TaskPath> taskPaths) {
         List<ScheduleTaskDto> taskList = new ArrayList<>();

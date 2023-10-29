@@ -4,9 +4,9 @@ import com.tiger.job.common.enums.ResponseStatus;
 import com.tiger.job.common.exception.base.BaseException;
 
 /**
- * @ClassName MatchPathException
- * @Description 没有捕获path异常
- * @Author huxuehao
+ * 描述：没有捕获path异常
+ *
+ * @author huxuehao
  **/
 public class NotMatchPathException extends BaseException {
     public NotMatchPathException(int code, String module, String method, String message) {

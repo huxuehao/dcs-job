@@ -5,9 +5,9 @@ import com.tiger.job.common.enums.ResponseStatus;
 import java.util.LinkedHashMap;
 
 /**
- * @ClassName Response
- * @Description TODO
- * @Author huxuehao
+ * 描述：响应体
+ *
+ * @author huxuehao
  **/
 public class Response extends LinkedHashMap<String, Object> {
     private static final long serialVersionUID = 1L;

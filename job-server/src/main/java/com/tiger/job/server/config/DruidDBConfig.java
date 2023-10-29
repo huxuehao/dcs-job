@@ -19,9 +19,9 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 /**
- * @ClassName DruidDBConfig
- * @Description 数据源配置类
- * @Author StudiousTiger
+ * 数据源配置类
+ *
+ * @author huxuehao
  **/
 @Configuration
 @EnableTransactionManagement

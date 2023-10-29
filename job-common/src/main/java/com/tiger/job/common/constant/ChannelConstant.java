@@ -1,9 +1,9 @@
 package com.tiger.job.common.constant;
 
 /**
- * @ClassName ChannelConstant
- * @Description redis的订阅频道的channel名称
- * @Author huxuehao
+ * 描述：redis的订阅频道的channel名称
+ *
+ * @author huxuehao
  **/
 public class ChannelConstant {
     public static final String OPEN = "tiger-job-channel:open-task";

@@ -5,9 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * @ClassName ScheduleTaskPo
- * @Description 定时任务信息表PO
- * @Author huxuehao
+ * 描述：定时任务信息表PO
+ *
+ * @author huxuehao
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)

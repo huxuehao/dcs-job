@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * @ClassName HeartbeatSchedule
- * @Description 心跳检检测
- * @Author huxuehao
+ * 心跳检检测
+ *
+ * @author huxuehao
  **/
 @Component
 public class HeartbeatSchedule {

@@ -5,9 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * @ClassName ScanProperties
- * @Description 扫描定时任务相关参数
- * @Author huxuehao
+ * 描述：扫描定时任务相关参数
+ *
+ * @author huxuehao
  **/
 @Data
 @Component

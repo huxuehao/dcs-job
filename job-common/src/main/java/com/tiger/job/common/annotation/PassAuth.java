@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @Annotation PassAuth
- * @Description 用于跳过权限认证
- * @Author StudiousTiger
+ * 描述：用于跳过权限认证
+ *
+ * @author StudiousTiger
  **/
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

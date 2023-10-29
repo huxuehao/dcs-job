@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * @ClassName ScheduleTaskMapper
- * @Description TODO
- * @Author huxuehao
+ * mapper
+ *
+ * @author huxuehao
  **/
 @Repository
 public interface ScheduleTaskMapper extends BaseMapper<ScheduleTaskDto> {

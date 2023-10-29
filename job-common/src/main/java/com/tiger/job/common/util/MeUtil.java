@@ -1,6 +1,7 @@
 package com.tiger.job.common.util;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
 import com.tiger.job.common.util.dependent.SnowflakeID;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -12,9 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * @ClassName MyUtil
- * @Description 自定义工具类
- * @Author StudiousTiger
+ * 描述：自定义工具类
+ *
+ * @author huxuehao
  **/
 public class MeUtil {
     public static final String ADMINISTRATOR = "1111111111111111111";
@@ -65,26 +66,18 @@ public class MeUtil {
             return true;
         } else if (str.matches("^[1-9][0-9]{3}年[0-9]{1,2}月[0-9]{1,2}日$")){
             return true;
-        } else if (str.matches("^[0-9]{1,2}月[0-9]{1,2}日$")) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return str.matches("^[0-9]{1,2}月[0-9]{1,2}日$");
     }
     private static boolean isDatetime(String str) {
         if (str.matches("^[1-9][0-9]{3}-[0-9]{1,2}-[0-9]{1,2}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}||[1-9][0-9]{3}-[0-9]{1,2}-[0-9]{1,2}\\s[0-9]{2}:[0-9]{2}$")){
             return true;
         } else if (str.matches("^[1-9][0-9]{3}/[0-9]{1,2}/[0-9]{1,2}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}||[1-9][0-9]{3}/[0-9]{1,2}/[0-9]{1,2}\\s[0-9]{2}:[0-9]{2}$")){
             return true;
-        } else if (str.matches("^[1-9][0-9]{3}年[0-9]{1,2}月[0-9]{1,2}日\\s[0-9]{2}时[0-9]{2}分[0-9]{2}秒||[1-9][0-9]{3}年[0-9]{1,2}月[0-9]{1,2}日\\s[0-9]{2}时[0-9]{2}分$")){
-            return true;
-        } else {
-            return false;
-        }
+        } else return str.matches("^[1-9][0-9]{3}年[0-9]{1,2}月[0-9]{1,2}日\\s[0-9]{2}时[0-9]{2}分[0-9]{2}秒||[1-9][0-9]{3}年[0-9]{1,2}月[0-9]{1,2}日\\s[0-9]{2}时[0-9]{2}分$");
     }
 
     /**
-     * @Description 匹配子串在父串中最后一次出现的位置
+     * 匹配子串在父串中最后一次出现的位置
      * @param parentString 父串
      * @param subString 子串
      * @return 最后一次出现的位置的索引
@@ -98,10 +91,8 @@ public class MeUtil {
             int size = split.length;
             if (parentString.endsWith(subString)){ /* 子串在末尾 */
                 return parentString.length()-subString.length();
-            }else if (size == 1 && subString.equals(parentString)) { /* 不存在子串 */
-                return -1;
-            } else if (size == 1) { /* 父串中只存在一个子串 */
-                if (parentString.substring(0,subString.length()).equals(subString)){ /* 子串在头 */
+            }else if (size == 1) { /* 父串中只存在一个子串 */
+                if (parentString.startsWith(subString)){ /* 子串在头 */
                     return 0;
                 } else {  /* 子串在尾 */
                     return split[0].length();
@@ -119,7 +110,7 @@ public class MeUtil {
     }
 
     /**
-     * @Description KMP算法：匹配子串在父串中第一次出现的位置
+     * KMP算法：匹配子串在父串中第一次出现的位置
      * @param parentString 父串
      * @param subString  子串
      * @return 第一次出现的位置的索引
@@ -136,16 +127,13 @@ public class MeUtil {
         return getLocate(parentString, subString);
     }
     /**
-     * @Description 返回subStr在str中出现的首个位置
-     * @param str
-     * @param subStr
-     * @return
+     * 返回subStr在str中出现的首个位置
      */
     private static int getLocate(String str, String subStr) {
         /* 记录“被匹配字符串”前移的位置数 */
         int locate = 0;
         /* 记录“被匹配字符串”前移后的字符串 */
-        String afterMoveStr = "";
+        String afterMoveStr;
 
         /* 获取 str 和 subStr匹配成功的字符串 */
         String partStr = getSameStr(str, subStr, 0);
@@ -177,9 +165,8 @@ public class MeUtil {
         return locate;
     }
     /**
-     * @Description 计算"部分匹配值"
+     * 计算"部分匹配值"
      * @param partStr ： 已匹配的字符串
-     * @return
      */
     private static int getPartialMatchVal(String partStr) {
         int nums = 0; /* 存放"部分匹配值" */
@@ -188,7 +175,7 @@ public class MeUtil {
         /* 从头到尾和从尾到头进行扫描（排除首尾的扫描） */
         for (int i=0,j=partStr.length()-1; i<partStr.length()-1 && j>0; i++,j--) {
             list1.add(partStr.substring(0, i+1)); /* 获取前缀字符串 */
-            list2.add(partStr.substring(j, partStr.length())); /* 获取后缀字符串 */
+            list2.add(partStr.substring(j)); /* 获取后缀字符串 */
         }
         /* 比较最大相同前缀（部分匹配值） */
         for (int i = 0; i < list1.size(); i++) {
@@ -199,7 +186,7 @@ public class MeUtil {
         return nums;
     }
     /**
-     * @Description 计算str  和  subStr 中已匹配的字符串
+     * 计算str  和  subStr 中已匹配的字符串
      * @param str ： 被匹配字符串
      * @param subStr 匹配字符串
      * @param partialMatchVal 开始时匹配的位置
@@ -220,9 +207,7 @@ public class MeUtil {
     }
 
     /**
-     * @Description 判断对象是否为空
-     * @param obj
-     * @return
+     * 判断对象是否为空
      */
     public static Boolean isEmpty(Object obj) {
         if (obj == null) {
@@ -232,16 +217,16 @@ public class MeUtil {
             return ((String) obj).trim().length() == 0;
         }
         if (obj instanceof Collection) {
-            return ((Collection) obj).isEmpty();
+            return ((Collection<?>) obj).isEmpty();
         }
         if (obj.getClass().isArray()) {
             return Array.getLength(obj) == 0;
         }
         if (obj instanceof Map) {
-            return ((Map) obj).isEmpty();
+            return ((Map<?, ?>) obj).isEmpty();
         }
         if (obj instanceof Optional) {
-            return !((Optional)obj).isPresent();
+            return !((Optional<?>)obj).isPresent();
         }
         if (obj instanceof CharSequence) {
             return ((CharSequence)obj).length() == 0;
@@ -250,22 +235,16 @@ public class MeUtil {
     }
 
     public static boolean hasEmpty(Object... os) {
-        Object[] var1 = os;
-        int var2 = os.length;
-
-        for(int var3 = 0; var3 < var2; ++var3) {
-            Object o = var1[var3];
+        for (Object o : os) {
             if (isEmpty(o)) {
                 return true;
             }
         }
-
         return false;
     }
 
     /**
-     * @Description 生成唯一的雪花ID
-     * @return
+     * 生成唯一的雪花ID
      */
     public static String nextId() {
         return String.valueOf(SnowflakeID.nextId());
@@ -273,25 +252,22 @@ public class MeUtil {
 
     /**
      * 对象转map
+     *
      * @param o 对象
-     * @return
      */
     public static Map<String,Object> ObjectToMap(Object o) {
-        return JSON.parseObject(JSON.toJSONString(o),Map.class);
+        return JSON.parseObject(JSON.toJSONString(o), new TypeReference<Map<String, Object>>(){});
     }
 
     /**
-     * @desc 当前sql类型Timestamp的当前时间
-     * @return
+     * 当前sql类型Timestamp的当前时间
      */
     public static Timestamp currentTimestamp() {
         return new Timestamp(new Date().getTime());
     }
 
     /**
-     * @desc 数据库datetime转String
-     * @param sqlDateTime
-     * @return
+     * 数据库datetime转String
      */
     public static String sqlTimeForm(Timestamp sqlDateTime) {
         return new SimpleDateFormat(datetimeFormat).format(sqlDateTime);
@@ -302,17 +278,14 @@ public class MeUtil {
         return new SimpleDateFormat(datetimeFormat).format(new Date(lo));
     }
     /**
-     * @desc 将数据库 Timestamp 格式化 (yyyy-MM-dd HH:mm:ss)
-     * @param sqlDateTime
-     * @return
+     * 将数据库 Timestamp 格式化 (yyyy-MM-dd HH:mm:ss)
      */
     public static String sqlTimestampForm(Timestamp sqlDateTime, String datetimeFormat) {
         return new SimpleDateFormat(datetimeFormat).format(sqlDateTime);
     }
 
     /**
-     * @desc 获取当前已经格式化后的时间 (yyyy-MM-dd HH:mm:ss)
-     * @return
+     * 获取当前已经格式化后的时间 (yyyy-MM-dd HH:mm:ss)
      */
     public static String currentDatetime() {
         return currentDatetime(datetimeFormat);
@@ -323,8 +296,7 @@ public class MeUtil {
     }
 
     /**
-     * @desc 获取当前已经格式化后的日期 (yyyyMMdd)
-     * @return
+     * 获取当前已经格式化后的日期 (yyyyMMdd)
      */
     public static String currentDate() {
         Timestamp timestamp = currentTimestamp();
@@ -333,29 +305,28 @@ public class MeUtil {
     }
 
     /**
-     * @desc 使用默认的加盐值进行MD5加密
+     * 使用默认的加盐值进行MD5加密
      * @param inputPass  原始密码
      * @return 加密后的字符串
      */
     public static String md5(String inputPass) {
-        String str = ""+salt.charAt(0)+salt.charAt(2) + inputPass +salt.charAt(5) + salt.charAt(4);
+        String str = String.valueOf(salt.charAt(0))+salt.charAt(2) + inputPass +salt.charAt(5) + salt.charAt(4);
         return DigestUtils.md5Hex(str);
     }
 
     /**
-     * @desc 使用自定义的盐值进行MD5加密
+     * 使用自定义的盐值进行MD5加密
      * @param inputPass  原始密码
      * @param salt 盐值
      * @return 加密后的字符串
      */
     public static String md5(String inputPass, String salt) {
-        String str = ""+salt.charAt(0)+salt.charAt(2) + inputPass +salt.charAt(5) + salt.charAt(4);
+        String str = String.valueOf(salt.charAt(0)) + salt.charAt(2) + inputPass +salt.charAt(5) + salt.charAt(4);
         return DigestUtils.md5Hex(str);
     }
 
     /**
      * 获取UUID
-     * @return
      */
     public static String uuid() {
         return UUID.randomUUID().toString().replaceAll("-","");
@@ -363,8 +334,6 @@ public class MeUtil {
 
     /**
      * 获取异常栈信息
-     * @param e
-     * @return
      */
     public static String catchExceptionStackInfo(Exception e) {
         StringWriter sw = new StringWriter();

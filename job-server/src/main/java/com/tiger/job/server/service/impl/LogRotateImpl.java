@@ -9,14 +9,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
- * @ClassName LogRotateImpl
- * @Description TODO
- * @Author huxuehao
+ * 日志轮转实现类
+ *
+ * @author huxuehao
  **/
 @Service
 public class LogRotateImpl implements LogRotate {
 
-    private final String TABLE_NAME = "sys_scheduled_log";
     private final LogRotateMapper logRotateMapper;
     private final LogProperties logProperties;
 
@@ -40,16 +39,15 @@ public class LogRotateImpl implements LogRotate {
         long minTime = dateFormat.parse(split[0]).getTime();
         long maxTime = dateFormat.parse(split[1]).getTime();
 
-        return maxTime - minTime >= 1000 * 60 * 60 * 24 * logProperties.getSaveDays() ? true : false;
+        return maxTime - minTime >= 1000L * 60 * 60 * 24 * logProperties.getSaveDays();
     }
 
     @Override
-    public Boolean doRotate(String tableSuffix) throws ParseException {
+    public void doRotate(String tableSuffix) throws ParseException {
         if (this.validDayCycle()) {
+            String TABLE_NAME = "sys_scheduled_log";
             logRotateMapper.copyTable(TABLE_NAME + tableSuffix);
             logRotateMapper.delRecordsIFExist(TABLE_NAME + tableSuffix);
-            return true;
         }
-        return false;
     }
 }

@@ -7,9 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * @ClassName LoginBody
- * @Description 登录类
- * @Author StudiousTiger
+ * 描述：登录类
+ *
+ * @author huxuehao
  **/
 @Data
 @AllArgsConstructor

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * @ClassName ManualExecutor
- * @Description 手动执行
- * @Author huxuehao
+ * 描述：手动执行器
+ *
+ * @author huxuehao
  **/
 @Component
 public class ManualExecutor implements Executor {

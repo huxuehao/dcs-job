@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @ClassName UserServiceImpl
- * @Description TODO
- * @Author StudiousTiger
+ * 用户服务实现类
+ *
+ * @author huxuehao
  **/
 @Service
 public class UserServiceImpl implements UserService {

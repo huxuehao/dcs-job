@@ -4,9 +4,9 @@ import com.tiger.job.common.annotation.TaskPath;
 import com.tiger.job.common.annotation.SchedulerBean;
 
 /**
- * @ClassName 测试定时任务
- * @Description TODO
- * @Author huxuehao
+ * 测试定时任务
+ *
+ * @author huxuehao
  **/
 @SchedulerBean
 public class MyScheduled1 {

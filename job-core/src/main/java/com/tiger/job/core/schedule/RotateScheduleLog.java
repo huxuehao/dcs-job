@@ -12,9 +12,9 @@ import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @ClassName RotateScheduleLog
- * @Description 实现定时任务的轮转
- * @Author huxuehao
+ * 实现定时任务的轮转
+ *
+ * @author huxuehao
  **/
 @Component
 public class RotateScheduleLog {

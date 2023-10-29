@@ -4,9 +4,9 @@ import com.tiger.job.common.enums.ResponseStatus;
 import com.tiger.job.common.exception.base.BaseException;
 
 /**
- * @ClassName ErrorException
- * @Description 错误
- * @Author huxuehao
+ * 描述：错误
+ *
+ * @author huxuehao
  **/
 public class ErrorException extends BaseException {
     public ErrorException(int code, String module, String method, String message) {

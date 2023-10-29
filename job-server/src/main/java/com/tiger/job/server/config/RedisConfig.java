@@ -7,9 +7,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 /**
- * @ClassName RedisConfig
- * @Description redis的配置类
- * @Author huxuehao
+ * redis的配置类
+ *
+ * @author huxuehao
  **/
 @Component
 public class RedisConfig {

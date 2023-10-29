@@ -7,9 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * @ClassName SysUser
- * @Description 用户信息实体类
- * @Author StudiousTiger
+ * 描述：用户信息实体类
+ *
+ * @author huxuehao
  **/
 @Data
 @AllArgsConstructor

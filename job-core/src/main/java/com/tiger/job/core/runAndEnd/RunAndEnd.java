@@ -5,9 +5,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringBootConfiguration;
 
 /**
- *@ClassName RunAndEnd
- *@Description 项目启动前后的配置
- *@Author huxuehao
+ * 项目启动前后的配置
+ *
+ * @author huxuehao
  **/
 @SpringBootConfiguration
 public class RunAndEnd implements ApplicationRunner {

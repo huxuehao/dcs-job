@@ -28,7 +28,6 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.SSLContext;
@@ -42,12 +41,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Http请求工具集
+ * 描述：Http请求工具集
  *
- * @author HuXuehao (StudiousTiger)
- * @desc 这个类的作用是封装HttpClient
- * @date 2023/01/04
- */
+ * @author huxuehao
+ **/
 @Component
 public class HttpUtil {
     private final HttpProperties httpProperties;

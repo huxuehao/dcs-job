@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * @ClassName redisProperties
- * @Description 动态的配置redis的信息
- * @Author huxuehao
+ * 描述：动态的配置redis的信息
+ *
+ * @author huxuehao
  **/
 @Data
 @Component

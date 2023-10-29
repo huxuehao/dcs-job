@@ -5,9 +5,9 @@ import com.tiger.job.common.entity.ScheduleLogDto;
 import java.util.List;
 
 /**
- * @InterfaceName ScheduleLogService
- * @Description TODO
- * @Author huxuehao
+ * 调度日志接口
+ *
+ * @author huxuehao
  **/
 public interface ScheduleLogService {
     /* 分页 */

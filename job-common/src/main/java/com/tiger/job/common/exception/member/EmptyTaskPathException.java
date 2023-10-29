@@ -4,9 +4,9 @@ import com.tiger.job.common.enums.ResponseStatus;
 import com.tiger.job.common.exception.base.BaseException;
 
 /**
- * @ClassName EmtyTaskPathException
- * @Description 存在path为空的TaskPath注解
- * @Author huxuehao
+ * 描述：存在path为空的TaskPath注解
+ *
+ * @author huxuehao
  **/
 public class EmptyTaskPathException  extends BaseException {
 

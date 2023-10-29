@@ -5,9 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * @ClassName LogProperties
- * @Description 日志配置文件
- * @Author huxuehao
+ * 描述：日志配置文件
+ *
+ * @author huxuehao
  **/
 @Data
 @Component

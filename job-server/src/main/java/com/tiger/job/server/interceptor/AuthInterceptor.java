@@ -23,9 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 /**
- * @ClassName AuthIntercept
- * @Description 权限认证的切面
- * @Author StudiousTiger
+ * 权限认证的切面
+ *
+ * @author huxuehao
  **/
 @Component
 public class AuthInterceptor implements HandlerInterceptor {

@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @ClassName RetryTemplate
- * @Description 定时任务重试执行模板
- * @Author huxuehao
+ * 定时任务重试执行模板
+ *
+ * @author huxuehao
  **/
 @Component
 public abstract class RetryTemplate {

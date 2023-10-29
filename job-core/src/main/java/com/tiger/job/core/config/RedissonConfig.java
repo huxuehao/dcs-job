@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @ClassName LockConfig
- * @Description Redisson的配置类，在TaskExecutorImpl中使用到了Redisson事务锁
- * @Author huxuehao
+ * 描述：Redisson的配置类，在TaskExecutorImpl中使用到了Redisson事务锁
+ *
+ * @author huxuehao
  **/
 @Configuration
 public class RedissonConfig {

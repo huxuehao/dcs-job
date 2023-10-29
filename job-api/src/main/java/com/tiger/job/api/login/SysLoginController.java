@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Description;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @ClassName SysLoginController
- * @Description TODO
- * @Author StudiousTiger
- **/
+ * 描述：登录
+ *
+ * @author huxuehao
+ */
 @RestController
 public class SysLoginController {
 

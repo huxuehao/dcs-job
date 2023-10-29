@@ -5,9 +5,9 @@ import com.tiger.job.core.log.impl.GenSuccessLog;
 import org.springframework.stereotype.Component;
 
 /**
- * @ClassName AdapterGenLog
- * @Description TODO
- * @Author huxuehao
+ * 日志适配器
+ *
+ * @author huxuehao
  **/
 @Component
 public class AdapterGenLog {

@@ -27,8 +27,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * @ClassName TaskInit
- * @Description 初始化定时任务
+ * 描述：初始化定时任务
  * scheduledFutureMap：作为ScheduledFuture的注册表,用于我们来操作其开启关闭，key为定时任务id。
  * operationMap: 存储的定时任务操作触发器，参数是ScheduleTaskDto。
  * threadPoolTaskScheduler：定时任务线程池，线程池的大小使用的是Runtime.getRuntime().availableProcessors()。
@@ -36,7 +35,7 @@ import java.util.stream.Collectors;
  * initSchedule()：从数据表中寻找有效的定时任务，并执行定时任务。
  * initOperationMap()：初始化定时任务操作触发器，最终初始化好的定时任务操作会被填充到operationMap中，
  * 其目的是为了动态的控制定时任务的新增、开启、关闭。使用Consumer作为定时任务预处理载体。
- * @Author huxuehao
+ * @author huxuehao
  **/
 @SpringBootConfiguration
 public class TaskInit {

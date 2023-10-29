@@ -14,7 +14,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * 描述：
+ * 解锁
+ *
+ * @author huxuehao
  **/
 @Service
 public class Unlock{
@@ -34,19 +36,18 @@ public class Unlock{
      * 解锁定时任务执行锁
      */
     public void unlockTask(List<String> taskIds) {
-        Optional.ofNullable(taskIds).ifPresent(v0 -> {
-            v0.forEach(v1 -> {
-                String queueName = taskQueue.getQueueName(v1);
-                RLock queueLock = locker.getLock(taskQueue.getQueueLockName(queueName));
-                if (queueLock.isLocked()) {
-                    queueLock.forceUnlock();
-                }
-                RLock lock = locker.getLock(JobConstant.LOCK_PREFIX + JobConstant.LINK_TAG + v1);
-                if (lock.isLocked()) {
-                    lock.forceUnlock();
-                }
-            });
-        });
+        Optional.ofNullable(taskIds).ifPresent(v0 ->
+                v0.forEach(v1 -> {
+                    String queueName = taskQueue.getQueueName(v1);
+                    RLock queueLock = locker.getLock(taskQueue.getQueueLockName(queueName));
+                    if (queueLock.isLocked()) {
+                        queueLock.forceUnlock();
+                    }
+                    RLock lock = locker.getLock(JobConstant.LOCK_PREFIX + JobConstant.LINK_TAG + v1);
+                    if (lock.isLocked()) {
+                        lock.forceUnlock();
+                    }
+                }));
     }
 
     /**

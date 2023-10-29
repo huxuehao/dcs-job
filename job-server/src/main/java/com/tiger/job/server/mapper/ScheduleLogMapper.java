@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * @InterfaceName ScheduleLogMapper
- * @Description TODO
- * @Author huxuehao
+ * mapper
+ *
+ * @author huxuehao
  **/
 @Repository
 public interface ScheduleLogMapper extends BaseMapper<ScheduleLogDto> {

@@ -13,9 +13,9 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * @ClassName Job
- * @Description 定时任务执行
- * @Author huxuehao
+ * 描述：定时任务执行
+ *
+ * @author huxuehao
  **/
 @Component
 public class Job {

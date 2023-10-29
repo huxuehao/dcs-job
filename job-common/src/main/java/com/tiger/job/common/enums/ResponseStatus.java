@@ -1,9 +1,9 @@
 package com.tiger.job.common.enums;
 
 /**
- * @EnumName ResponseStatus
- * @Description 响应体
- * @Author huxuehao
+ * 描述：响应状态码
+ *
+ * @author huxuehao
  **/
 public enum ResponseStatus {
     Success(200, "请求成功"),

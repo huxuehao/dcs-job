@@ -1,9 +1,9 @@
 package com.tiger.job.common.constant;
 
 /**
- * @ClassName JobConstant
- * @Description 定时任务常量类
- * @Author huxuehao
+ * 描述：定时任务常量类
+ *
+ * @author huxuehao
  **/
 public class JobConstant {
     /* 统一连接符 */

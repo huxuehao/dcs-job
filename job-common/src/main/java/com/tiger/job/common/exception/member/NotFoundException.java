@@ -4,9 +4,9 @@ import com.tiger.job.common.enums.ResponseStatus;
 import com.tiger.job.common.exception.base.BaseException;
 
 /**
- * @ClassName NotFoundException
- * @Description 未找到异常
- * @Author StudiousTiger
+ * 描述：未找到异常
+ *
+ * @author huxuehao
  **/
 public class NotFoundException extends BaseException {
     public NotFoundException(int code, String module, String method, String message) {

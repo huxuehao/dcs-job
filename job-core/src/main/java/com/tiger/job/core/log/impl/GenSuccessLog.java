@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * @ClassName GenSuccessLog
- * @Description TODO
- * @Author huxuehao
+ * 生成成功日志
+ *
+ * @author huxuehao
  **/
 @Component
 public class GenSuccessLog implements GenLog {

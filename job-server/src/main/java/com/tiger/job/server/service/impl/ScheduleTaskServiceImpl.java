@@ -18,9 +18,9 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * @ClassName ScheduleTaskServiceImpl
- * @Description TODO
- * @Author huxuehao
+ * 调度任务实现类
+ *
+ * @author huxuehao
  **/
 @Service
 public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, ScheduleTaskDto> implements ScheduleTaskService {

@@ -1,9 +1,9 @@
 package com.tiger.job.common.exception.base;
 
 /**
- * @ClassName BaseException
- * @Description 基础异常
- * @Author huxuehao
+ * 描述：基础异常
+ *
+ * @author huxuehao
  **/
 public class BaseException extends RuntimeException {
     private static final long serialVersionUID = 1L;

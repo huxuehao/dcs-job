@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @ClassName TaskManagerController
- * @Description 任务管理接口，这里我就使用构造函数进行依赖注入了
- * @Author huxuehao
- **/
+ * 描述：任务管理接口，这里我就使用构造函数进行依赖注入了
+ *
+ * @author huxuehao
+ */
 @RestController
 @RequestMapping(value = "/job/task")
 public class TaskManagerController {
@@ -79,7 +79,7 @@ public class TaskManagerController {
     @Description(value = "添加任务")
     @PostMapping(value = "/add")
     public Response addTask(@RequestBody ScheduleTaskDto scheduleTask) {
-        if (!isValidCron(scheduleTask.getCron())) {
+        if (!isValidCronExpression(scheduleTask.getCron())) {
             return Response.error("cron表达式校验失败");
         }
         scheduleTaskService.add(scheduleTask);
@@ -90,7 +90,7 @@ public class TaskManagerController {
     @Description(value = "更新任务")
     @PostMapping(value = "/update")
     public Response updateTask(@RequestBody ScheduleTaskDto scheduleTask) {
-        if (!isValidCron(scheduleTask.getCron())) {
+        if (!isValidCronExpression(scheduleTask.getCron())) {
             return Response.error("cron表达式校验失败");
         }
         return Response.success(scheduleTaskService.update(scheduleTask));
@@ -153,7 +153,7 @@ public class TaskManagerController {
     }
 
     /* 检验cron表达式是否有效 */
-    private boolean isValidCron(String cronStr) {
+    private boolean isValidCronExpression(String cronStr) {
         return CronExpression.isValidExpression(cronStr);
     }
 }

@@ -5,9 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * @ClassName RetryProperties
- * @Description 重试策略配置
- * @Author huxuehao
+ * 描述：重试策略配置
+ *
+ * @author huxuehao
  **/
 @Data
 @Component

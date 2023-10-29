@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * @ClassName UserMapper
- * @Description TODO
- * @Author StudiousTiger
+ * mapper
+ *
+ * @author huxuehao
  **/
 @Repository
 public interface UserMapper {

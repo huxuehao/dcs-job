@@ -9,15 +9,13 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @ClassName ClassUtil
- * @Description TODO
- * @Author huxuehao
+ * 描述：Class工具类，扫描文件之类的
+ *
+ * @author huxuehao
  **/
 public class ClassUtil {
     /**
      * 获取与参数Class同包下的实现类
-     * @param c
-     * @return
      */
     public static List<Class<?>> getClassByImplements(Class<?> c) {
         if (c.isInterface()) {
@@ -31,7 +29,6 @@ public class ClassUtil {
      * 获取在packageNames下的参数Class的实现类
      * @param c 接口Class
      * @param packageNames 指定包集合
-     * @return
      */
     public static List<Class<?>> getClassByImplements(Class<?> c, List<String> packageNames) {
         if (c.isInterface()) {
@@ -43,8 +40,6 @@ public class ClassUtil {
 
     /**
      * 获取与参数Class同包下的子类
-     * @param c
-     * @return
      */
     public static List<Class<?>> getClassByExtends(Class<?> c) {
         if (c.isLocalClass()) {
@@ -56,9 +51,6 @@ public class ClassUtil {
 
     /**
      * 获取在packageNames下的参数Class的子类
-     * @param c
-     * @param packageNames
-     * @return
      */
     public static List<Class<?>> getClassByExtends(Class<?> c, List<String> packageNames) {
         if (c.isLocalClass()) {
@@ -70,13 +62,11 @@ public class ClassUtil {
 
     /**
      * 获取与参数Class同包下的子类和实现类
-     * @param c
-     * @return
      */
     public static List<Class<?>> getClassOfAssignable(Class<?> c) {
         ArrayList<Class<?>> classes = new ArrayList<>();
         String packageName = c.getPackage().getName();
-        List<Class<?>> allClass = null;
+        List<Class<?>> allClass;
         try {
             allClass = getClasses(packageName);
         } catch (ClassNotFoundException | IOException e) {
@@ -92,9 +82,6 @@ public class ClassUtil {
 
     /**
      * 获取在packageNames下的参数Class的实现类和子类
-     * @param c
-     * @param packageNames
-     * @return
      */
     public static List<Class<?>> getClassOfAssignable(Class<?> c, List<String> packageNames) {
         List<Class<?>> classes = new ArrayList<>();
@@ -120,9 +107,6 @@ public class ClassUtil {
     /**
      * 从一个包中查找出所有的类
      * @param packageName 包名
-     * @return
-     * @throws ClassNotFoundException
-     * @throws IOException
      */
     public static List<Class<?>> getClasses(String packageName) throws ClassNotFoundException, IOException {
         /* 获取类加载器 */
@@ -148,8 +132,6 @@ public class ClassUtil {
      * 寻找类
      * @param directory file
      * @param packageName 包名
-     * @return
-     * @throws ClassNotFoundException
      */
     private static List<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
         List<Class<?>> classes = new ArrayList<>();

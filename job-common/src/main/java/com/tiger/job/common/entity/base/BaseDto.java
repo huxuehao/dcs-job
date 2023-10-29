@@ -1,13 +1,15 @@
 package com.tiger.job.common.entity.base;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * @ClassName BaseDto
- * @Description 基础dto
- * @Author huxuehao
+ * 描述：基础dto
+ *
+ * @author huxuehao
  **/
-@Data
+@Getter
+@Setter
 public class BaseDto extends BaseEntity {
     private String createUser;
     private String createTime;

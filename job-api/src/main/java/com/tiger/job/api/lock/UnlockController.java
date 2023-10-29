@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 
 /**
- * @ClassName UnlockController
- * @Description TODO 解锁分布式锁
- * @Author huxuehao
- **/
+ * 描述：解锁分布式锁
+ *
+ * @author huxuehao
+ */
 @RestController
 @RequestMapping(value = "/unlock")
 public class UnlockController {

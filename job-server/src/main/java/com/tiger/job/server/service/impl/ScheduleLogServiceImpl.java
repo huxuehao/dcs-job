@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @ClassName ScheduleLogServiceImpl
- * @Description TODO
- * @Author huxuehao
+ * 日志实现类
+ *
+ * @author huxuehao
  **/
 @Service
 public class ScheduleLogServiceImpl extends ServiceImpl<ScheduleLogMapper, ScheduleLogDto> implements ScheduleLogService {

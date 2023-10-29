@@ -3,9 +3,9 @@ package com.tiger.job.server.service;
 import java.text.ParseException;
 
 /**
- * @InterfaceName LogRotate
- * @Description TODO
- * @Author huxuehao
+ * 日志轮转接口
+ *
+ * @author huxuehao
  **/
 public interface LogRotate {
 
@@ -13,5 +13,5 @@ public interface LogRotate {
     Boolean validDayCycle() throws ParseException;
 
     /* 执行日志轮转 */
-    Boolean doRotate(String tableSuffix) throws ParseException;
+    void doRotate(String tableSuffix) throws ParseException;
 }

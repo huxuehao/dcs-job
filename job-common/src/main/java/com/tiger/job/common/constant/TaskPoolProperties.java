@@ -5,7 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * 连接池配置
+ * 描述：连接池配置
+ *
+ * @author huxuehao
  **/
 @Data
 @Component
