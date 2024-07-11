@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  **/
 @Data
 @Component
-@ConfigurationProperties(prefix = "tiger.scheduled-tasks.pool")
+@ConfigurationProperties(prefix = "tiger.scheduled-task.pool")
 public class TaskPoolProperties {
     // cpu核数的倍数
     int processorTimes = 2;

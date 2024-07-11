@@ -93,11 +93,11 @@ public class TaskConfig {
             taskThreadPool = processors * taskPoolProperties.getProcessorTimes() + taskPoolProperties.getFloatNumber();
         }
         log.info("定时任务线程池: CPU核数 = {}", processors);
-        log.info("定时任务线程池: CPU核数倍数: qianmo.scheduled-tasks.pool.processor-times = {}", taskPoolProperties.getProcessorTimes());
-        log.info("定时任务线程池: 线程池上下浮动数: qianmo.scheduled-tasks.pool.float-number = {}", taskPoolProperties.getFloatNumber());
-        log.info("定时任务线程池: 线程名称前缀: qianmo.scheduled-tasks.pool.thread-name-prefix = {}", taskPoolProperties.getThreadNamePrefix());
-        log.info("定时任务线程池: 线程等待终止时间: qianmo.scheduled-tasks.pool.await-termination-seconds = {}", taskPoolProperties.getAwaitTerminationSeconds());
-        log.info("定时任务线程池: 调度器shutdown后，是否等待当前调度执行完成: qianmo.scheduled-tasks.pool.complete-on-shutdown = {}", taskPoolProperties.isCompleteOnShutdown());
+        log.info("定时任务线程池: CPU核数倍数: tiger.scheduled-tasks.pool.processor-times = {}", taskPoolProperties.getProcessorTimes());
+        log.info("定时任务线程池: 线程池上下浮动数: tiger.scheduled-tasks.pool.float-number = {}", taskPoolProperties.getFloatNumber());
+        log.info("定时任务线程池: 线程名称前缀: tiger.scheduled-tasks.pool.thread-name-prefix = {}", taskPoolProperties.getThreadNamePrefix());
+        log.info("定时任务线程池: 线程等待终止时间: tiger.scheduled-tasks.pool.await-termination-seconds = {}", taskPoolProperties.getAwaitTerminationSeconds());
+        log.info("定时任务线程池: 调度器shutdown后，是否等待当前调度执行完成: tiger.scheduled-tasks.pool.complete-on-shutdown = {}", taskPoolProperties.isCompleteOnShutdown());
         log.info("定时任务线程池: 定时任务线程池最终大小 = {}", taskThreadPool);
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
         // 线程池的大小

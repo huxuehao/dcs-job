@@ -44,8 +44,7 @@ CREATE TABLE `sys_scheduled` (
   `create_time` varchar(40) DEFAULT NULL COMMENT '创建时间',
   `update_user` varchar(40) DEFAULT NULL COMMENT '更新人',
   `update_time` varchar(40) DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_url` (`url`) BLOCK_SIZE 16384 LOCAL
+  PRIMARY KEY (`id`)
 ) COMMENT = '定时任务调度表';
 INSERT INTO `sys_scheduled`(`id`, `name`, `task_type`, `task_describe`, `cron`, `path`, `enable`, `open_log`, `create_user`, `create_time`, `update_user`, `update_time`) VALUES ('1658314634255069185', '定时任务测试1', 'other_task', '定时任务测试功', '0 0/12 * * * ?', '/sheduled1/execute/do-task1', '0', '1', '1111111111111111111', '2023-05-16 11:33:13', '1111111111111111111', '2023-05-21 17:49:21');
 INSERT INTO `sys_scheduled`(`id`, `name`, `task_type`, `task_describe`, `cron`, `path`, `enable`, `open_log`, `create_user`, `create_time`, `update_user`, `update_time`) VALUES ('1658314948605571074', '定时任务测试2', 'other_task', '定时任务测试功', '0 0/15 * * * ?', '/sheduled1/execute/do-task2', '0', '1', '1111111111111111111', '2023-05-16 11:34:28', '1111111111111111111', '2023-05-16 16:22:22');
