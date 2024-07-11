@@ -10,12 +10,12 @@ import com.tiger.job.core.worker.TaskWorker;
 import com.tiger.job.server.service.ScheduleTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
+import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 /**
  * 描述：初始化定时任务
+ * SmartInitializingSingleton：保证在Spring容器中所有单例Bean初始化完成后，‌触发相应的初始化逻辑。
  * scheduledFutureMap：作为ScheduledFuture的注册表,用于我们来操作其开启关闭，key为定时任务id。
  * operationMap: 存储的定时任务操作触发器，参数是ScheduleTaskDto。
  * threadPoolTaskScheduler：定时任务线程池，线程池的大小使用的是Runtime.getRuntime().availableProcessors()。
@@ -37,8 +38,8 @@ import java.util.stream.Collectors;
  * 其目的是为了动态的控制定时任务的新增、开启、关闭。使用Consumer作为定时任务预处理载体。
  * @author huxuehao
  **/
-@SpringBootConfiguration
-public class TaskInit {
+@Component
+public class TaskInit implements SmartInitializingSingleton {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Map<String, ScheduledFuture<?>> scheduledFutureMap;
     private final Map<String, Consumer<ScheduleTaskDto>> triggerMap;
@@ -65,9 +66,13 @@ public class TaskInit {
     /**
      * 描述：初始化
      */
-    @PostConstruct
-    public void init() throws IOException, ClassNotFoundException {
-        this.initSchedulerScan();
+    @Override
+    public void afterSingletonsInstantiated() {
+        try {
+            this.initSchedulerScan();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         this.initTask();
         this.initTrigger();
     }

@@ -5,6 +5,7 @@ import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.ClusterServersConfig;
 import org.redisson.config.Config;
+import org.redisson.config.SentinelServersConfig;
 import org.redisson.config.SingleServerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,10 +28,21 @@ public class RedissonConfig {
         /* 集群模式 */
         if (redisProperties.getCluster() != null) {
             ClusterServersConfig clusterServersConfig = config.useClusterServers()
-                    .addNodeAddress(redisProperties.getNodeAddress());
+                    .addNodeAddress(redisProperties.getClusterNodeAddress());
             if (redisProperties.getPassword() != null && !"".equals(redisProperties.getPassword())) {
                 clusterServersConfig.setPassword(redisProperties.getPassword());
             }
+        }
+        /* 哨兵模式 */
+        else if(redisProperties.getSentinel() != null) {
+            SentinelServersConfig sentinelServersConfig = config.useSentinelServers()
+                    .setMasterName((String)redisProperties.getSentinel().getOrDefault("master", "master"))
+                    .addSentinelAddress(redisProperties.getSentinelNodeAddress())
+                    .setCheckSentinelsList(false);
+            if (redisProperties.getPassword() != null && !"".equals(redisProperties.getPassword())) {
+                sentinelServersConfig.setPassword(redisProperties.getPassword());
+            }
+            sentinelServersConfig.setDatabase(redisProperties.getDatabase());
         }
         /* 单例模式 */
         else {
