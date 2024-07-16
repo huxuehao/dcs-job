@@ -5,6 +5,7 @@ import com.tiger.job.core.beanScan.SchedulerScan;
 import com.tiger.job.common.constant.ChannelConstant;
 import com.tiger.job.core.executor.AdapterExecutor;
 import com.tiger.job.core.queue.TaskQueue;
+import com.tiger.job.core.retry.RetryActuator;
 import com.tiger.job.core.unlock.Unlock;
 import com.tiger.job.core.worker.TaskWorker;
 import com.tiger.job.server.service.ScheduleTaskService;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
  * 描述：初始化定时任务
  * SmartInitializingSingleton：保证在Spring容器中所有单例Bean初始化完成后，‌触发相应的初始化逻辑。
  * scheduledFutureMap：作为ScheduledFuture的注册表,用于我们来操作其开启关闭，key为定时任务id。
+ * scheduleTaskConfigMap：作为调度任务配置的容器,主要用于重试时获取定时配置，key为定时任务id。
  * operationMap: 存储的定时任务操作触发器，参数是ScheduleTaskDto。
  * threadPoolTaskScheduler：定时任务线程池，线程池的大小使用的是Runtime.getRuntime().availableProcessors()。
  * scheduleTaskService：操作schedule_task的Service。
@@ -42,6 +44,7 @@ import java.util.stream.Collectors;
 public class TaskInit implements SmartInitializingSingleton {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Map<String, ScheduledFuture<?>> scheduledFutureMap;
+    private final Map<String, ScheduleTaskDto> scheduleTaskConfigMap;
     private final Map<String, Consumer<ScheduleTaskDto>> triggerMap;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
     private final Map<String, Map<Object, Method>> schedulerScanMethodMap;
@@ -50,9 +53,11 @@ public class TaskInit implements SmartInitializingSingleton {
     private final TaskQueue taskQueue;
     private final SchedulerScan schedulerScan;
     private final Unlock unlock;
+    private final RetryActuator retryActuator;
 
-    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapterExecutor, SchedulerScan schedulerScan, Unlock unlock) {
+    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("scheduleTaskConfigMap") Map<String, ScheduleTaskDto> scheduleTaskConfigMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapterExecutor, SchedulerScan schedulerScan, Unlock unlock, RetryActuator retryActuator) {
         this.scheduledFutureMap = scheduledFutureMap;
+        this.scheduleTaskConfigMap = scheduleTaskConfigMap;
         this.triggerMap = triggerMap;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
         this.schedulerScanMethodMap = schedulerScanMethodMap;
@@ -61,6 +66,7 @@ public class TaskInit implements SmartInitializingSingleton {
         this.adapterExecutor = adapterExecutor;
         this.schedulerScan = schedulerScan;
         this.unlock = unlock;
+        this.retryActuator = retryActuator;
     }
 
     /**
@@ -75,6 +81,7 @@ public class TaskInit implements SmartInitializingSingleton {
         }
         this.initTask();
         this.initTrigger();
+        retryActuator.run();
     }
 
     /**
@@ -95,6 +102,7 @@ public class TaskInit implements SmartInitializingSingleton {
             CronTrigger cronTrigger = item.toCronTrigger();
             ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(worker, cronTrigger);
             scheduledFutureMap.put(item.getId(), schedule);
+            scheduleTaskConfigMap.put(item.getId(), item);
             // 强制解锁
             unlock.unlockTask(Collections.singletonList(item.getId()));
             log.info("定时任务：[{}]初始化完成", item.getName());
@@ -130,6 +138,7 @@ public class TaskInit implements SmartInitializingSingleton {
                 ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(worker, cronTrigger);
                 scheduledFutureMap.put(scheduleId, schedule);
             }
+            scheduleTaskConfigMap.put(item.getId(), item);
             /* 强制解锁 */
             unlock.unlockTask(Collections.singletonList(scheduleId));
         };
@@ -143,6 +152,7 @@ public class TaskInit implements SmartInitializingSingleton {
             String scheduleId = item.getId();
             ScheduledFuture<?> scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务
             Optional.ofNullable(scheduledFuture).ifPresent(schedule -> schedule.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则停止定时 */
+            scheduleTaskConfigMap.remove(item.getId());
             taskQueue.delete(taskQueue.getQueueName(item.getId())); /* 定时队列删除 */
         };
         triggerMap.put(ChannelConstant.CLOSE, closeSchedule);
@@ -156,6 +166,7 @@ public class TaskInit implements SmartInitializingSingleton {
             ScheduledFuture<?> scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务
             Optional.ofNullable(scheduledFuture).ifPresent(schedule -> schedule.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则停止定时 */
             scheduledFutureMap.remove(scheduleId); /* 从注册表中移除 */
+            scheduleTaskConfigMap.remove(scheduleId);
             taskQueue.delete(taskQueue.getQueueName(item.getId())); /* 定时队列删除 */
         };
         triggerMap.put(ChannelConstant.DELETE, deleteSchedule);

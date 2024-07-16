@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.tiger.job.common.util.dependent.SnowflakeID;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -340,5 +341,36 @@ public class MeUtil {
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
         return sw.toString();
+    }
+
+    /**
+     * 线程休眠
+     * @param millis 毫秒数
+     */
+    public static void sleep(long millis){
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * 创建线程池
+     * @param corePoolSize  核心线程数
+     * @param maxPoolSize   最大线程数
+     * @param capacity      排队人数
+     * @param threadPrefix  线程前缀
+     */
+    public static ThreadPoolTaskExecutor createThreadPool(int corePoolSize, int maxPoolSize, int capacity, String threadPrefix){
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(corePoolSize);
+        executor.setMaxPoolSize(maxPoolSize);
+        executor.setQueueCapacity(capacity);
+        if (threadPrefix != null) {
+            executor.setThreadNamePrefix(threadPrefix);
+        }
+        executor.initialize();
+        return executor;
     }
 }

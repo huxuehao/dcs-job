@@ -68,6 +68,14 @@ public class TaskConfig {
     }
 
     /**
+     * 存放活跃的ScheduleTaskConfig
+     */
+    @Bean(name = "scheduleTaskConfigMap")
+    public Map<String, ScheduleTaskDto> scheduleTaskConfigMap() {
+        return new ConcurrentHashMap<>();
+    }
+
+    /**
      * 触发器注册表
      * 描述：对于定时任务的动态操作（添加、开启、停止、删除）我们需要将上述操作封装成触发器，想要使用的时候
      * 我们只需要取出已经初始化好的代码逻辑，取出对应的代码逻辑，传入参数，执行即可。上述描述是一种预处理的思想。

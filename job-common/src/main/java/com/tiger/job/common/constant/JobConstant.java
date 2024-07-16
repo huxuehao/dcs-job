@@ -14,6 +14,8 @@ public class JobConstant {
     public static final String HEARTBEAT_PREFIX = "task-heart-beat";
     /* 分布式队列前缀 */
     public static final String CLUSTER_QUEUE_PREFIX = "tiger-job-queue";
+    /* 重试队列前缀 */
+    public static final String CLUSTER_RETRY_QUEUE_PREFIX = "tiger-job-retry-queue";
     /* 分布式队列锁前缀 */
     public static final String CLUSTER_QUEUE_LOCK_PREFIX = "dcs-lock";
     /* 日志轮转事务锁 */
