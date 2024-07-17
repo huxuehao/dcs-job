@@ -64,6 +64,13 @@ public class TaskRetryQueue {
     }
 
     /**
+     * 获取所有
+     */
+    public Set<String> getAll() {
+        return this.get(0L, -1L);
+    }
+
+    /**
      * 获取指定时间需要执行的任务
      * @param endTime 截止时间
      */
@@ -77,7 +84,7 @@ public class TaskRetryQueue {
      * @param endTime   结束时间
      */
     public Set<String> get(Long startTime, Long endTime) {
-        return redisTemplate.opsForZSet().rangeByScore(QUEUE_PREFIX,startTime,endTime,0,1);
+        return redisTemplate.opsForZSet().rangeByScore(QUEUE_PREFIX,startTime,endTime);
     }
 
     /**

@@ -5,7 +5,6 @@ import com.tiger.job.core.beanScan.SchedulerScan;
 import com.tiger.job.common.constant.ChannelConstant;
 import com.tiger.job.core.executor.AdapterExecutor;
 import com.tiger.job.core.queue.TaskQueue;
-import com.tiger.job.core.retry.RetryActuator;
 import com.tiger.job.core.unlock.Unlock;
 import com.tiger.job.core.worker.TaskWorker;
 import com.tiger.job.server.service.ScheduleTaskService;
@@ -53,9 +52,8 @@ public class TaskInit implements SmartInitializingSingleton {
     private final TaskQueue taskQueue;
     private final SchedulerScan schedulerScan;
     private final Unlock unlock;
-    private final RetryActuator retryActuator;
 
-    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("scheduleTaskConfigMap") Map<String, ScheduleTaskDto> scheduleTaskConfigMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapterExecutor, SchedulerScan schedulerScan, Unlock unlock, RetryActuator retryActuator) {
+    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("scheduleTaskConfigMap") Map<String, ScheduleTaskDto> scheduleTaskConfigMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapterExecutor, SchedulerScan schedulerScan, Unlock unlock) {
         this.scheduledFutureMap = scheduledFutureMap;
         this.scheduleTaskConfigMap = scheduleTaskConfigMap;
         this.triggerMap = triggerMap;
@@ -66,7 +64,6 @@ public class TaskInit implements SmartInitializingSingleton {
         this.adapterExecutor = adapterExecutor;
         this.schedulerScan = schedulerScan;
         this.unlock = unlock;
-        this.retryActuator = retryActuator;
     }
 
     /**
@@ -81,7 +78,6 @@ public class TaskInit implements SmartInitializingSingleton {
         }
         this.initTask();
         this.initTrigger();
-        retryActuator.run();
     }
 
     /**

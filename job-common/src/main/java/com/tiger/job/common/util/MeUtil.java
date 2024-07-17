@@ -351,7 +351,7 @@ public class MeUtil {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ex) {
-            ex.printStackTrace();
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -367,6 +367,7 @@ public class MeUtil {
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(capacity);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
         if (threadPrefix != null) {
             executor.setThreadNamePrefix(threadPrefix);
         }

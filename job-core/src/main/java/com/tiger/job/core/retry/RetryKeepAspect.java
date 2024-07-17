@@ -7,6 +7,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -17,14 +18,19 @@ import org.springframework.stereotype.Component;
  * @author huxuehao
  **/
 @Aspect
-@Order(-1) /* 该切面应当先于 @Transactional 执行 */
+@Order(-1)
+/* 该切面应当先于 @Transactional 执行 */
 @Component
+/* 判断retry是否开启 */
+@ConditionalOnProperty(name="tiger.scheduled-task.retry.open", havingValue = "true", matchIfMissing = false)
 public class RetryKeepAspect {
     private final RetryProperties retryProperties;
     private final TaskRetryQueue taskRetryQueue;
-    public RetryKeepAspect(RetryProperties retryProperties, TaskRetryQueue taskRetryQueue) {
+    private final RetryActuator retryActuator;
+    public RetryKeepAspect(RetryProperties retryProperties, TaskRetryQueue taskRetryQueue, RetryActuator retryActuator) {
         this.retryProperties = retryProperties;
         this.taskRetryQueue = taskRetryQueue;
+        this.retryActuator = retryActuator;
     }
 
     @Pointcut("@annotation(com.tiger.job.common.annotation.Retry)")
@@ -45,11 +51,20 @@ public class RetryKeepAspect {
                     // 执行
                     Object res = joinPoint.proceed();
                     if (!((Boolean) res)) {
+                        // 推送到重试队列
                         this.pushToRetryQueue(args[0]);
+                        // 尝试启动重试执行器
+                        retryActuator.tryStart();
+                    } else {
+                        // 尝试关闭重试执行器
+                        retryActuator.tryStop();
                     }
                     return res;
                 } catch (Throwable e) {
+                    // 推送到重试队列
                     this.pushToRetryQueue(args[0]);
+                    // 尝试启动重试执行器
+                    retryActuator.tryStart();
                     throw new RuntimeException(e);
                 }
             } else {
