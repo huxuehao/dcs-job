@@ -67,7 +67,7 @@ public class TaskRetryQueue {
      * 获取所有
      */
     public Set<String> getAll() {
-        return this.get(0L, -1L);
+        return redisTemplate.opsForZSet().range(QUEUE_PREFIX,0,-1);
     }
 
     /**
