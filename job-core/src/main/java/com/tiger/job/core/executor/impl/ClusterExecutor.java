@@ -8,9 +8,9 @@ import com.tiger.job.core.executor.Executor;
 import com.tiger.job.core.queue.TaskQueue;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.support.CronExpression;
 import org.springframework.stereotype.Component;
 
@@ -29,14 +29,16 @@ public class ClusterExecutor implements Executor {
     private final Job job;
     private final TaskQueue taskQueue;
     private final String uniqueIdentifier;
+    private final ClusterExecutor self;
 
     @Resource
     private RedissonClient locker;
 
-    public ClusterExecutor(Job job, TaskQueue taskQueue, @Qualifier("uniqueIdentifier") String uniqueIdentifier) {
+    public ClusterExecutor(Job job, TaskQueue taskQueue, @Qualifier("uniqueIdentifier") String uniqueIdentifier, @Lazy ClusterExecutor self) {
         this.job = job;
         this.taskQueue = taskQueue;
         this.uniqueIdentifier = uniqueIdentifier;
+        this.self = self;
     }
 
     @Override
@@ -60,10 +62,10 @@ public class ClusterExecutor implements Executor {
                     taskQueue.push(queueName, getQueueItem());
                     /*
                      * doExecute属于内部方法，如果直接使用this.doExecute(xx),那么是使用实例对象调用的，而不是代理对象，导致AOP失效。
-                     * 所以我们通过@EnableAspectJAutoProxy(exposeProxy=true) 加 (XX)AopContext.currentProxy())的方式，使得
+                     * 所以我们通过@Lazy将当前对象注册到当前对象，从而使得AOP生效
                      * doExecute方法被代理对象调用，从而使得AOP生效
                      */
-                    return ((ClusterExecutor)AopContext.currentProxy()).doExecute(task);
+                    return self.doExecute(task);
                 } else {
                     return this.pushQueue(queueName);
                 }
@@ -79,7 +81,7 @@ public class ClusterExecutor implements Executor {
             try {
                 if (lock.tryLock(0,this.expirationTime(task.getCron()), TimeUnit.MILLISECONDS)) {
                     try {
-                        return ((ClusterExecutor)AopContext.currentProxy()).doExecute(task);
+                        return self.doExecute(task);
                     } finally {
                         taskQueue.pop(queueName);
                         this.pushQueue(queueName);
