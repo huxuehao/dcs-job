@@ -1,8 +1,6 @@
 package com.tiger.job.server.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,9 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
@@ -27,10 +22,10 @@ import java.sql.SQLException;
 @EnableTransactionManagement
 public class DruidDBConfig {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private static final String MYBATIS_CONFIG = "classpath:mybatis/mybatis-config.xml";
-    private static final String MAPPER_XML_PATH = "classpath:com/tiger/job/**/*Mapper.xml";
-    private static final String TYPE_ALIASES_PACKAGE = "com.tiger.job.**.entity";
- 
+    //private static final String MYBATIS_CONFIG = "classpath:mybatis/mybatis-config.xml";
+    //private static final String MAPPER_XML_PATH = "classpath:com/tiger/job/**/*Mapper.xml";
+    //private static final String TYPE_ALIASES_PACKAGE = "com.tiger.job.**.entity";
+
     /* adi数据库连接信息 */
     @Value("${spring.datasource.url}")
     private String dbUrl;
@@ -115,24 +110,5 @@ public class DruidDBConfig {
         /* 移除泄露连接发生是是否记录日志 */
         datasource.setLogAbandoned(true);
         return datasource;
-    }
- 
-    @Bean
-    public SqlSessionFactory sqlSessionFactory() throws Exception {
-        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        log.info("mybatis配置：初始化默认数据源 [ {} ] ", dbUrl);
-        sqlSessionFactoryBean.setDataSource(dataSource());
-        /* 设置mybatis的主配置文件 */
-        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        Resource mybatisConfigXml = resolver.getResource(MYBATIS_CONFIG);
-        sqlSessionFactoryBean.setConfigLocation(mybatisConfigXml);
-        log.info("mybatis配置：设置mybatis的主配置文件 [ {} ]", MYBATIS_CONFIG);
-        /* 手动配置mybatis的mapper.xml资源路径 */
-        sqlSessionFactoryBean.setMapperLocations(resolver.getResources(MAPPER_XML_PATH));
-        log.info("mybatis配置：配置mybatis的mapper.xml资源路径 [ {} ]", MAPPER_XML_PATH);
-        /* 手动配置mybatis的别名类资源路径 */
-        sqlSessionFactoryBean.setTypeAliasesPackage(TYPE_ALIASES_PACKAGE);
-        log.info("mybatis配置：配置mybatis的类型别名程序包路径 [ {} ]", TYPE_ALIASES_PACKAGE);
-        return sqlSessionFactoryBean.getObject();
     }
 }

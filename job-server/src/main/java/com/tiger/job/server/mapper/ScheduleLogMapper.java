@@ -2,8 +2,8 @@ package com.tiger.job.server.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tiger.job.common.entity.ScheduleLogDto;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author huxuehao
  **/
-@Repository
+@Mapper
 public interface ScheduleLogMapper extends BaseMapper<ScheduleLogDto> {
     /* 分页 */
     List<ScheduleLogDto> getPage();

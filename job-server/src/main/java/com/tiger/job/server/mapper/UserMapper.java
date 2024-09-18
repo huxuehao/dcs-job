@@ -1,8 +1,8 @@
 package com.tiger.job.server.mapper;
 
 import com.tiger.job.common.entity.SysUser;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @author huxuehao
  **/
-@Repository
+@Mapper
 public interface UserMapper {
     /**
      * 通过用户名查询用户

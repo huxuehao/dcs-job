@@ -3,8 +3,8 @@ package com.tiger.job.server.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tiger.job.common.entity.ScheduleTaskDto;
 import com.tiger.job.common.entity.ScheduleTaskPo;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author huxuehao
  **/
-@Repository
+@Mapper
 public interface ScheduleTaskMapper extends BaseMapper<ScheduleTaskDto> {
     /* 添加定时任务信息 */
     int add(@Param("task") ScheduleTaskDto task);

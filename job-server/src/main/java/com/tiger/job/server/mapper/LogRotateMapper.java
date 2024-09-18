@@ -1,14 +1,14 @@
 package com.tiger.job.server.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 /**
  * mapper
  *
  * @author huxuehao
  **/
-@Repository
+@Mapper
 public interface LogRotateMapper {
     /* 查询日志表中日周期 */
     String selectDayCycle();
