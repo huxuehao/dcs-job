@@ -1,6 +1,6 @@
 package com.tiger.job.core.retry;
 
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -36,7 +36,7 @@ public class RetryKeepAspect {
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         if (args != null && args.length > 0) {
-            if (args[0] instanceof ScheduleTaskDto) {
+            if (args[0] instanceof ScheduledConfigEntity) {
                 // 执行
                 Object res = joinPoint.proceed();
                 // 若执行失败推送到重试队列

@@ -1,7 +1,7 @@
 package com.tiger.job.core.unlock;
 
 import com.tiger.job.common.constant.JobConstant;
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import com.tiger.job.core.queue.TaskQueue;
 import com.tiger.job.server.service.ScheduleTaskService;
 import org.redisson.api.RLock;
@@ -54,9 +54,9 @@ public class Unlock{
      * 解锁全部的定时任务锁
      */
     public void unlockTaskAll() {
-        List<ScheduleTaskDto> list = scheduleTaskService.list();
+        List<ScheduledConfigEntity> list = scheduleTaskService.list();
         Optional.ofNullable(list)
-                .ifPresent(v0 -> this.unlockTask(v0.stream().map(ScheduleTaskDto::getId).collect(Collectors.toList())));
+                .ifPresent(v0 -> this.unlockTask(v0.stream().map(ScheduledConfigEntity::getId).collect(Collectors.toList())));
     }
 
     /**

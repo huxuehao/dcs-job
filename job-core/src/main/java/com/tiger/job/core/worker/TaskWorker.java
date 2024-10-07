@@ -1,6 +1,6 @@
 package com.tiger.job.core.worker;
 
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import com.tiger.job.core.executor.Executor;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskWorker implements Runnable {
     private Executor executor;
-    private ScheduleTaskDto scheduleTask;
+    private ScheduledConfigEntity scheduleTask;
 
     public TaskWorker() {
     }
 
-    public TaskWorker(ScheduleTaskDto scheduleTask, Executor executor) {
+    public TaskWorker(ScheduledConfigEntity scheduleTask, Executor executor) {
         this.scheduleTask = scheduleTask;
         this.executor = executor;
     }

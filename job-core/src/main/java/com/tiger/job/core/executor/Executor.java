@@ -1,6 +1,6 @@
 package com.tiger.job.core.executor;
 
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 
 /**
  * 描述：使用策略模式来执行定时任务
@@ -8,5 +8,5 @@ import com.tiger.job.common.entity.ScheduleTaskDto;
  * @author huxuehao
  **/
 public interface Executor {
-    Boolean execute(ScheduleTaskDto task);
+    Boolean execute(ScheduledConfigEntity task);
 }

@@ -1,6 +1,6 @@
 package com.tiger.job.core.log;
 
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 
 /**
  * 日志接口
@@ -8,5 +8,5 @@ import com.tiger.job.common.entity.ScheduleTaskDto;
  * @author huxuehao
  **/
 public interface GenLog {
-    void gen(ScheduleTaskDto task, String message);
+    void gen(ScheduledConfigEntity task, String message);
 }

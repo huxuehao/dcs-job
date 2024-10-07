@@ -1,0 +1,11 @@
+package com.tiger.job.common.enums;
+
+/**
+ * 描述：类型
+ *
+ * @author huxuehao
+ **/
+public enum JobType {
+    ANNOTATION,
+    TEMPLATE;
+}

@@ -1,7 +1,7 @@
 package com.tiger.job.server.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.tiger.job.common.entity.ScheduleLogDto;
+import com.tiger.job.common.entity.ScheduleLogEntity;
 import com.tiger.job.server.mapper.ScheduleLogMapper;
 import com.tiger.job.server.service.ScheduleLogService;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author huxuehao
  **/
 @Service
-public class ScheduleLogServiceImpl extends ServiceImpl<ScheduleLogMapper, ScheduleLogDto> implements ScheduleLogService {
+public class ScheduleLogServiceImpl extends ServiceImpl<ScheduleLogMapper, ScheduleLogEntity> implements ScheduleLogService {
     private final ScheduleLogMapper scheduleLogMapper;
 
     public ScheduleLogServiceImpl(ScheduleLogMapper scheduleLogMapper) {
@@ -22,28 +22,28 @@ public class ScheduleLogServiceImpl extends ServiceImpl<ScheduleLogMapper, Sched
     }
 
     @Override
-    public List<ScheduleLogDto> getPage() {
+    public List<ScheduleLogEntity> getPage() {
         return scheduleLogMapper.getPage();
     }
 
     @Override
-    public int add(ScheduleLogDto scheduleLog) {
+    public int add(ScheduleLogEntity scheduleLog) {
         return scheduleLogMapper.add(scheduleLog);
     }
 
     @Override
     /* 根据定时任务获取最新的错误日志*/
-    public ScheduleLogDto latestLogByTask(String taskId) {
+    public ScheduleLogEntity latestLogByTask(String taskId) {
         return scheduleLogMapper.latestLogByTask(taskId);
     }
 
     @Override
-    public ScheduleLogDto lastLog(String taskId, String executeTime) {
+    public ScheduleLogEntity lastLog(String taskId, String executeTime) {
         return scheduleLogMapper.lastLog(taskId, executeTime);
     }
 
     @Override
-    public ScheduleLogDto nextLog(String taskId, String executeTime) {
+    public ScheduleLogEntity nextLog(String taskId, String executeTime) {
         return scheduleLogMapper.nextLog(taskId, executeTime);
     }
 

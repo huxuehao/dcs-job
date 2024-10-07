@@ -2,7 +2,8 @@ package com.tiger.job.core.beanScan;
 
 import com.tiger.job.common.annotation.TaskPath;
 import com.tiger.job.common.constant.ScanProperties;
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
+import com.tiger.job.common.enums.JobType;
 import com.tiger.job.common.util.MeUtil;
 import com.tiger.job.server.mapper.ScheduleTaskMapper;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,7 @@ public class AutoInsert {
     }
 
     private void autoInsert(List<TaskPath> taskPaths) {
-        List<ScheduleTaskDto> taskList = genTaskDto(taskPaths);
+        List<ScheduledConfigEntity> taskList = genTaskDto(taskPaths);
         taskMapper.deleteRecordsNotIn(taskList);
         taskMapper.addRecordsMoreOf(taskList);
     }
@@ -40,18 +41,21 @@ public class AutoInsert {
     /**
      * 生成task实体
      */
-    private List<ScheduleTaskDto> genTaskDto(List<TaskPath> taskPaths) {
-        List<ScheduleTaskDto> taskList = new ArrayList<>();
+    private List<ScheduledConfigEntity> genTaskDto(List<TaskPath> taskPaths) {
+        List<ScheduledConfigEntity> taskList = new ArrayList<>();
         for (TaskPath taskPath : taskPaths) {
-            ScheduleTaskDto dto = new ScheduleTaskDto();
+            ScheduledConfigEntity dto = new ScheduledConfigEntity();
             dto.setId(MeUtil.nextId());
             dto.setPath(taskPath.path());
             dto.setEnable(taskPath.enable());
             dto.setOpenLog(taskPath.openLog());
             dto.setTaskDescribe(taskPath.describe());
             dto.setTaskType(taskPath.type());
+            dto.setType(String.valueOf(JobType.ANNOTATION));
             dto.setCreateUser(MeUtil.ADMINISTRATOR);
             dto.setCreateTime(MeUtil.currentDatetime());
+            dto.setUpdateUser(MeUtil.ADMINISTRATOR);
+            dto.setUpdateTime(MeUtil.currentDatetime());
             if ("-1".equals(taskPath.cron())) {
                 dto.setCron(scanProperties.getDefaultCron());
             } else {

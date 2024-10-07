@@ -1,6 +1,6 @@
 package com.tiger.job.server.listener;
 
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import org.springframework.context.ApplicationEvent;
 
 /**
@@ -12,9 +12,9 @@ public class ScheduleEvent extends ApplicationEvent {
     private static final long serialVersionUID = -1L;
     private String type;
 
-    private ScheduleTaskDto taskDto;
+    private ScheduledConfigEntity taskDto;
 
-    public ScheduleEvent(Object source, String type, ScheduleTaskDto taskDto) {
+    public ScheduleEvent(Object source, String type, ScheduledConfigEntity taskDto) {
         super(source);
         this.type = type;
         this.taskDto = taskDto;
@@ -28,11 +28,11 @@ public class ScheduleEvent extends ApplicationEvent {
         this.type = type;
     }
 
-    public ScheduleTaskDto getTaskDto() {
+    public ScheduledConfigEntity getTaskDto() {
         return taskDto;
     }
 
-    public void setTaskDto(ScheduleTaskDto taskDto) {
+    public void setTaskDto(ScheduledConfigEntity taskDto) {
         this.taskDto = taskDto;
     }
 }

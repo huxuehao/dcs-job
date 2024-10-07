@@ -3,7 +3,7 @@ package com.tiger.job.server.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tiger.job.common.constant.ChannelConstant;
 import com.tiger.job.common.constant.ClusterProperties;
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import com.tiger.job.common.entity.ScheduleTaskPo;
 import com.tiger.job.common.util.MeUtil;
 import com.tiger.job.server.listener.ScheduleEvent;
@@ -23,14 +23,14 @@ import java.util.function.Consumer;
  * @author huxuehao
  **/
 @Service
-public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, ScheduleTaskDto> implements ScheduleTaskService {
+public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, ScheduledConfigEntity> implements ScheduleTaskService {
     private final ApplicationEventPublisher publisher;
     private final ScheduleTaskMapper scheduleTaskMapper;
     //private final StringRedisTemplate stringRedisTemplate;
     private final ClusterProperties clusterProperties;
-    private final Map<String, Consumer<ScheduleTaskDto>> triggerMap;
+    private final Map<String, Consumer<ScheduledConfigEntity>> triggerMap;
 
-    public ScheduleTaskServiceImpl(ApplicationEventPublisher publisher, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, ClusterProperties clusterProperties, ScheduleTaskMapper scheduleTaskMapper) {
+    public ScheduleTaskServiceImpl(ApplicationEventPublisher publisher, @Qualifier("triggerMap") Map<String, Consumer<ScheduledConfigEntity>> triggerMap, ClusterProperties clusterProperties, ScheduleTaskMapper scheduleTaskMapper) {
         this.publisher = publisher;
         this.triggerMap = triggerMap;
         this.clusterProperties = clusterProperties;
@@ -39,12 +39,12 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
 
 
     @Override
-    public List<ScheduleTaskDto> selectAll() {
+    public List<ScheduledConfigEntity> selectAll() {
         return scheduleTaskMapper.selectAll();
     }
 
     /* 新增*/
-    public int add(ScheduleTaskDto scheduleTask){
+    public int add(ScheduledConfigEntity scheduleTask){
         String id = MeUtil.nextId();
         String createUser = MeUtil.nextId();
         String createTime = MeUtil.currentDatetime();
@@ -56,7 +56,7 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
     }
     /* 更新*/
     @Transactional(rollbackFor = Exception.class)
-    public int update(ScheduleTaskDto scheduleTask){
+    public int update(ScheduledConfigEntity scheduleTask){
         String updateUser = MeUtil.nextId();
         String updateTime = MeUtil.currentDatetime();
         scheduleTask.setUpdateUser(updateUser);
@@ -116,12 +116,12 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
     }
 
     /* 填充id、更新人、更新时间 */
-    private List<ScheduleTaskDto> fillTaskInfo (List<String> ids) {
+    private List<ScheduledConfigEntity> fillTaskInfo (List<String> ids) {
         String updateUser = MeUtil.nextId();
         String updateTime = MeUtil.currentDatetime();
-        List<ScheduleTaskDto> tasks = new ArrayList<>();
+        List<ScheduledConfigEntity> tasks = new ArrayList<>();
         ids.forEach(item -> {
-            ScheduleTaskDto task = new ScheduleTaskDto();
+            ScheduledConfigEntity task = new ScheduledConfigEntity();
             task.setId(item);
             task.setUpdateUser(updateUser);
             task.setUpdateTime(updateTime);
@@ -132,7 +132,7 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
 
     /* 开启定时 */
     private void openSchedule(List<String> ids) {
-        List<ScheduleTaskDto> taskList = this.listByIds(ids);
+        List<ScheduledConfigEntity> taskList = this.listByIds(ids);
         if (taskList != null && taskList.size() > 0) {
             taskList.forEach(item -> {
                 if (clusterProperties.isOpen()) {
@@ -147,7 +147,7 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
     }
     /* 关闭定时 */
     private void closeSchedule(List<String> ids) {
-        List<ScheduleTaskDto> taskList = this.listByIds(ids);
+        List<ScheduledConfigEntity> taskList = this.listByIds(ids);
         if (taskList != null && taskList.size() > 0) {
             taskList.forEach(item -> {
                 if (clusterProperties.isOpen()) {
@@ -162,7 +162,7 @@ public class ScheduleTaskServiceImpl extends ServiceImpl<ScheduleTaskMapper, Sch
     }
     /* 删除定时 */
     private void deleteSchedule(List<String> ids) {
-        List<ScheduleTaskDto> taskList = this.listByIds(ids);
+        List<ScheduledConfigEntity> taskList = this.listByIds(ids);
         if (taskList != null && taskList.size() > 0) {
             taskList.forEach(item -> {
                 if (clusterProperties.isOpen()) {

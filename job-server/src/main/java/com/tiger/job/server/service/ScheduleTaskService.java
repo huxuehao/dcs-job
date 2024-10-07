@@ -1,7 +1,7 @@
 package com.tiger.job.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import com.tiger.job.common.entity.ScheduleTaskPo;
 
 import java.util.List;
@@ -11,13 +11,13 @@ import java.util.List;
  *
  * @author huxuehao
  **/
-public interface ScheduleTaskService extends IService<ScheduleTaskDto> {
+public interface ScheduleTaskService extends IService<ScheduledConfigEntity> {
     /* 获取列表*/
-    List<ScheduleTaskDto> selectAll();
+    List<ScheduledConfigEntity> selectAll();
     /* 新增 */
-    int add(ScheduleTaskDto scheduleTask);
+    int add(ScheduledConfigEntity scheduleTask);
     /* 更新 */
-    int update(ScheduleTaskDto scheduleTask);
+    int update(ScheduledConfigEntity scheduleTask);
     /* 总数 */
     int getTotals(String taskName, String taskType, String taskStatus);
     /* 分页 */

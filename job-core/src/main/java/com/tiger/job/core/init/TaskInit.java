@@ -1,6 +1,6 @@
 package com.tiger.job.core.init;
 
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import com.tiger.job.core.beanScan.SchedulerScan;
 import com.tiger.job.common.constant.ChannelConstant;
 import com.tiger.job.core.executor.AdapterExecutor;
@@ -43,8 +43,8 @@ import java.util.stream.Collectors;
 public class TaskInit implements SmartInitializingSingleton {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Map<String, ScheduledFuture<?>> scheduledFutureMap;
-    private final Map<String, ScheduleTaskDto> scheduleTaskConfigMap;
-    private final Map<String, Consumer<ScheduleTaskDto>> triggerMap;
+    private final Map<String, ScheduledConfigEntity> scheduleTaskConfigMap;
+    private final Map<String, Consumer<ScheduledConfigEntity>> triggerMap;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
     private final Map<String, Map<Object, Method>> schedulerScanMethodMap;
     private final ScheduleTaskService scheduleTaskService;
@@ -53,7 +53,7 @@ public class TaskInit implements SmartInitializingSingleton {
     private final SchedulerScan schedulerScan;
     private final Unlock unlock;
 
-    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("scheduleTaskConfigMap") Map<String, ScheduleTaskDto> scheduleTaskConfigMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapterExecutor, SchedulerScan schedulerScan, Unlock unlock) {
+    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("scheduleTaskConfigMap") Map<String, ScheduledConfigEntity> scheduleTaskConfigMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduledConfigEntity>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapterExecutor, SchedulerScan schedulerScan, Unlock unlock) {
         this.scheduledFutureMap = scheduledFutureMap;
         this.scheduleTaskConfigMap = scheduleTaskConfigMap;
         this.triggerMap = triggerMap;
@@ -76,8 +76,8 @@ public class TaskInit implements SmartInitializingSingleton {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.initTask();
         this.initTrigger();
+        this.initTask();
     }
 
     /**
@@ -85,24 +85,6 @@ public class TaskInit implements SmartInitializingSingleton {
      */
     private void initSchedulerScan() throws IOException, ClassNotFoundException {
         schedulerScanMethodMap.putAll(schedulerScan.schedulerScanMethod());
-    }
-
-    /**
-     * 描述：初始化定时任务
-     */
-    private void initTask() {
-        List<ScheduleTaskDto> taskList = scheduleTaskService.selectAll();
-        List<ScheduleTaskDto> enableTask = taskList.stream().filter(item -> "1".equals(item.getEnable())).collect(Collectors.toList());
-        enableTask.forEach(item -> {
-            TaskWorker worker = new TaskWorker(item, adapterExecutor.matchExecutor());
-            CronTrigger cronTrigger = item.toCronTrigger();
-            ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(worker, cronTrigger);
-            scheduledFutureMap.put(item.getId(), schedule);
-            scheduleTaskConfigMap.put(item.getId(), item);
-            // 强制解锁
-            unlock.unlockTask(Collections.singletonList(item.getId()));
-            log.info("定时任务：[{}]初始化完成", item.getName());
-        });
     }
 
     /**
@@ -119,7 +101,7 @@ public class TaskInit implements SmartInitializingSingleton {
 
     /* 定时任务：开启操作 */
     private void openTrigger() {
-        Consumer<ScheduleTaskDto> openSchedule = item -> {
+        Consumer<ScheduledConfigEntity> openSchedule = item -> {
             String scheduleId = item.getId();
             if (scheduledFutureMap.containsKey(scheduleId)) { /* 当定时任务已经存在与scheduledFutureMap中*/
                 scheduledFutureMap.compute(scheduleId, (k, v) -> { /* 重新计算scheduledFutureMap中key为scheduledId的value的值 */
@@ -144,7 +126,7 @@ public class TaskInit implements SmartInitializingSingleton {
 
     /* 定时任务：关闭操作 */
     private void closeTrigger(){
-        Consumer<ScheduleTaskDto> closeSchedule = item -> {
+        Consumer<ScheduledConfigEntity> closeSchedule = item -> {
             String scheduleId = item.getId();
             ScheduledFuture<?> scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务
             Optional.ofNullable(scheduledFuture).ifPresent(schedule -> schedule.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则停止定时 */
@@ -157,7 +139,7 @@ public class TaskInit implements SmartInitializingSingleton {
 
     /* 定时任务：删除操作 */
     private void deleteTrigger(){
-        Consumer<ScheduleTaskDto> deleteSchedule = item -> {
+        Consumer<ScheduledConfigEntity> deleteSchedule = item -> {
             String scheduleId = item.getId();
             ScheduledFuture<?> scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务
             Optional.ofNullable(scheduledFuture).ifPresent(schedule -> schedule.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则停止定时 */
@@ -167,5 +149,18 @@ public class TaskInit implements SmartInitializingSingleton {
         };
         triggerMap.put(ChannelConstant.DELETE, deleteSchedule);
         log.info("定时任务：操作注册表：[{}]初始化完成", ChannelConstant.DELETE);
+    }
+
+
+    /**
+     * 描述：初始化定时任务
+     */
+    private void initTask() {
+        List<ScheduledConfigEntity> taskList = scheduleTaskService.selectAll();
+        List<ScheduledConfigEntity> enableTask = taskList.stream().filter(item -> "1".equals(item.getEnable())).collect(Collectors.toList());
+        enableTask.forEach(item -> {
+            triggerMap.get(ChannelConstant.OPEN).accept(item);
+            log.info("定时任务：[{}]初始化完成", item.getName());
+        });
     }
 }

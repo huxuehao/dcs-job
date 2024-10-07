@@ -1,7 +1,7 @@
 package com.tiger.job.core.log.impl;
 
-import com.tiger.job.common.entity.ScheduleLogDto;
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduleLogEntity;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import com.tiger.job.common.util.MeUtil;
 import com.tiger.job.core.log.GenLog;
 import com.tiger.job.server.service.ScheduleLogService;
@@ -24,11 +24,11 @@ public class GenFailLog implements GenLog {
     }
 
     @Override
-    public void gen(ScheduleTaskDto task, String message) {
+    public void gen(ScheduledConfigEntity task, String message) {
         genFailLog(task, message);
     }
 
-    private void genFailLog(ScheduleTaskDto task, String message){
+    private void genFailLog(ScheduledConfigEntity task, String message){
         try {
             scheduleLogService.add(initScheduleLogEntity(task, message));
         } catch (Exception e) {
@@ -37,8 +37,8 @@ public class GenFailLog implements GenLog {
     }
 
     /* 初始化日志信息 */
-    private ScheduleLogDto initScheduleLogEntity(ScheduleTaskDto task, String message) {
-        return new ScheduleLogDto(
+    private ScheduleLogEntity initScheduleLogEntity(ScheduledConfigEntity task, String message) {
+        return new ScheduleLogEntity(
                 MeUtil.nextId(),
                 task.getId(),
                 task.getName(),

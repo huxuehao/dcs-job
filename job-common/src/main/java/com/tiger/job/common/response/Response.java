@@ -30,7 +30,7 @@ public class Response extends LinkedHashMap<String, Object> {
     }
 
     /**
-     * @desc 成功响应体
+     * 成功响应体
      * @return 封装的返回值
      */
     public static Response success() {
@@ -38,7 +38,7 @@ public class Response extends LinkedHashMap<String, Object> {
     }
 
     /**
-     * @desc  成功响应体
+     * 成功响应体
      * @param  data 数据
      * @return 封装的返回值
      */
@@ -46,7 +46,7 @@ public class Response extends LinkedHashMap<String, Object> {
         return Response.success(ResponseStatus.Success.msg, data);
     }
     /**
-     * @desc   成功响应体
+     * 成功响应体
      * @param  msg  描述
      * @param  data 数据
      * @return 封装的返回值
@@ -56,15 +56,14 @@ public class Response extends LinkedHashMap<String, Object> {
     }
 
     /**
-     * @desc 失败响应体
-     * @return
+     * 失败响应体
      */
     public static Response error() {
         return Response.error(ResponseStatus.Error.msg);
     }
 
     /**
-     * @desc   失败响应体
+     * 失败响应体
      * @param  msg 描述
      * @return 封装的返回值
      */
@@ -73,7 +72,7 @@ public class Response extends LinkedHashMap<String, Object> {
     }
 
     /**
-     * @desc   失败响应体
+     * 失败响应体
      * @param  code 响应码
      * @param  msg 描述
      * @return 封装的返回值
@@ -83,7 +82,7 @@ public class Response extends LinkedHashMap<String, Object> {
     }
 
     /**
-     * @desc   失败响应体
+     * 失败响应体
      * @param  msg 描述
      * @param  data  数据
      * @return 封装的返回值
@@ -93,7 +92,7 @@ public class Response extends LinkedHashMap<String, Object> {
     }
 
     /**
-     * @desc   失败响应体
+     * 失败响应体
      * @param  code  响应码
      * @param  msg   描述
      * @param  data 数据
@@ -104,7 +103,7 @@ public class Response extends LinkedHashMap<String, Object> {
     }
 
     /**
-     * @desc 警告响应体
+     * 警告响应体
      * @return 封装的返回值
      */
     public static Response warn() {
@@ -112,7 +111,7 @@ public class Response extends LinkedHashMap<String, Object> {
     }
 
     /**
-     * @desc 警告响应体
+     * 警告响应体
      * @param msg 描述
      * @return 封装的返回值
      */
@@ -121,7 +120,7 @@ public class Response extends LinkedHashMap<String, Object> {
     }
 
     /**
-     * @desc 警告响应体
+     * 警告响应体
      * @param msg 描述
      * @param data 数据
      * @return 封装的返回值
@@ -131,7 +130,7 @@ public class Response extends LinkedHashMap<String, Object> {
     }
 
     /**
-     * @desc 警告响应体
+     * 警告响应体
      * @param code 响应码
      * @param msg 描述
      * @return 封装的返回值
@@ -141,7 +140,7 @@ public class Response extends LinkedHashMap<String, Object> {
     }
 
     /**
-     * @desc 警告响应体
+     * 警告响应体
      * @param code 响应码
      * @param msg 描述
      * @param data 数据

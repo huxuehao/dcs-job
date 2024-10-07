@@ -1,7 +1,7 @@
 package com.tiger.job.core.retry;
 
 import com.tiger.job.common.constant.RetryProperties;
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import com.tiger.job.common.util.MeUtil;
 import com.tiger.job.core.executor.AdapterExecutor;
 import com.tiger.job.core.queue.TaskRetryQueue;
@@ -32,9 +32,9 @@ public class RetryActuator {
     private final RetryProperties retryProperties;
     private final TaskRetryQueue taskRetryQueue;
     private final AdapterExecutor adapterExecutor;
-    private final Map<String, ScheduleTaskDto> scheduleTaskConfigMap;
+    private final Map<String, ScheduledConfigEntity> scheduleTaskConfigMap;
 
-    public RetryActuator(RetryProperties retryProperties, TaskRetryQueue taskRetryQueue, AdapterExecutor adapterExecutor, @Qualifier("scheduleTaskConfigMap") Map<String, ScheduleTaskDto> scheduleTaskConfigMap) {
+    public RetryActuator(RetryProperties retryProperties, TaskRetryQueue taskRetryQueue, AdapterExecutor adapterExecutor, @Qualifier("scheduleTaskConfigMap") Map<String, ScheduledConfigEntity> scheduleTaskConfigMap) {
         this.retryProperties = retryProperties;
         this.taskRetryQueue = taskRetryQueue;
         this.adapterExecutor = adapterExecutor;
@@ -142,7 +142,7 @@ public class RetryActuator {
      * @param scheduledConfig 任务配置
      */
     public void pushToRetryQueue(Object scheduledConfig) {
-        String taskId = ((ScheduleTaskDto)scheduledConfig).getId();
+        String taskId = ((ScheduledConfigEntity)scheduledConfig).getId();
         long nextTime = System.currentTimeMillis() + (retryProperties.getSleep() * 1000L);
         String taskTag = taskRetryQueue.getTagById(taskId);
 

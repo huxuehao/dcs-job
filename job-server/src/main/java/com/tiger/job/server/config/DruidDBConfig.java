@@ -22,9 +22,6 @@ import java.sql.SQLException;
 @EnableTransactionManagement
 public class DruidDBConfig {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    //private static final String MYBATIS_CONFIG = "classpath:mybatis/mybatis-config.xml";
-    //private static final String MAPPER_XML_PATH = "classpath:com/tiger/job/**/*Mapper.xml";
-    //private static final String TYPE_ALIASES_PACKAGE = "com.tiger.job.**.entity";
 
     /* adi数据库连接信息 */
     @Value("${spring.datasource.url}")

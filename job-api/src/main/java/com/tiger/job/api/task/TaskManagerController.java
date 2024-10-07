@@ -1,7 +1,7 @@
 package com.tiger.job.api.task;
 
 import com.tiger.job.common.annotation.LoginAuth;
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import com.tiger.job.common.entity.ScheduleTaskPo;
 import com.tiger.job.common.response.Response;
 import com.tiger.job.core.executor.impl.ManualExecutor;
@@ -60,7 +60,7 @@ public class TaskManagerController {
     @Description(value = "执行任务")
     @GetMapping(value = "/execute")
     public Response execute(@RequestParam("id") String id) {
-        ScheduleTaskDto task = scheduleTaskService.getById(id);
+        ScheduledConfigEntity task = scheduleTaskService.getById(id);
         Boolean execute = executor.execute(task);
         if (execute == null) {
             return Response.error("操作冲突：定时正在执行，请稍后重试");
@@ -78,7 +78,7 @@ public class TaskManagerController {
     @LoginAuth
     @Description(value = "添加任务")
     @PostMapping(value = "/add")
-    public Response addTask(@RequestBody ScheduleTaskDto scheduleTask) {
+    public Response addTask(@RequestBody ScheduledConfigEntity scheduleTask) {
         if (!isValidCronExpression(scheduleTask.getCron())) {
             return Response.error("cron表达式校验失败");
         }
@@ -89,7 +89,7 @@ public class TaskManagerController {
     @LoginAuth
     @Description(value = "更新任务")
     @PostMapping(value = "/update")
-    public Response updateTask(@RequestBody ScheduleTaskDto scheduleTask) {
+    public Response updateTask(@RequestBody ScheduledConfigEntity scheduleTask) {
         if (!isValidCronExpression(scheduleTask.getCron())) {
             return Response.error("cron表达式校验失败");
         }
@@ -148,7 +148,7 @@ public class TaskManagerController {
     @Description(value = "获取任务列表")
     @GetMapping(value = "/list")
     public Response taskList() {
-        List<ScheduleTaskDto> list = scheduleTaskService.list();
+        List<ScheduledConfigEntity> list = scheduleTaskService.list();
         return Response.success(list);
     }
 

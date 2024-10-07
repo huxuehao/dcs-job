@@ -6,10 +6,12 @@
         <result column="name" property="name"/>
         <result column="task_type" property="taskType"/>
         <result column="task_describe" property="taskDescribe"/>
+        <result column="config" property="config"/>
         <result column="path" property="path"/>
         <result column="cron" property="cron"/>
         <result column="enable" property="enable"/>
         <result column="open_log" property="openLog"/>
+        <result column="type" property="type"/>
         <result column="create_user" property="createUser"/>
         <result column="create_time" property="createTime"/>
         <result column="update_user" property="updateUser"/>
@@ -22,10 +24,12 @@
             a.`name`,
             b.`dict_label` as task_type,
             a.`task_describe`,
+            a.`config`,
             a.`path`,
             a.`cron`,
             a.`enable`,
             a.`open_log`,
+            a.`type`,
             a.`create_user`,
             a.`create_time`,
             a.`update_user`,
@@ -82,10 +86,12 @@
             `name`,
             `task_type`,
             `task_describe`,
+            `config`,
             `path`,
             `cron`,
             `enable`,
             `open_log`,
+            `type`,
             `create_user`,
             `create_time`
         )
@@ -94,10 +100,12 @@
             #{task.name},
             #{task.taskType},
             #{task.taskDescribe},
+            #{task.config},
             #{task.path},
             #{task.cron},
             #{task.enable},
             #{task.openLog},
+            #{task.type},
             #{task.createUser},
             #{task.createTime}
         )
@@ -109,6 +117,7 @@
             `name` = #{task.name},
             `task_type` = #{task.taskType},
             `task_describe` = #{task.taskDescribe},
+            `config` = #{task.config},
             `path` = #{task.path},
             `cron` = #{task.cron},
             `enable` = #{task.enable},
@@ -161,10 +170,12 @@
             a.`name`,
             b.`dict_label` as task_type,
             a.`task_describe`,
+            a.`config`,
             a.`path`,
             a.`cron`,
             a.`enable`,
             a.`open_log`,
+            a.`type`,
             a.`create_user`,
             a.`create_time`,
             a.`update_user`,
@@ -184,15 +195,17 @@
         where a.id = #{taskId}
     </select>
 
-    <resultMap id="scheduleTaskDtoMap" type="com.tiger.job.common.entity.ScheduleTaskDto">
+    <resultMap id="scheduleTaskDtoMap" type="com.tiger.job.common.entity.ScheduledConfigEntity">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="taskType" column="task_type"/>
         <result property="taskDescribe" column="task_describe"/>
+        <result property="config" column="config"/>
         <result property="path" column="path"/>
         <result property="cron" column="cron"/>
         <result property="enable" column="enable"/>
         <result property="openLog" column="open_log"/>
+        <result property="type" column="type"/>
         <result property="createUser" column="create_user"/>
         <result property="createTime" column="create_time"/>
         <result property="updateUser" column="update_user"/>
@@ -204,10 +217,12 @@
             `name`,
             `task_type`,
             `task_describe`,
+            `config`,
             `path`,
             `cron`,
             `enable`,
             `open_log`,
+            `type`,
             `create_user`,
             `create_time`,
             `update_user`,
@@ -226,10 +241,12 @@
             `name`,
             `task_type`,
             `task_describe`,
+            `config`,
             `path`,
             `cron`,
             `enable`,
             `open_log`,
+            `type`,
             `create_user`,
             `create_time`,
             `update_user`,
@@ -240,10 +257,11 @@
 
     <delete id="deleteRecordsNotIn">
         delete from `sys_scheduled`
-        where  `path` not in
+        where `path` not in
         <foreach collection="tasks" item="item" open="(" separator="," close=")">
             #{item.path}
         </foreach>
+        and `type` = 'ANNOTATION'
     </delete>
 
     <insert id="addRecordsMoreOf">
@@ -253,10 +271,12 @@
                 `name`,
                 `task_type`,
                 `task_describe`,
+                `config`,
                 `path`,
                 `cron`,
                 `enable`,
                 `open_log`,
+                `type`,
                 `create_user`,
                 `create_time`
             )
@@ -267,10 +287,12 @@
                 #{item.name},
                 #{item.taskType},
                 #{item.taskDescribe},
+                #{item.config},
                 #{item.path},
                 #{item.cron},
                 #{item.enable},
                 #{item.openLog},
+                #{item.type},
                 #{item.createUser},
                 #{item.createTime}
             )

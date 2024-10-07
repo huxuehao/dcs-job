@@ -1,7 +1,7 @@
 package com.tiger.job.core.config;
 
 import com.alibaba.fastjson2.JSON;
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import com.tiger.job.common.constant.ChannelConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +26,9 @@ import java.util.function.Consumer;
 @Configuration
 public class RedisSubscribeConfig {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final Map<String, Consumer<ScheduleTaskDto>> triggerMap;
+    private final Map<String, Consumer<ScheduledConfigEntity>> triggerMap;
 
-    public RedisSubscribeConfig(@Qualifier("triggerMap") Map<String, Consumer<ScheduleTaskDto>> triggerMap) {
+    public RedisSubscribeConfig(@Qualifier("triggerMap") Map<String, Consumer<ScheduledConfigEntity>> triggerMap) {
         this.triggerMap = triggerMap;
     }
 
@@ -55,7 +55,7 @@ public class RedisSubscribeConfig {
             log.info("接收到了节点的广播消息，channel为：{}", channel);
             String body = new String(message.getBody());
             /* ScheduleTaskDto 是 Consumer 的参数，所以将消息体转换成ScheduleTaskDto对象，并作为 Consumer 的参数 */
-            triggerMap.get(channel).accept(JSON.parseObject(body, ScheduleTaskDto.class));
+            triggerMap.get(channel).accept(JSON.parseObject(body, ScheduledConfigEntity.class));
 
         };
     }

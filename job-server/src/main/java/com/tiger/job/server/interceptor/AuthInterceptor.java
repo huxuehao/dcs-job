@@ -39,7 +39,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
         /* 获取请求头中的 token */
-        String token = request.getHeader("OptSql-Auth");
+        String token = request.getHeader("Job-Auth");
         /* 获取映射的方法 */
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();

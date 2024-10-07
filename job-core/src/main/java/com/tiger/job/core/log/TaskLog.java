@@ -1,7 +1,7 @@
 package com.tiger.job.core.log;
 
 import com.tiger.job.common.constant.LogProperties;
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,7 +24,7 @@ public class TaskLog {
      * @param task 定时任务DTO
      * @param message 消息
      */
-    public void invoke(ScheduleTaskDto task, String message) {
+    public void invoke(ScheduledConfigEntity task, String message) {
         if ("0".equals(task.getOpenLog()) || (!logProperties.isFailOpen() && !logProperties.isSuccessOpen())) {
             return;
         }

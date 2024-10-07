@@ -1,9 +1,8 @@
 package com.tiger.job.core.doJob;
 
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import com.tiger.job.common.exception.member.NotMatchPathException;
 import com.tiger.job.common.util.MeUtil;
-import com.tiger.job.core.log.TaskLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,22 +12,21 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * 描述：定时任务执行
+ * 描述：基于注解模式去执行
  *
  * @author huxuehao
  **/
 @Component
-public class Job {
+public class InvokeAnnotation extends AbstractInvoke {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Map<String, Map<Object, Method>> schedulerScanMethodMap;
-    private final TaskLog taskLog;
 
-    public Job(@Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, TaskLog taskLog) {
+    public InvokeAnnotation(@Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap) {
         this.schedulerScanMethodMap = schedulerScanMethodMap;
-        this.taskLog = taskLog;
     }
 
-    public boolean invoke(ScheduleTaskDto task) {
+    @Override
+    public String invoke(ScheduledConfigEntity task) {
         String message = null;
         try {
             /*执行定时任务*/
@@ -47,10 +45,7 @@ public class Job {
         } catch (Exception e) {
             log.error("定时任务[{}]执行失败", task.getName());
             message = MeUtil.catchExceptionStackInfo(e);
-        } finally {
-            /* 生成日志 */
-            taskLog.invoke(task, message);
         }
-        return message == null;
+        return message;
     }
 }

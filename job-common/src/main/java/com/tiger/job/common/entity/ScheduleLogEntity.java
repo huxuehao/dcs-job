@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_scheduled_log")
-public class ScheduleLogDto extends BaseEntity {
+public class ScheduleLogEntity extends BaseEntity {
     private String id;
     private String taskId;
     private String taskName;

@@ -14,28 +14,30 @@ import java.util.Objects;
  **/
 @Data
 @TableName("sys_scheduled")
-public class ScheduleTaskDto extends BaseDto {
+public class ScheduledConfigEntity extends BaseDto {
     private String id;
     private String name;
     private String taskType;
     private String taskDescribe;
+    private String config;
     private String cron;
     private String path;
     private String enable;
     private String openLog;
+    private String type;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        ScheduleTaskDto dto = (ScheduleTaskDto) o;
-        return Objects.equals(path, dto.path);
+        ScheduledConfigEntity dto = (ScheduledConfigEntity) o;
+        return Objects.equals(id, dto.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), path);
+        return Objects.hash(super.hashCode(), id);
     }
 
     // 提供转换为CronTrigger的工具方法

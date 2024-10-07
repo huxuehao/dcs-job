@@ -1,6 +1,5 @@
 package com.tiger.job.common.entity;
 
-import com.tiger.job.common.entity.base.BaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,14 +10,6 @@ import lombok.EqualsAndHashCode;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ScheduleTaskPo extends BaseDto {
-    private String id;
-    private String name;
-    private String taskType;
-    private String taskDescribe;
-    private String cron;
-    private String path;
-    private String enable;
-    private String openLog;
+public class ScheduleTaskPo extends ScheduledConfigEntity {
     private String total;
 }

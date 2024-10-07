@@ -2,8 +2,8 @@ package com.tiger.job.core.executor.impl;
 
 import com.tiger.job.common.annotation.Retry;
 import com.tiger.job.common.constant.JobConstant;
-import com.tiger.job.common.entity.ScheduleTaskDto;
-import com.tiger.job.core.doJob.Job;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
+import com.tiger.job.core.doJob.JobInvoke;
 import com.tiger.job.core.executor.Executor;
 import com.tiger.job.core.queue.TaskQueue;
 import org.redisson.api.RLock;
@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @EnableAspectJAutoProxy(exposeProxy=true)
 public class ClusterExecutor implements Executor {
-    private final Job job;
+    private final JobInvoke jobInvoke;
     private final TaskQueue taskQueue;
     private final String uniqueIdentifier;
     private final ClusterExecutor self;
@@ -34,15 +34,15 @@ public class ClusterExecutor implements Executor {
     @Resource
     private RedissonClient locker;
 
-    public ClusterExecutor(Job job, TaskQueue taskQueue, @Qualifier("uniqueIdentifier") String uniqueIdentifier, @Lazy ClusterExecutor self) {
-        this.job = job;
+    public ClusterExecutor(JobInvoke jobInvoke, TaskQueue taskQueue, @Qualifier("uniqueIdentifier") String uniqueIdentifier, @Lazy ClusterExecutor self) {
+        this.jobInvoke = jobInvoke;
         this.taskQueue = taskQueue;
         this.uniqueIdentifier = uniqueIdentifier;
         this.self = self;
     }
 
     @Override
-    public Boolean execute(ScheduleTaskDto task) {
+    public Boolean execute(ScheduledConfigEntity task) {
         /* 获取当前定时任务所属的队列 */
         String queueName = taskQueue.getQueueName(task.getId());
         /* 获取 queueName 对应的分布式锁 */
@@ -128,11 +128,11 @@ public class ClusterExecutor implements Executor {
      * @return 执行结果
      */
     @Retry
-    public boolean doExecute(ScheduleTaskDto task) {
+    public boolean doExecute(ScheduledConfigEntity task) {
         RLock lock = locker.getLock(JobConstant.LOCK_PREFIX + JobConstant.LINK_TAG + task.getId());
         if (lock.tryLock()) { /* 获取锁 */
             try {
-                return job.invoke(task); /* 执行 */
+                return jobInvoke.execute(task); /* 执行 */
             } finally {
                 lock.unlock(); /* 解锁 */
             }

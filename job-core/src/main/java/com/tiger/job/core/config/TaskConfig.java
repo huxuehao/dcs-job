@@ -1,7 +1,7 @@
 package com.tiger.job.core.config;
 
 import com.tiger.job.common.constant.TaskPoolProperties;
-import com.tiger.job.common.entity.ScheduleTaskDto;
+import com.tiger.job.common.entity.ScheduledConfigEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -71,7 +71,7 @@ public class TaskConfig {
      * 存放活跃的ScheduleTaskConfig
      */
     @Bean(name = "scheduleTaskConfigMap")
-    public Map<String, ScheduleTaskDto> scheduleTaskConfigMap() {
+    public Map<String, ScheduledConfigEntity> scheduleTaskConfigMap() {
         return new ConcurrentHashMap<>();
     }
 
@@ -84,7 +84,7 @@ public class TaskConfig {
      * 这样我们一方面可以实现动态扩展，另一方面省去了多 if-else 的操作。
      */
     @Bean(name = "triggerMap")
-    public Map<String, Consumer<ScheduleTaskDto>> triggerMap() {
+    public Map<String, Consumer<ScheduledConfigEntity>> triggerMap() {
         return new ConcurrentHashMap<>();
     }
 
