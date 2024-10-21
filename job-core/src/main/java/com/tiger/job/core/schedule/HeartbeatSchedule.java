@@ -6,6 +6,7 @@ import com.tiger.job.core.queue.TaskQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -22,18 +23,17 @@ import java.util.stream.Collectors;
  * @author huxuehao
  **/
 @Component
+@ConditionalOnProperty(name = "tiger.scheduled-task.cluster.open", havingValue = "true", matchIfMissing = false)
 public class HeartbeatSchedule {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final TaskQueue taskQueue;
     private final String uniqueIdentifier;
-    private final ClusterProperties clusterProperties;
     private final RedisTemplate<String, String> redisTemplate;
     private static final String TASK_HEART_BEAT_PREFIX = JobConstant.HEARTBEAT_PREFIX + JobConstant.LINK_TAG;
 
-    public HeartbeatSchedule(@Qualifier("uniqueIdentifier") String uniqueIdentifier, TaskQueue taskQueue, ClusterProperties clusterProperties, RedisTemplate<String, String> redisTemplate) {
+    public HeartbeatSchedule(@Qualifier("uniqueIdentifier") String uniqueIdentifier, TaskQueue taskQueue, RedisTemplate<String, String> redisTemplate) {
         this.uniqueIdentifier = uniqueIdentifier;
         this.taskQueue = taskQueue;
-        this.clusterProperties = clusterProperties;
         this.redisTemplate = redisTemplate;
     }
 
@@ -45,9 +45,6 @@ public class HeartbeatSchedule {
     /* 发送心跳，心跳时长设置1分30秒 */
     @Scheduled(cron = "30 0/1 * * * ?")
     public void sendHeartbeat() {
-        if (!clusterProperties.isOpen()) {
-            return;
-        }
         try {
             /* 判断心跳是否存在 */
             if (!Boolean.TRUE.equals(redisTemplate.hasKey(getHeartbeatId()))) {
@@ -61,9 +58,6 @@ public class HeartbeatSchedule {
     /* 维持心跳，心跳时长设置1分30秒 */
     @Scheduled(cron = "15 0/1 * * * ?")
     public void keepHeartbeat() {
-        if (!clusterProperties.isOpen()) {
-            return;
-        }
         try {
             /* 判断心跳是否存在 */
             if (Boolean.TRUE.equals(redisTemplate.hasKey(getHeartbeatId()))) {
@@ -79,9 +73,6 @@ public class HeartbeatSchedule {
     /* 清除队列中不合法的元素*/
     @Scheduled(cron = "45 0/1 * * * ?")
     public void clearIllegalQueueItem() {
-        if (!clusterProperties.isOpen()) {
-            return;
-        }
         try {
             // 获取redis中所有合法的心跳
             Set<String> legalHeartbeat = redisTemplate.keys(TASK_HEART_BEAT_PREFIX.concat("*"));

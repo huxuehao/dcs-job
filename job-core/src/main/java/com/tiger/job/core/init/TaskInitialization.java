@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @author huxuehao
  **/
 @Component
-public class TaskInit implements SmartInitializingSingleton {
+public class TaskInitialization implements SmartInitializingSingleton {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Map<String, ScheduledFuture<?>> scheduledFutureMap;
     private final Map<String, ScheduledConfigEntity> scheduleTaskConfigMap;
@@ -53,7 +53,7 @@ public class TaskInit implements SmartInitializingSingleton {
     private final SchedulerScan schedulerScan;
     private final Unlock unlock;
 
-    public TaskInit(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("scheduleTaskConfigMap") Map<String, ScheduledConfigEntity> scheduleTaskConfigMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduledConfigEntity>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapterExecutor, SchedulerScan schedulerScan, Unlock unlock) {
+    public TaskInitialization(@Qualifier("scheduledFutureMap") Map<String, ScheduledFuture<?>> scheduledFutureMap, @Qualifier("scheduleTaskConfigMap") Map<String, ScheduledConfigEntity> scheduleTaskConfigMap, @Qualifier("triggerMap") Map<String, Consumer<ScheduledConfigEntity>> triggerMap, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler threadPoolTaskScheduler, @Qualifier("schedulerScanMethodMap") Map<String, Map<Object, Method>> schedulerScanMethodMap, ScheduleTaskService scheduleTaskService, TaskQueue taskQueue, AdapterExecutor adapterExecutor, SchedulerScan schedulerScan, Unlock unlock) {
         this.scheduledFutureMap = scheduledFutureMap;
         this.scheduleTaskConfigMap = scheduleTaskConfigMap;
         this.triggerMap = triggerMap;
