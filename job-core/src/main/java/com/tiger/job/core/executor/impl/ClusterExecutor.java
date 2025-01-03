@@ -47,7 +47,7 @@ public class ClusterExecutor implements Executor {
         String queueName = taskQueue.getQueueName(task.getId());
         /* 获取 queueName 对应的分布式锁 */
         RLock lock = locker.getLock(taskQueue.getQueueLockName(queueName));
-        /* 产看队列队首元素 */
+        /* 查看队列队首元素 */
         String firstItem = taskQueue.peek(queueName);
         if (firstItem == null) {
             /*
@@ -74,7 +74,7 @@ public class ClusterExecutor implements Executor {
             }
         }
         /*
-         * 若队首元素与当前节点的唯一表示父匹配，侧上锁、执行定时、出队、（不在队列时）入队；
+         * 若队首元素与当前节点的唯一标识符匹配，侧上锁、执行定时、出队、（不在队列时）入队；
          * 否则，当前节点（不在队列时）入队
          * */
         if (firstItem.startsWith(uniqueIdentifier)) {

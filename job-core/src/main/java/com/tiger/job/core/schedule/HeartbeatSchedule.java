@@ -1,6 +1,5 @@
 package com.tiger.job.core.schedule;
 
-import com.tiger.job.common.constant.ClusterProperties;
 import com.tiger.job.common.constant.JobConstant;
 import com.tiger.job.core.queue.TaskQueue;
 import org.slf4j.Logger;

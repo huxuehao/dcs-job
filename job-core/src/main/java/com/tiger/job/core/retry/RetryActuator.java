@@ -27,7 +27,9 @@ public class RetryActuator {
     // retry 线程
     private static volatile Thread thread;
     // 标记线程是否被中断
-    // 不使用thread.isInterrupted()代替isInterrupted是因为，执行完isInterrupted()线程中的Interrupted会自动置为false,不太好控制
+    // 不使用 thread.isInterrupted() 代替 isInterrupted 是因为 volatile 的灵活性更高。
+    // 如果你是用 isInterrupted() 尝试打断线程，但是在线程中使用了 sleep()，那么整个打断逻辑不清晰,
+    // 需要手动维护 interrupt 的状态，即在 sleep() 的 catch 中需要手动再次调用 interrupt()
     private static volatile boolean isInterrupted = true;
     private final RetryProperties retryProperties;
     private final TaskRetryQueue taskRetryQueue;

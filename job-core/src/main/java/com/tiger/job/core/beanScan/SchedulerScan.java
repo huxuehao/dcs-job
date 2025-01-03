@@ -75,36 +75,38 @@ public class SchedulerScan {
         for (Class<?> aClass : classes) {
             Method[] declaredMethods = aClass.getDeclaredMethods();
             for (Method method : declaredMethods) {
-                if (method.isAnnotationPresent(TaskPath.class)) {
-                    TaskPath annotation = method.getAnnotation(TaskPath.class);
-                    String path = annotation.path();
-                    if (path == null || "".equals(path)) {
-                        throw new EmptyTaskPathException();
-                    }
-                    method.setAccessible(true); /* 去除私有方法的限制 */
-                    Map<Object, Method> mapValue = new HashMap<Object, Method>() {{
-                        try {
-                            /* 先从bean中获取, 若取不到则手动创建实例 */
-                            put(BeanUtil.getBean(aClass), method);
-                        } catch (Exception e) {
-                            try {
-                                /* 手动创建实例 */
-                                put(aClass.newInstance(), method);
-                            } catch (InstantiationException ex) {
-                                throw new RuntimeException("实例化异常，请确保[" + aClass.getName() +"]具默认构造函数;" + ex.getMessage());
-                            } catch (IllegalAccessException ex) {
-                                throw new RuntimeException("非法访问异常，请确保[" + aClass.getName() +"]的默认构造函为public;" + ex.getMessage());
-                            }
-                        }
-                    }};
-                    /* 判断是否有重复的path */
-                    if (methodMap.containsKey(path)) {
-                        throw new SameTaskPathException("存在相同的定时任务path：" + path + "，请确保path的唯一性");
-                    }
-                    taskPaths.add(annotation);
-                    methodMap.put(path, mapValue);
-                    log.info("定时任务：已经完成对 [ {}({}) ] 定时任务的扫描", annotation.name(),annotation.path());
+                if (!method.isAnnotationPresent(TaskPath.class)) {
+                    continue;
                 }
+
+                TaskPath annotation = method.getAnnotation(TaskPath.class);
+                String path = annotation.path();
+                if (path == null || "".equals(path)) {
+                    throw new EmptyTaskPathException();
+                }
+                method.setAccessible(true); /* 去除私有方法的限制 */
+                Map<Object, Method> mapValue = new HashMap<Object, Method>() {{
+                    try {
+                        /* 先从bean中获取, 若取不到则手动创建实例 */
+                        put(BeanUtil.getBean(aClass), method);
+                    } catch (Exception e) {
+                        try {
+                            /* 手动创建实例 */
+                            put(aClass.newInstance(), method);
+                        } catch (InstantiationException ex) {
+                            throw new RuntimeException("实例化异常，请确保[" + aClass.getName() +"]具默认构造函数;" + ex.getMessage());
+                        } catch (IllegalAccessException ex) {
+                            throw new RuntimeException("非法访问异常，请确保[" + aClass.getName() +"]的默认构造函为public;" + ex.getMessage());
+                        }
+                    }
+                }};
+                /* 判断是否有重复的path */
+                if (methodMap.containsKey(path)) {
+                    throw new SameTaskPathException("存在相同的定时任务path：" + path + "，请确保path的唯一性");
+                }
+                taskPaths.add(annotation);
+                methodMap.put(path, mapValue);
+                log.info("定时任务：已经完成对 [ {}({}) ] 定时任务的扫描", annotation.name(),annotation.path());
             }
         }
         autoInsert.invoke(taskPaths);
