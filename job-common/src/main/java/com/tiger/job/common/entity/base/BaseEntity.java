@@ -8,5 +8,5 @@ import java.io.Serializable;
  * @author huxuehao
  **/
 public class BaseEntity implements Serializable {
-    private static final long serialVersionUID = -153746138274322843L;
+    private static final long serialVersionUID = -1;
 }

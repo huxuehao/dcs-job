@@ -18,11 +18,11 @@
             `content`,
             `execute_time`
         from
-            `sys_scheduled_log`
+            ${dbName}
         order by `name` desc, `execute_time` desc, id
     </select>
     <insert id="add">
-        insert into `sys_scheduled_log`(`id`,`task_id`,`task_name`,`execute_status`,`content`,`execute_time`)
+        insert into ${dbName}(`id`,`task_id`,`task_name`,`execute_status`,`content`,`execute_time`)
         values (
             #{log.id},
             #{log.taskId},
@@ -34,7 +34,7 @@
     </insert>
     <delete id="clearLog">
         delete from
-            `sys_scheduled_log`
+            ${dbName}
         where
             `execute_time` &lt;= #{endTime}
     </delete>
@@ -47,7 +47,7 @@
             `content`,
             `execute_time`
         from
-            `sys_scheduled_log`
+            ${dbName}
         where
             `task_id` = #{taskId}
             and execute_status = 'fail'
@@ -63,7 +63,7 @@
             `content`,
             `execute_time`
         from
-            `sys_scheduled_log`
+            ${dbName}
         where
             `task_id` = #{taskId}
             and `execute_time` &gt; #{executeTime}
@@ -81,7 +81,7 @@
             `content`,
             `execute_time`
         from
-            `sys_scheduled_log`
+            ${dbName}
         where
             `task_id` = #{taskId}
             and `execute_time` &lt; #{executeTime}

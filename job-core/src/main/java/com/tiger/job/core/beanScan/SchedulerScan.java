@@ -109,7 +109,9 @@ public class SchedulerScan {
                 log.info("定时任务：已经完成对 [ {}({}) ] 定时任务的扫描", annotation.name(),annotation.path());
             }
         }
-        autoInsert.invoke(taskPaths);
+        if (!taskPaths.isEmpty()) {
+            autoInsert.invoke(taskPaths);
+        }
         return methodMap;
     }
 }

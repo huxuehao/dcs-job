@@ -10,6 +10,7 @@ public class JobConstant {
     public static final String LINK_TAG = "::";
     /* 执行定时任务时的任务锁的前缀 */
     public static final String LOCK_PREFIX = "tiger-job-task-lock";
+    public static final String AUTO_INSERT_LOCK = "tiger-job-auto-insert-lock";
     /* 心跳检查前缀 */
     public static final String HEARTBEAT_PREFIX = "task-heart-beat";
     /* 分布式队列前缀 */

@@ -21,6 +21,7 @@
         <dependency>
             <groupId>com.tiger</groupId>
             <artifactId>job-common</artifactId>
+            <version>${parent.version}</version>
         </dependency>
     </dependencies>
 

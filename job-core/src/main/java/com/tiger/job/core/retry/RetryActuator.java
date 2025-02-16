@@ -144,7 +144,7 @@ public class RetryActuator {
      * @param scheduledConfig 任务配置
      */
     public void pushToRetryQueue(Object scheduledConfig) {
-        String taskId = ((ScheduledConfigEntity)scheduledConfig).getId();
+        String taskId = String.valueOf(((ScheduledConfigEntity)scheduledConfig).getId());
         long nextTime = System.currentTimeMillis() + (retryProperties.getSleep() * 1000L);
         String taskTag = taskRetryQueue.getTagById(taskId);
 

@@ -7,7 +7,7 @@
         select
             concat(min(`execute_time`),',',max(`execute_time`)) as daycycle
         from
-            `sys_scheduled_log`
+            ${dbName}
     </select>
 
     <!--复制表，实现日志轮转-->

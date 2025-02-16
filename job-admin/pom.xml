@@ -16,10 +16,47 @@
     </properties>
 
     <dependencies>
-        <!--接口包-->
+        <!--服务包-->
         <dependency>
             <groupId>com.tiger</groupId>
-            <artifactId>job-api</artifactId>
+            <artifactId>job-server</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <!--核心包-->
+        <dependency>
+            <groupId>com.tiger</groupId>
+            <artifactId>job-core</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tiger</groupId>
+            <artifactId>job-system</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tiger</groupId>
+            <artifactId>job-system-auth</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tiger</groupId>
+            <artifactId>job-system-menu</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tiger</groupId>
+            <artifactId>job-system-org</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tiger</groupId>
+            <artifactId>job-system-params</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tiger</groupId>
+            <artifactId>job-system-user</artifactId>
+            <version>${parent.version}</version>
         </dependency>
     </dependencies>
 

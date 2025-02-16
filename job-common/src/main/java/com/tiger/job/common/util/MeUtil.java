@@ -250,6 +250,12 @@ public class MeUtil {
     public static String nextId() {
         return String.valueOf(SnowflakeID.nextId());
     }
+    /**
+     * 生成唯一的雪花ID
+     */
+    public static Long nextLongId() {
+        return SnowflakeID.nextId();
+    }
 
     /**
      * 对象转map

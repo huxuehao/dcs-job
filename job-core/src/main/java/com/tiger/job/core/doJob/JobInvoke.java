@@ -4,6 +4,9 @@ import com.alibaba.fastjson2.JSON;
 import com.tiger.job.common.entity.ScheduledConfigEntity;
 import com.tiger.job.common.enums.JobType;
 import com.tiger.job.common.util.MeUtil;
+import com.tiger.job.core.doJob.invoker.AnnotationInvoker;
+import com.tiger.job.core.doJob.invoker.GlueInvoker;
+import com.tiger.job.core.doJob.invoker.TemplateInvoker;
 import com.tiger.job.core.log.TaskLog;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +17,15 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 public class JobInvoke {
-    private final InvokeAnnotation invokeAnnotation;
-    private final InvokeTemplate invokeTemplate;
+    private final AnnotationInvoker annotationInvoker;
+    private final TemplateInvoker templateInvoker;
+    private final GlueInvoker glueInvoker;
     private final TaskLog taskLog;
 
-    public JobInvoke(InvokeAnnotation invokeAnnotation, InvokeTemplate invokeTemplate, TaskLog taskLog) {
-        this.invokeAnnotation = invokeAnnotation;
-        this.invokeTemplate = invokeTemplate;
+    public JobInvoke(AnnotationInvoker annotationInvoker, TemplateInvoker templateInvoker, GlueInvoker glueInvoker, TaskLog taskLog) {
+        this.annotationInvoker = annotationInvoker;
+        this.templateInvoker = templateInvoker;
+        this.glueInvoker = glueInvoker;
         this.taskLog = taskLog;
     }
 
@@ -29,10 +34,13 @@ public class JobInvoke {
         try {
             switch (JobType.valueOf(task.getType())) {
                 case ANNOTATION :
-                    message = invokeAnnotation.invoke(task);
+                    message = annotationInvoker.invoke(task);
                     break;
                 case TEMPLATE :
-                    message = invokeTemplate.invoke(task);
+                    message = templateInvoker.invoke(task);
+                    break;
+                case GLUE :
+                    message = glueInvoker.invoke(task);
                     break;
                 default:
                     message = "匹配" + JSON.toJSONString(task) + "中的type失败";

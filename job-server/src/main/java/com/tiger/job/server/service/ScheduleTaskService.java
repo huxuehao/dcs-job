@@ -15,21 +15,29 @@ public interface ScheduleTaskService extends IService<ScheduledConfigEntity> {
     /* 获取列表*/
     List<ScheduledConfigEntity> selectAll();
     /* 新增 */
-    int add(ScheduledConfigEntity scheduleTask);
+    boolean add(ScheduledConfigEntity scheduleTask);
     /* 更新 */
-    int update(ScheduledConfigEntity scheduleTask);
-    /* 总数 */
-    int getTotals(String taskName, String taskType, String taskStatus);
-    /* 分页 */
-    List<ScheduleTaskPo> getPage(Integer current, Integer size, String taskName, String taskType, String taskStatus);
+    boolean update(ScheduledConfigEntity scheduleTask);
     /* 启用 */
-    int enableByIds(List<String> ids);
+    int enableByIds(List<Long> ids);
 
     /* 禁用 */
-    int disableByIds(List<String> ids);
+    int disableByIds(List<Long> ids);
 
     /* 删除 */
-    int deleteByIds(List<String> ids);
+    boolean deleteByIds(List<Long> ids);
 
-    ScheduleTaskPo refreshResult(String tasId);
+    ScheduleTaskPo refreshResult(Long tasId);
+
+    /**
+     * 开启调度
+     * @param ids 任务ID集合
+     */
+    void openSchedule(List<Long> ids);
+
+    /**
+     * 关闭调度
+     * @param ids 任务ID集合
+     */
+    void closeSchedule(List<Long> ids);
 }

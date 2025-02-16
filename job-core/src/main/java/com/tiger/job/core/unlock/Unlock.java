@@ -56,7 +56,7 @@ public class Unlock{
     public void unlockTaskAll() {
         List<ScheduledConfigEntity> list = scheduleTaskService.list();
         Optional.ofNullable(list)
-                .ifPresent(v0 -> this.unlockTask(v0.stream().map(ScheduledConfigEntity::getId).collect(Collectors.toList())));
+                .ifPresent(v0 -> this.unlockTask(v0.stream().map(item -> String.valueOf(item.getId())).collect(Collectors.toList())));
     }
 
     /**

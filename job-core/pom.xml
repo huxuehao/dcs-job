@@ -26,11 +26,13 @@
         <dependency>
             <groupId>com.tiger</groupId>
             <artifactId>job-task</artifactId>
+            <version>${parent.version}</version>
         </dependency>
         <!--服务包-->
         <dependency>
             <groupId>com.tiger</groupId>
             <artifactId>job-server</artifactId>
+            <version>${parent.version}</version>
         </dependency>
     </dependencies>
 

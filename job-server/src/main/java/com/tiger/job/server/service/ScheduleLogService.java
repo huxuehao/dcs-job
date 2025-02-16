@@ -1,5 +1,6 @@
 package com.tiger.job.server.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.tiger.job.common.entity.ScheduleLogEntity;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  *
  * @author huxuehao
  **/
-public interface ScheduleLogService {
+public interface ScheduleLogService extends IService<ScheduleLogEntity> {
     /* 分页 */
     List<ScheduleLogEntity> getPage();
     /* 添加 */

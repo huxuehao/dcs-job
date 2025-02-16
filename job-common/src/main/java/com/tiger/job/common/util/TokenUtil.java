@@ -22,6 +22,9 @@ import java.util.UUID;
 public class TokenUtil {
     /**
      * 创建token
+     * @param id        ID
+     * @param subject   主题
+     * @param ttlMillis 过期时间
      */
     public static String createToken(String id, String subject, long ttlMillis) {
         /* 指定签名的时候使用的签名算法 */
@@ -50,6 +53,7 @@ public class TokenUtil {
 
     /**
      * 解密token
+     * @param token token
      */
     public static Claims parseToken(String token) {
         return Jwts.parser()
@@ -63,9 +67,8 @@ public class TokenUtil {
      * @return 秘钥
      */
     public static SecretKey generalKey(){
-        /* 本地配置文件中加密的密文djkjsRe&fh*jakh@18908=_ */
-        String stringKey = Constant.JWT_SECRET;
-        byte[] encodedKey = Base64.decodeBase64(stringKey);
+        /* 本地配置文件中加密的密文 */
+        byte[] encodedKey = Base64.decodeBase64(Constant.JWT_SECRET);
         /* 根据给定的字节数组使用AES加密算法构造一个密钥。*/
         return new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
     }

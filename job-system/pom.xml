@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.tiger</groupId>
+        <artifactId>job</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>job-system</artifactId>
+    <packaging>pom</packaging>
+
+    <name>job-system</name>
+    <modules>
+        <module>job-system-auth</module>
+        <module>job-system-menu</module>
+        <module>job-system-org</module>
+        <module>job-system-params</module>
+        <module>job-system-user</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--核心包-->
+            <dependency>
+                <groupId>com.tiger</groupId>
+                <artifactId>job-common</artifactId>
+                <version>${parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tiger</groupId>
+                <artifactId>job-system-menu</artifactId>
+                <version>${parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tiger</groupId>
+                <artifactId>job-system-auth</artifactId>
+                <version>${parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tiger</groupId>
+                <artifactId>job-system-params</artifactId>
+                <version>${parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tiger</groupId>
+                <artifactId>job-system-user</artifactId>
+                <version>${parent.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

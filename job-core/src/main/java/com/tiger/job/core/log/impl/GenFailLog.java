@@ -39,7 +39,7 @@ public class GenFailLog implements GenLog {
     /* 初始化日志信息 */
     private ScheduleLogEntity initScheduleLogEntity(ScheduledConfigEntity task, String message) {
         return new ScheduleLogEntity(
-                MeUtil.nextId(),
+                MeUtil.nextLongId(),
                 task.getId(),
                 task.getName(),
                 "fail",

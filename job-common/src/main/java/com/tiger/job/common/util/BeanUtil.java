@@ -26,6 +26,9 @@ public final class BeanUtil implements BeanFactoryPostProcessor {
         BeanUtil.beanFactory = beanFactory;
     }
 
+    public static boolean checkBeanFactory() {
+        return beanFactory != null;
+    }
     /**
      * 获取对象
      */

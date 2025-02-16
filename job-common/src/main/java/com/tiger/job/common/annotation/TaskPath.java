@@ -20,9 +20,9 @@ public @interface TaskPath {
     /* 执行策略 */
     String cron() default "-1";
     /* 分类 */
-    String type() default "other_task";
+    String type() default "default";
     /* 是否启用 */
-    String enable() default "0";
+    int enable() default 0;
     /* 是否开启日志采集 */
-    String openLog() default "1";
+    int openLog() default 1;
 }

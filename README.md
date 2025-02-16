@@ -1,46 +1,192 @@
-# 分布式动态定时任务-job
+> **注意：以超级管理员身份登录系统时，若出现接口提示 “不允许访问”，请点击 “系统管理/系统权限/接口管理” 中的 “接口采集/校验” 按钮进行接口权限校验。**
 
-#### 介绍
-该定时任务是基于springboot的scheduling做的分布式动态定时任务，其功能包括添加定时任务、编辑定时任务、删除定时任务、启动定时任务、关闭定时任务、查看定时执行情况、查看错误日志。目前只提供了后端以及相关的管理接口。注：该项目使用到了Redis。
-![输入图片说明](%E5%9B%BE%E7%89%87/image.png)
+### 1. 项目技术路线
 
-#### 项目包说明
-1. job-admin: 项目启动包。
-2. job-api: 定时任务管理接口包。
-3. job-server: 服务包，其中包括service、mapper、interceptor、config等。
-4. job-core: 项目核心包，包括触发器、扫描器、分布式执行器、心跳检查等。
-5. job-common: 项目公共包，包括注解、枚举、实体类、工具包、异常处理、常量等。
-6. job-task: 项目定时任务载体包，主要存放用户编写的定时任务。
-#### 定时任务编写说明
-使用编写定时任务主要依赖于两个注解，即 `@SchedulerBean` 和 `@TaskPath`：
-- @SchedulerBean：定时任务类注解，被该注解标记的类将会被定时任务扫描器扫描到。
-- @TaskPath：定时任务方法注解，其属性包括 name（定时任务名）、describe（描述）、path（path，必填）、cron（执行策略）、type（分类）、enable（是否启用定时任务）、openLog（是否开启日志采集）
+`JDK8` + `Spring-Boot` + `Vue3` + `ElementUI-plus`
 
-#### 配置文件说明
-```yaml
-tiger:
-  scheduled-task:
-    # 扫描类
-    scan:
-      task-package: com.tiger.job.task # 定时任务的包路径，用于扫描定时任务
-      auto-insert: true # 自动扫描报并入库
-      default-cron: "0 0/30 * * * ?" # 默认策略
-    # 集群配置
-    cluster:
-      open: true # 开启分布式
-    # 日志采集
-    log:
-      success-open: true # 开启执行成功日志(建议开启)
-      fail-open: true # 开启执行失败日志(建议开启)
-      save-days: 2 # 日志保存天数
-    # 重试策略
-    retry:
-      open: true # 是否开启重试策略
-      count: 1 # 重试次数
-      sleep: 5 # 重试间隔（秒）
-  # http工具类
-  http-util:
-    socket-timeout: 60000 # 单位：秒
-    connect-timeout: 15000 # 单位：秒
-    connection-request-timeout: 60000 # 单位：秒
+
+
+### 2. 项目介绍
+
+本项目是一个去中心化的分布式定时任务，但是不仅仅是分布式定时任务。
+
+#### 2.1. 三种执行模式
+
+**注解模式**：开发者在后端硬编码定时任务。
+
+```java
+@Component
+@SchedulerBean
+public class Demo {
+
+    private final ComponentBean c;
+
+    public TopicTask(ComponentBean c) {
+        this.c = c;
+    }
+
+    @TaskPath(name = "定时任务9", path = "/topic/execute/do-task1")
+    private void topic1() {
+        System.out.println("do something...");
+        c.invoke();
+    }
+}
 ```
+
+**模版模式**：开发者在后端定义执行模版，前端通过类路径指定执行模版，支持向执行模版传参。
+
+```java
+@Component
+public class Demo implements JobTemplate {
+    @Override
+    public void doTask(ScheduledConfigEntity scheduledConfig) {
+        System.out.println("demo done");
+    }
+}
+
+```
+
+**Glue模式**：执行开发者在线编写执行代码，支持 `@Resource` 和 `@Autowired` 的依赖注入。
+
+![image-20250216172414168](image/image-20250216172414168.png)
+
+
+
+#### 2.2. 包结构介绍
+
+```sh
+job   # 项目主目录
+  -- job-admin     # 后端：启动模块
+  -- job-common    # 后端：公共模块
+  -- job-core      # 后端：定时任务核心实现模块
+  -- job-server    # 后端：定时任务控制模块
+  -- hanjiang-etm-system      # 后端：系统目录
+    -- hanjiang-etm-auth      # 后端：系统权限模块
+    -- hanjiang-etm-menu      # 后端：系统菜单模块
+    -- hanjiang-etm-org       # 后端：组织机构模块
+    -- hanjiang-etm-params    # 后端：系统参数模块
+    -- hanjiang-etm-user      # 后端：用户管理模块
+  -- job-ui        # 前端：前端项目
+  -- database.sql  # 数据库：数据库初始化脚本
+```
+
+
+
+### 3. 功能介绍
+
+#### 3.1. 定时任务模块
+
+**① 任务分类**
+
+用户可随意编排任务分类树，支持排序。
+
+**② 任务实例**
+
+支持**3**种执行模式，用户可随意进行选择：
+
+- 注解模式：开发者在后端硬编码定时任务。
+
+- 模版模式：开发者在后端定义执行模版，前端通过类路径指定执行模版，支持向执行模版传参。
+
+- Glue模式：执行开发者在线编写执行代码，支持 `@Resource` 和 `@Autowired` 的依赖注入。
+
+每个定时任务编辑即生效，没有条条框框的限制，操作友好。功能点包括单不限于：新增、编辑、删除、启动、停止、执行一次、执行日志、执行计划、GlUE编辑器等。
+
+**③ 任务日志**
+
+记录定时任务内次的执行日志，分为成功/失败日志，内容包括但不限于：任务实例、执行时间、执行结果、错误日志等。
+
+
+
+#### 3.2. 系统管理模块
+
+**① 组织机构管理**
+
+用户可随意编排组织机构树，支持单位/部门，支持有效/无效，支持排序。
+
+**② 用户信息管理**
+
+支持常见的用户信息的录入，支持重置密码、解封/禁用账号、支持配置用户角色。
+
+**③ 按钮管理**
+
+支持根据菜单录入按钮，支持有效/无效，以便对菜单中按钮的权限进行控制。
+
+**④ 接口管理**
+
+支持一键采集/校验接口配置（此操作将会自动扫描后端接口，并完成插入/更新/删除操作），支持有效/无效，以便对菜单中接口的权限进行控制。
+
+**⑤ 角色管理**
+
+用户可随意编排角色树，支持配置角色权限，权限分为 3 部分。
+
+菜单权限：控制角色可访问的菜单。
+
+按钮权限：控制角色可访问的菜单中的按钮。
+
+接口权限：控制角色可访问的后端接口。
+
+**⑥ 系统参数**
+
+可配置/修改系统所需要的参数，例如：允许上传的文件类型、单个文件的 MaxSiz、TokenTTL 等。
+
+**⑦ 系统菜单**
+
+管理系统的所有菜单，支持菜单大部分配置，例如：层级关系、图标、名称、组件位置（仅限前端 views 文件下）、排序、是否有效、路由参数等。
+
+
+
+### 4. 系统截图
+
+任务分类：
+
+![image-20250216174043538](image/image-20250216174043538.png)
+
+任务实例：
+
+![image-20250216174109956](image/image-20250216174109956.png)
+
+![image-20250216174130535](image/image-20250216174130535.png)
+
+![image-20250216174152762](image/image-20250216174152762.png)
+
+![image-20250216174217202](image/image-20250216174217202.png)
+
+![image-20250216174246475](image/image-20250216174246475.png)
+
+![image-20250216174313019](image/image-20250216174313019.png)
+
+![image-20250216174333669](image/image-20250216174333669.png)
+
+![image-20250216174358153](image/image-20250216174358153.png)
+
+任务日志：
+
+![image-20250216174429424](image/image-20250216174429424.png)
+
+![image-20250216174447019](image/image-20250216174447019.png)
+
+组织机构：
+![image-20250216174537874](image/image-20250216174537874.png)
+
+用户管理：
+![image-20250216174558668](image/image-20250216174558668.png)
+
+按钮管理：
+![image-20250216174636485](image/image-20250216174636485.png)
+
+接口管理：
+![image-20250216174704804](image/image-20250216174704804.png)
+
+角色管理：
+![image-20250216174734341](image/image-20250216174734341.png)
+
+![image-20250216174756138](image/image-20250216174756138.png)
+
+系统参数：
+![image-20250216174816137](image/image-20250216174816137.png)
+
+系统菜单：
+![image-20250216174843969](image/image-20250216174843969.png)
+
+![image-20250216174912472](image/image-20250216174912472.png)

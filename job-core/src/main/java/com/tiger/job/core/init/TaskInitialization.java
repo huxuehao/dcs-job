@@ -102,7 +102,7 @@ public class TaskInitialization implements SmartInitializingSingleton {
     /* 定时任务：开启操作 */
     private void openTrigger() {
         Consumer<ScheduledConfigEntity> openSchedule = item -> {
-            String scheduleId = item.getId();
+            String scheduleId = String.valueOf(item.getId());
             if (scheduledFutureMap.containsKey(scheduleId)) { /* 当定时任务已经存在与scheduledFutureMap中*/
                 scheduledFutureMap.compute(scheduleId, (k, v) -> { /* 重新计算scheduledFutureMap中key为scheduledId的value的值 */
                     Optional.ofNullable(v).ifPresent(v0 -> v0.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则将其先停跳 */
@@ -116,7 +116,7 @@ public class TaskInitialization implements SmartInitializingSingleton {
                 ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(worker, cronTrigger);
                 scheduledFutureMap.put(scheduleId, schedule);
             }
-            scheduleTaskConfigMap.put(item.getId(), item);
+            scheduleTaskConfigMap.put(String.valueOf(item.getId()), item);
             /* 强制解锁 */
             unlock.unlockTask(Collections.singletonList(scheduleId));
         };
@@ -127,11 +127,11 @@ public class TaskInitialization implements SmartInitializingSingleton {
     /* 定时任务：关闭操作 */
     private void closeTrigger(){
         Consumer<ScheduledConfigEntity> closeSchedule = item -> {
-            String scheduleId = item.getId();
+            String scheduleId = String.valueOf(item.getId());
             ScheduledFuture<?> scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务
             Optional.ofNullable(scheduledFuture).ifPresent(schedule -> schedule.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则停止定时 */
-            scheduleTaskConfigMap.remove(item.getId());
-            taskQueue.delete(taskQueue.getQueueName(item.getId())); /* 定时队列删除 */
+            scheduleTaskConfigMap.remove(String.valueOf(item.getId()));
+            taskQueue.delete(taskQueue.getQueueName(String.valueOf(item.getId()))); /* 定时队列删除 */
         };
         triggerMap.put(ChannelConstant.CLOSE, closeSchedule);
         log.info("定时任务：操作注册表：[{}]初始化完成", ChannelConstant.CLOSE);
@@ -140,12 +140,12 @@ public class TaskInitialization implements SmartInitializingSingleton {
     /* 定时任务：删除操作 */
     private void deleteTrigger(){
         Consumer<ScheduledConfigEntity> deleteSchedule = item -> {
-            String scheduleId = item.getId();
+            String scheduleId = String.valueOf(item.getId());
             ScheduledFuture<?> scheduledFuture = scheduledFutureMap.get(scheduleId); // 从scheduledFutureMap中获取scheduledId对应的定时任务
             Optional.ofNullable(scheduledFuture).ifPresent(schedule -> schedule.cancel(true)); /* 先判空,如果对象（ScheduledFuture）存在,则停止定时 */
             scheduledFutureMap.remove(scheduleId); /* 从注册表中移除 */
             scheduleTaskConfigMap.remove(scheduleId);
-            taskQueue.delete(taskQueue.getQueueName(item.getId())); /* 定时队列删除 */
+            taskQueue.delete(taskQueue.getQueueName(String.valueOf(item.getId()))); /* 定时队列删除 */
         };
         triggerMap.put(ChannelConstant.DELETE, deleteSchedule);
         log.info("定时任务：操作注册表：[{}]初始化完成", ChannelConstant.DELETE);

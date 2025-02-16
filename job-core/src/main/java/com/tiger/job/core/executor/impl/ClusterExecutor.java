@@ -44,7 +44,7 @@ public class ClusterExecutor implements Executor {
     @Override
     public Boolean execute(ScheduledConfigEntity task) {
         /* 获取当前定时任务所属的队列 */
-        String queueName = taskQueue.getQueueName(task.getId());
+        String queueName = taskQueue.getQueueName(String.valueOf(task.getId()));
         /* 获取 queueName 对应的分布式锁 */
         RLock lock = locker.getLock(taskQueue.getQueueLockName(queueName));
         /* 查看队列队首元素 */

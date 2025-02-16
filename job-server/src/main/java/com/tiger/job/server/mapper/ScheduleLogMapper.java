@@ -15,16 +15,16 @@ import java.util.List;
 @Mapper
 public interface ScheduleLogMapper extends BaseMapper<ScheduleLogEntity> {
     /* 分页 */
-    List<ScheduleLogEntity> getPage();
+    List<ScheduleLogEntity> getPage(@Param("dbName") String dbName);
     /* 添加 */
-    int add(@Param("log") ScheduleLogEntity log);
+    int add(@Param("dbName") String dbName, @Param("log") ScheduleLogEntity log);
     /* 清除日志 */
-    int clearLog(@Param("endTime") String endTime);
+    int clearLog(@Param("dbName") String dbName, @Param("endTime") String endTime);
     /* 根据定时任务获取最新的错误日志*/
-    ScheduleLogEntity latestLogByTask(@Param("taskId") String taskId);
+    ScheduleLogEntity latestLogByTask(@Param("dbName") String dbName, @Param("taskId") String taskId);
     /* 上一条日志 */
-    ScheduleLogEntity lastLog(String taskId, String executeTime);
+    ScheduleLogEntity lastLog(@Param("dbName") String dbName, String taskId, String executeTime);
     /* 下一条日志 */
-    ScheduleLogEntity nextLog(String taskId, String executeTime);
+    ScheduleLogEntity nextLog(@Param("dbName") String dbName, String taskId, String executeTime);
 
 }

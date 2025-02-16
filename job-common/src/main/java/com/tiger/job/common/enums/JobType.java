@@ -7,5 +7,6 @@ package com.tiger.job.common.enums;
  **/
 public enum JobType {
     ANNOTATION,
-    TEMPLATE;
+    TEMPLATE,
+    GLUE;
 }

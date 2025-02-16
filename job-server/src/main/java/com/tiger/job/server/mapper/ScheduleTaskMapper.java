@@ -15,34 +15,15 @@ import java.util.List;
  **/
 @Mapper
 public interface ScheduleTaskMapper extends BaseMapper<ScheduledConfigEntity> {
-    /* 添加定时任务信息 */
-    int add(@Param("task") ScheduledConfigEntity task);
-    /* 更新定时任务信息 */
-    int update(@Param("task") ScheduledConfigEntity task);
-
-    List<ScheduledConfigEntity> selectAll();
-
-    List<ScheduledConfigEntity> selectByIds(@Param("ids") List<String> ids);
-    /* 获取总数 */
-    int getTotals(@Param("taskName") String taskName,
-                  @Param("taskType") String taskType,
-                  @Param("taskStatus") String taskStatus);
-    List<ScheduleTaskPo> getPage(@Param("current") Integer current,
-                                 @Param("size") Integer size,
-                                 @Param("taskName") String taskName,
-                                 @Param("taskType") String taskType,
-                                 @Param("taskStatus") String taskStatus);
     /* 批量开启定时任务信息 */
-    int enableByIds(@Param("tasks") List<ScheduledConfigEntity> tasks);
+    int enableByIds(@Param("dbName") String dnName, @Param("tasks") List<ScheduledConfigEntity> tasks);
     /* 批量关闭定时任务信息 */
-    int disableByIds(@Param("tasks") List<ScheduledConfigEntity> tasks);
-    /* 批量删除定时任务信息 */
-    int deleteByIds(@Param("ids") List<String> ids);
+    int disableByIds(@Param("dbName") String dnName, @Param("tasks") List<ScheduledConfigEntity> tasks);
     /* 根据定时任务id获取最新的定时任务信息*/
-    ScheduleTaskPo refreshResult(@Param("taskId") String taskId);
+    ScheduleTaskPo refreshResult(@Param("dbName") String dnName, @Param("classifyDbName") String classifyDbName, @Param("taskId") Long taskId);
     /* 删除不存在与tasks中的记录 */
-    int deleteRecordsNotIn(@Param("tasks") List<ScheduledConfigEntity> tasks);
+    int deleteRecordsNotIn(@Param("dbName") String dnName, @Param("tasks") List<ScheduledConfigEntity> tasks);
     /* 添加tasks中多的记录 */
-    int addRecordsMoreOf(@Param("tasks") List<ScheduledConfigEntity> tasks);
+    int addRecordsMoreOf(@Param("dbName") String dnName, @Param("tasks") List<ScheduledConfigEntity> tasks);
 
 }

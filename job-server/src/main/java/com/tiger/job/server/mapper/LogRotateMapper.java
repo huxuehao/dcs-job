@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface LogRotateMapper {
     /* 查询日志表中日周期 */
-    String selectDayCycle();
+    String selectDayCycle(@Param("dbName") String dbName);
 
     /* 复制表，实现日志轮转 */
     int copyTable(@Param("tableName_n") String tableName_n);

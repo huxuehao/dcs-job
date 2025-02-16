@@ -21,6 +21,7 @@ public class TopicTask {
 
     @TaskPath(name = "定时任务9", path = "/topic/execute/do-task1")
     private void topic1() {
+        System.out.println("do something...");
         c.invoke();
     }
 }

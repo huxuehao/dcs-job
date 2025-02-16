@@ -1,8 +1,17 @@
 package com.tiger.job.common.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.tiger.job.common.entity.base.BaseDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.tiger.job.common.constant.DBConst;
+import com.tiger.job.common.entity.base.BaseEntity;
+import com.tiger.job.common.mp.annotation.QueryDefine;
+import com.tiger.job.common.mp.support.QueryCondition;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scheduling.support.CronTrigger;
 
 import java.util.Objects;
@@ -13,18 +22,51 @@ import java.util.Objects;
  * @author huxuehao
  **/
 @Data
-@TableName("sys_scheduled")
-public class ScheduledConfigEntity extends BaseDto {
-    private String id;
+@TableName(DBConst.SYS_SCHEDULED)
+public class ScheduledConfigEntity extends BaseEntity {
+
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
+    @QueryDefine(condition = QueryCondition.EQ)
+    private Long id;
+
+    @QueryDefine(condition = QueryCondition.LIKE)
     private String name;
-    private String taskType;
+
+    @JsonSerialize(using = ToStringSerializer.class)
+    @QueryDefine(condition = QueryCondition.EQ)
+    private Long taskClassify;
+
     private String taskDescribe;
+
     private String config;
+
+    @QueryDefine(condition = QueryCondition.LIKE)
     private String cron;
+
+    @QueryDefine(condition = QueryCondition.LIKE)
     private String path;
-    private String enable;
-    private String openLog;
+
+    @QueryDefine(condition = QueryCondition.EQ)
+    private Integer enable;
+
+    @QueryDefine(condition = QueryCondition.EQ)
+    private Integer openLog;
+
+    @QueryDefine(condition = QueryCondition.EQ)
     private String type;
+
+    private String createUser;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String createTime;
+
+    private String updateUser;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String updateTime;
 
     @Override
     public boolean equals(Object o) {
