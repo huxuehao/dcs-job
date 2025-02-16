@@ -371,7 +371,7 @@ const codeDialogProp = reactive({
   visible: false,
   withHeader: false,
   showClose: true,
-  appendToBody: true, 
+  appendToBody: true,
   closeOnPressEscape: false,
   title: "脚本编辑器-JAVA",
   size:"100%",
@@ -649,8 +649,8 @@ const showExecLog = (row: any) => {
             </el-button>
           </el-col>
           <el-col :span="8" style="text-align: right">
-            <el-button icon="RefreshRight" @click="handleSearch" title="刷新"
-              >刷新
+            <el-button icon="RefreshRight" @click="handleSearch" title="刷新">
+              刷新
             </el-button>
           </el-col>
         </el-row>
@@ -865,11 +865,11 @@ const showExecLog = (row: any) => {
     </template>
   </ResizeBox>
   <el-dialog v-bind="dialogProp" v-model="dialogProp.visible">
-    <TaskForm 
-      ref="form" 
-      v-if="dialogProp.visible" 
-      :data="formData" 
-      :tree-list="classifyTreeList" 
+    <TaskForm
+      ref="form"
+      v-if="dialogProp.visible"
+      :data="formData"
+      :tree-list="classifyTreeList"
       :mode="mode">
     </TaskForm>
     <template #footer>
@@ -898,12 +898,12 @@ const showExecLog = (row: any) => {
     v-bind="codeDialogProp"
     v-model="codeDialogProp.visible"
     class="drawer-none-padding">
-      <CodeEditor 
+      <CodeEditor
         v-if="codeDialogProp.visible"
-        v-model="code" 
+        v-model="code"
         @close="closeGlue()"
         title="脚本编辑器-JAVA"
-        v-loading="codeLoading" 
+        v-loading="codeLoading"
         element-loading-background="rgba(0, 0, 0, 0)">
         <template #button>
           <el-button icon="RefreshRight" @click="initJavaCode()">初始化代码</el-button>
@@ -914,8 +914,8 @@ const showExecLog = (row: any) => {
         </template>
       </CodeEditor>
   </el-drawer>
-  <el-dialog 
-    v-bind="glueVersion" 
+  <el-dialog
+    v-bind="glueVersion"
     v-model="glueVersion.visible"
     @close="() => {glueList = []}">
     <el-table v-if="glueVersion.visible" :data="glueList" height="50vh" border>
@@ -943,7 +943,7 @@ const showExecLog = (row: any) => {
   text-align: left;
   padding: 2px 10px;
   margin: 2px 0;
-  
+
   &:hover {
     background-color: #F5F7FA;
   }
