@@ -60,12 +60,12 @@ job   # 项目主目录
   -- job-common    # 后端：公共模块
   -- job-core      # 后端：定时任务核心实现模块
   -- job-server    # 后端：定时任务控制模块
-  -- hanjiang-etm-system      # 后端：系统目录
-    -- hanjiang-etm-auth      # 后端：系统权限模块
-    -- hanjiang-etm-menu      # 后端：系统菜单模块
-    -- hanjiang-etm-org       # 后端：组织机构模块
-    -- hanjiang-etm-params    # 后端：系统参数模块
-    -- hanjiang-etm-user      # 后端：用户管理模块
+  -- job-system      # 后端：系统目录
+    -- job-auth      # 后端：系统权限模块
+    -- job-menu      # 后端：系统菜单模块
+    -- job-org       # 后端：组织机构模块
+    -- job-params    # 后端：系统参数模块
+    -- job-user      # 后端：用户管理模块
   -- job-ui        # 前端：前端项目
   -- database.sql  # 数据库：数据库初始化脚本
 ```
@@ -137,6 +137,9 @@ job   # 项目主目录
 
 
 ### 4. 系统截图
+
+登录页：
+![image-20250216175833479](image/image-20250216175833479.png)
 
 任务分类：
 
