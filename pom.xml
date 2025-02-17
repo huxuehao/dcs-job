@@ -7,7 +7,7 @@
     <groupId>com.tiger</groupId>
     <artifactId>job</artifactId>
     <packaging>pom</packaging>
-    <version>${dcs-job.version}</version>
+    <version>1.0-SNAPSHOT</version>
     <modules>
         <module>job-core</module>
         <module>job-admin</module>
@@ -17,7 +17,6 @@
         <module>job-system</module>
     </modules>
     <properties>
-        <dcs-job.version>1.0-SNAPSHOT</dcs-job.version>
         <spring-depend.version>2.7.1</spring-depend.version>
         <spring-aop.version>${spring-depend.version}</spring-aop.version>
         <spring-cache.version>${spring-depend.version}</spring-cache.version>
