@@ -1,5 +1,5 @@
 export default {
-  systemName: "DCS-JOB",
+  systemName: "DCS JOB",
   homePath: "/home",
   repeatReqInterval: 500, // 重复请求时间间隔
   tokenHeader: "Authorization",
@@ -10,4 +10,5 @@ export default {
   whiteList: [
     "/login"
   ],
+  baseUrl: 'web/index.html'
 };

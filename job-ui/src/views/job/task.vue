@@ -657,10 +657,10 @@ const showExecLog = (row: any) => {
         <!-- 列表区域 -->
         <div
           class="data-list"
-          :style="[{ height: 'calc(100vh - 180px - ' + tHeight + 'px)' }]"
+          :style="[{ height: 'calc(100% - var(--table-hg-150) - ' + tHeight + 'px)' }]"
         >
           <el-table
-            :stripe="false"
+            :stripe="true"
             :data="dataList"
             :header-cell-style="{
               backgroundColor: '#F5F7FA',
@@ -731,7 +731,7 @@ const showExecLog = (row: any) => {
             </el-table-column>
             <el-table-column
               label="操作"
-              width="280"
+              width="320"
               align="center"
               fixed="right"
             >

@@ -202,7 +202,7 @@ const handleEdit = (row: any) => {
 <template>
   <div style="height: 100%">
     <!-- 按钮区域-->
-    <el-row class="button-box">
+    <el-row class="button-box" style="margin-top: 0">
       <el-col :span="16">
         <el-button
           v-permission="'params_add'"
@@ -221,15 +221,14 @@ const handleEdit = (row: any) => {
         </el-button>
       </el-col>
       <el-col :span="8" style="text-align: right">
-        <el-button icon="RefreshRight" @click="handleSearch" title="刷新"
-          >刷新</el-button
-        >
+        <el-button icon="RefreshRight" @click="handleSearch" title="刷新">刷新</el-button>
       </el-col>
     </el-row>
     <!-- 列表区域 -->
-    <div class="data-list" :style="[{ height: 'calc(100vh - 180px)' }]">
+    <div class="data-list"
+         :style="[{ height: 'calc(100% - var(--table-hg-150) + 5px)' }]">
       <el-table
-        :stripe="false"
+        :stripe="true"
         :data="dataList"
         :header-cell-style="{
           backgroundColor: '#F5F7FA',
@@ -256,7 +255,7 @@ const handleEdit = (row: any) => {
         <el-table-column label="Key" prop="paramKey"> </el-table-column>
         <el-table-column label="Value" prop="paramValue" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column label="操作" width="200" align="center" fixed="right">
+        <el-table-column label="操作" width="220" align="center" fixed="right">
           <template #default="scope">
             <el-button
               v-permission="'params_view'"
@@ -374,12 +373,6 @@ const handleEdit = (row: any) => {
 
 <style lang="scss" scoped>
 @use "/src/style/views/index.scss" as *;
-
-.search-box,
-.button-box,
-.data-list {
-  margin-left: 10px;
-}
 .button-box {
   margin-top: 10px;
   margin-bottom: 5px;

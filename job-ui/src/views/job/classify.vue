@@ -317,10 +317,10 @@ const handleAddChild = (row: any) => {
     <!-- 列表区域 -->
     <div
       class="data-list"
-      :style="[{ height: 'calc(100vh - 150px - ' + tHeight + 'px)' }]"
+      :style="[{ height: 'calc(100% + 40px - var(--table-hg-150) - ' + tHeight + 'px)' }]"
     >
       <el-table
-        :stripe="false"
+        :stripe="true"
         :data="dataList"
         :header-cell-style="{
           backgroundColor: '#F5F7FA',
@@ -360,7 +360,7 @@ const handleAddChild = (row: any) => {
           width="100"
           align="center"
         ></el-table-column>
-        <el-table-column label="操作" width="280" align="center" fixed="right">
+        <el-table-column label="操作" width="320" align="center" fixed="right">
           <template #default="scope">
             <el-button
               v-permission="'task_classify_view'"
@@ -498,10 +498,4 @@ const handleAddChild = (row: any) => {
 
 <style lang="scss" scoped>
 @use "/src/style/views/index.scss" as *;
-
-.search-box,
-.button-box,
-.data-list {
-  margin-left: 10px;
-}
 </style>
