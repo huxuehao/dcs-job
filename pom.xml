@@ -17,7 +17,7 @@
         <module>job-system</module>
     </modules>
     <properties>
-        <spring-depend.version>2.7.1</spring-depend.version>
+        <spring-depend.version>2.7.18</spring-depend.version>
         <spring-aop.version>${spring-depend.version}</spring-aop.version>
         <spring-cache.version>${spring-depend.version}</spring-cache.version>
         <spring-redis.version>${spring-depend.version}</spring-redis.version>
@@ -162,6 +162,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.7.18</version>
             </plugin>
         </plugins>
     </build>

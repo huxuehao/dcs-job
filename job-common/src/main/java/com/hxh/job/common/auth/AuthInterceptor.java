@@ -23,11 +23,12 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
         /* 如果不是映射到方法中，那么直接通过 */
-        if (!(handler instanceof HandlerMethod handlerMethod)) {
+        if (!(handler instanceof HandlerMethod)) {
             return true;
         }
 
         /* 获取映射的方法 */
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
 
         /* 判断是否跳过认证 */

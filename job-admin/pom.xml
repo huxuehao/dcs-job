@@ -30,11 +30,6 @@
         </dependency>
         <dependency>
             <groupId>com.hxh</groupId>
-            <artifactId>job-system</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.hxh</groupId>
             <artifactId>job-system-auth</artifactId>
             <version>${parent.version}</version>
         </dependency>
