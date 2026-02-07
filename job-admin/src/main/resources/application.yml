@@ -9,7 +9,7 @@ spring:
 tiger:
   scheduled-task:
     scan:
-      task-package: com.tiger.job.task # 定时任务的包路径，用于扫描定时任务
+      task-package: com.hxh.job.task # 定时任务的包路径，用于扫描定时任务
       auto-insert: true # 自动扫描报并入库
       default-cron: "0 0/30 * * * ?" # 默认策略
     pool:

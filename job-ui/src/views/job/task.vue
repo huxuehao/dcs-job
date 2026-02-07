@@ -501,7 +501,7 @@ const handleFormatJavaCode = () => {
 
 const initJavaCode = () => {
 code.value =
-`import com.tiger.job.common.JobHandler;
+`import com.hxh.job.common.JobHandler;
 
 public class Demo extends JobHandler {
 

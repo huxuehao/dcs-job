@@ -20,7 +20,7 @@
     <!--别名-->
     <typeAliases>
         <!--定位到包-->
-        <package name="com.tiger.job.common.entity"/>
+        <package name="com.hxh.job.common.entity"/>
     </typeAliases>
 
 </configuration>

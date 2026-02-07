@@ -1,0 +1,28 @@
+package com.hxh.job.common.exception.member;
+
+import com.hxh.job.common.enums.ResponseStatus;
+import com.hxh.job.common.exception.base.BaseException;
+
+/**
+ * 描述：存在相同的path异常
+ *
+ * @author huxuehao
+ **/
+public class SameTaskPathException extends BaseException {
+
+    public SameTaskPathException(int code, String module, String method, String message) {
+        super(code, module, method, message);
+    }
+
+    public SameTaskPathException(String module, String method, String message) {
+        super(ResponseStatus.SamePathTaskPath.code, module, method, message);
+    }
+
+    public SameTaskPathException(String message) {
+        super(ResponseStatus.SamePathTaskPath.code, null, null, message);
+    }
+
+    public SameTaskPathException() {
+        super(ResponseStatus.SamePathTaskPath.code, null, null, ResponseStatus.SamePathTaskPath.msg);
+    }
+}

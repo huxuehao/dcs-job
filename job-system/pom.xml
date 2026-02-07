@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.tiger</groupId>
+        <groupId>com.hxh</groupId>
         <artifactId>job</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -27,27 +27,27 @@
         <dependencies>
             <!--核心包-->
             <dependency>
-                <groupId>com.tiger</groupId>
+                <groupId>com.hxh</groupId>
                 <artifactId>job-common</artifactId>
                 <version>${parent.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tiger</groupId>
+                <groupId>com.hxh</groupId>
                 <artifactId>job-system-menu</artifactId>
                 <version>${parent.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tiger</groupId>
+                <groupId>com.hxh</groupId>
                 <artifactId>job-system-auth</artifactId>
                 <version>${parent.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tiger</groupId>
+                <groupId>com.hxh</groupId>
                 <artifactId>job-system-params</artifactId>
                 <version>${parent.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tiger</groupId>
+                <groupId>com.hxh</groupId>
                 <artifactId>job-system-user</artifactId>
                 <version>${parent.version}</version>
             </dependency>

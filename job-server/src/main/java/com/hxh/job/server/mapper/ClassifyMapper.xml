@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hxh.job.server.mapper.ClassifyMapper">
+    <resultMap id="listMap" type="com.hxh.job.common.dto.ClassifyDto">
+        <id column="id" property="id"/>
+        <id column="parent_id" property="parentId"/>
+        <id column="name" property="name"/>
+        <id column="code" property="code"/>
+        <id column="remark" property="remark"/>
+        <id column="sort" property="sort"/>
+    </resultMap>
+    <select id="listV2" resultMap="listMap">
+        select
+            id,
+            parent_id,
+            `name`,
+            code,
+            remark,
+            sort
+        from ${dbName}
+        <where>
+            ${ew.sqlSegment}
+            and del_flag = 0
+        </where>
+        order by sort
+    </select>
+</mapper>
