@@ -157,7 +157,7 @@ public class TaskInitialization implements SmartInitializingSingleton {
      */
     private void initTask() {
         List<ScheduledConfigEntity> taskList = scheduleTaskService.selectAll();
-        List<ScheduledConfigEntity> enableTask = taskList.stream().filter(item -> "1".equals(item.getEnable())).collect(Collectors.toList());
+        List<ScheduledConfigEntity> enableTask = taskList.stream().filter(item -> item.getEnable().equals(1)).collect(Collectors.toList());
         enableTask.forEach(item -> {
             triggerMap.get(ChannelConstant.OPEN).accept(item);
             log.info("定时任务：[{}]初始化完成", item.getName());
