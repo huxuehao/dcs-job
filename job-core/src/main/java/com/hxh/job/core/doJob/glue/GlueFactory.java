@@ -109,7 +109,7 @@ public class GlueFactory {
                     }
                 } catch (Exception ignored) {
                 }
-                if (beanObj != null) {
+                if (beanObj == null) {
                     beanObj = BeanUtil.getBean(declaredField.getType());
                 }
             }
